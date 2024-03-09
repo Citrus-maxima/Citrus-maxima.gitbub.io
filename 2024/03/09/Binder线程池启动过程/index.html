@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Binder线程池启动过程 基于Android U  在应用程序进程创建过程中会启动Binder线程池。  12345678frameworks&#x2F;base&#x2F;core&#x2F;java&#x2F;com&#x2F;android&#x2F;internal&#x2F;os&#x2F;ZygoteInit.javapublic static Runnable zygoteInit(int targetSdkVersion, long[] disabledCo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/03/09/Binder%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Binder线程池启动过程 基于Android U  在应用程序进程创建过程中会启动Binder线程池。  12345678frameworks&#x2F;base&#x2F;core&#x2F;java&#x2F;com&#x2F;android&#x2F;internal&#x2F;os&#x2F;ZygoteInit.javapublic static Runnable zygoteInit(int targetSdkVersion, long[] disabledCo">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2023/12/26/f6BpAaGyOExUVWZ.jpg">
+<meta property="article:published_time" content="2024-03-09T07:30:58.562Z">
+<meta property="article:modified_time" content="2024-03-09T07:30:58.563Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/12/26/f6BpAaGyOExUVWZ.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Binder线程池启动过程" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/09/Binder%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/" class="article-date">
+  <time class="dt-published" datetime="2024-03-09T07:30:58.562Z" itemprop="datePublished">2024-03-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Binder线程池启动过程"><a href="#Binder线程池启动过程" class="headerlink" title="Binder线程池启动过程"></a><center>Binder线程池启动过程</center></h2><blockquote>
+<p>基于Android U</p>
+</blockquote>
+<p>在应用程序进程创建过程中会启动Binder线程池。</p>
+<p><img src="https://s2.loli.net/2023/12/26/f6BpAaGyOExUVWZ.jpg"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/com/android/internal/os/ZygoteInit.java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> Runnable <span class="title function_">zygoteInit</span><span class="params">(<span class="type">int</span> targetSdkVersion, <span class="type">long</span>[] disabledCompatChanges,</span></span><br><span class="line"><span class="params">        String[] argv, ClassLoader classLoader)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    ZygoteInit.nativeZygoteInit();</span><br><span class="line">    <span class="keyword">return</span> RuntimeInit.applicationInit(targetSdkVersion, disabledCompatChanges, argv,</span><br><span class="line">            classLoader);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>nativeZygoteInit()会在新创建的应用程序进程中创建Binder线程池。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/com/android/internal/os/ZygoteInit.java</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title function_">nativeZygoteInit</span><span class="params">()</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/jni/AndroidRuntime.cpp</span><br><span class="line"><span class="type">const</span> JNINativeMethod methods[] = &#123;</span><br><span class="line">    &#123; <span class="string">&quot;nativeZygoteInit&quot;</span>, <span class="string">&quot;()V&quot;</span>,</span><br><span class="line">        (<span class="type">void</span>*) com_android_internal_os_ZygoteInit_nativeZygoteInit &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>nativeZygoteInit()是一个JNI方法，它对应的函数是com_android_internal_os_ZygoteInit_nativeZygoteInit()。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/jni/AndroidRuntime.<span class="function">cpp</span></span><br><span class="line"><span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">com_android_internal_os_ZygoteInit_nativeZygoteInit</span><span class="params">(JNIEnv* env, jobject clazz)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	gCurRuntime-&gt;<span class="built_in">onZygoteInit</span>();</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<p>gCurRuntime是AndroidRuntime类型的指针，它是在AndroidRuntime初始化时就创建的。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/jni/AndroidRuntime.cpp</span><br><span class="line">    </span><br><span class="line"><span class="type">static</span> AndroidRuntime* gCurRuntime = <span class="literal">NULL</span>;</span><br><span class="line">AndroidRuntime::<span class="built_in">AndroidRuntime</span>(<span class="type">char</span>* argBlockStart, <span class="type">const</span> <span class="type">size_t</span> argBlockLength) :</span><br><span class="line">    <span class="built_in">mExitWithoutCleanup</span>(<span class="literal">false</span>),</span><br><span class="line">    <span class="built_in">mArgBlockStart</span>(argBlockStart),</span><br><span class="line">    <span class="built_in">mArgBlockLength</span>(argBlockLength)</span><br><span class="line">&#123;</span><br><span class="line">    ...</span><br><span class="line">	gCurRuntime = <span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>AppRuntime继承自AndroidRuntime，AppRuntime创建时就会调用AndroidRuntime的构造函数，gCurRuntime就会被初始化，它指向的是AppRuntime。AppRuntime在app_main.cpp中实现。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/cmds/app_process/app_main.<span class="function">cpp</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">onZygoteInit</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    sp&lt;ProcessState&gt; proc = ProcessState::<span class="built_in">self</span>();</span><br><span class="line">    <span class="built_in">ALOGV</span>(<span class="string">&quot;App process: starting thread pool.\n&quot;</span>);</span><br><span class="line">    proc-&gt;<span class="built_in">startThreadPool</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用ProcessState#startThreadPool()来启动Binder线程池。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">frameworks/native/libs/binder/ProcessState.<span class="function">cpp</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ProcessState::startThreadPool</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    AutoMutex _l(mLock);</span><br><span class="line">    <span class="keyword">if</span> (!mThreadPoolStarted) &#123;</span><br><span class="line">        <span class="keyword">if</span> (mMaxThreads == <span class="number">0</span>) &#123;  <span class="comment">// 1</span></span><br><span class="line">            <span class="built_in">ALOGW</span>(<span class="string">&quot;Extra binder thread started, but 0 threads requested. Do not use &quot;</span></span><br><span class="line">                  <span class="string">&quot;*startThreadPool when zero threads are requested.&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        mThreadPoolStarted = <span class="literal">true</span>;  <span class="comment">// 2</span></span><br><span class="line">        <span class="built_in">spawnPooledThread</span>(<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>支持Binder通信的进程中都有一个ProcessState类，它里面有一个mThreadPoolStarted变量，用来表示Binder线程池是否已经被启动过，默认值为false。在每次调用startThreadPool()时都会在注释1处先检查这个标记，从而确保Binder线程池只会被启动一次。如果Binder线程池未被启动，则在注释2处设置mThreadPoolStarted为true，并调用spawnPooledThread()来创建线程池中的第一个线程，也就是线程池的主线程。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">frameworks/native/libs/binder/ProcessState.<span class="function">cpp</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ProcessState::spawnPooledThread</span><span class="params">(<span class="type">bool</span> isMain)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mThreadPoolStarted) &#123;</span><br><span class="line">        String8 name = <span class="built_in">makeBinderThreadName</span>();</span><br><span class="line">        <span class="built_in">ALOGV</span>(<span class="string">&quot;Spawning new pooled thread, name=%s\n&quot;</span>, name.<span class="built_in">string</span>());</span><br><span class="line">        sp&lt;Thread&gt; t = sp&lt;PoolThread&gt;::<span class="built_in">make</span>(isMain);</span><br><span class="line">        t-&gt;<span class="built_in">run</span>(name.<span class="built_in">string</span>());  <span class="comment">// 1</span></span><br><span class="line">        <span class="built_in">pthread_mutex_lock</span>(&amp;mThreadCountLock);</span><br><span class="line">        mKernelStartedThreads++;</span><br><span class="line">        <span class="built_in">pthread_mutex_unlock</span>(&amp;mThreadCountLock);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到Binder线程为一个PoolThread。在注释1处调用PoolThread#run()来启动一个新的线程。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">frameworks/native/libs/binder/ProcessState.cpp</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">PoolThread</span> : <span class="keyword">public</span> Thread</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">PoolThread</span><span class="params">(<span class="type">bool</span> isMain)</span></span></span><br><span class="line"><span class="function">        : mIsMain(isMain)</span></span><br><span class="line"><span class="function">    &#123;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">bool</span> <span class="title">threadLoop</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        IPCThreadState::<span class="built_in">self</span>()-&gt;<span class="built_in">joinThreadPool</span>(mIsMain);  <span class="comment">// 1</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> <span class="type">bool</span> mIsMain;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>PoolThread类继承了Thread类。在注释1处调用IPCThreadState#joinThreadPool()，将当前线程注册到Binder驱动程序中，这样我们创建的线程就加入了Binder线程池中，新创建的应用程序进程就支持Binder进程间通信了，我们只需要创建当前进程的Binder对象，并将它注册到ServiceManager中就可以实现Binder进程间通信。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/03/09/Binder%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/" data-id="cltjvv1b700058q2u57h31qc3" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/03/09/Android%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/03/09/Android%E5%85%B3%E6%9C%BA%E6%B5%81%E7%A8%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">March 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/03/09/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E5%B9%BF%E6%92%AD%E7%9A%84%E5%8F%91%E9%80%81%E5%92%8C%E6%8E%A5%E6%94%B6%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E6%B6%88%E6%81%AF%E5%BE%AA%E7%8E%AF%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E8%BD%AF%E9%87%8D%E5%90%AF%E5%8A%9F%E8%83%BD%E8%B0%83%E7%A0%94/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E4%B8%8A%E4%B8%8B%E6%96%87Context/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

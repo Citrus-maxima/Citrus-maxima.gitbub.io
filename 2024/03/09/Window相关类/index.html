@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Window相关类 基于Android U  Window、WindowManager和WMS的关系Window是一个抽象类，具体的实现类为PhoneWindow，它对View进行管理。 WindowManager是一个接口类，继承自接口ViewManager，它是用来管理Window的，它的实现类为WindowManagerImpl。如果我们想要对Window（View）进行添加、更新和删除操作">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/03/09/Window%E7%9B%B8%E5%85%B3%E7%B1%BB/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Window相关类 基于Android U  Window、WindowManager和WMS的关系Window是一个抽象类，具体的实现类为PhoneWindow，它对View进行管理。 WindowManager是一个接口类，继承自接口ViewManager，它是用来管理Window的，它的实现类为WindowManagerImpl。如果我们想要对Window（View）进行添加、更新和删除操作">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2023/12/26/zcaJ2lviuVyeD3g.jpg">
+<meta property="og:image" content="https://s2.loli.net/2023/12/26/3aeDTIOg9qxCkcV.jpg">
+<meta property="article:published_time" content="2024-03-09T07:30:58.571Z">
+<meta property="article:modified_time" content="2024-03-09T07:30:58.571Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/12/26/zcaJ2lviuVyeD3g.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Window相关类" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/09/Window%E7%9B%B8%E5%85%B3%E7%B1%BB/" class="article-date">
+  <time class="dt-published" datetime="2024-03-09T07:30:58.571Z" itemprop="datePublished">2024-03-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Window相关类"><a href="#Window相关类" class="headerlink" title="Window相关类"></a>Window相关类</h2><blockquote>
+<p>基于Android U</p>
+</blockquote>
+<h4 id="Window、WindowManager和WMS的关系"><a href="#Window、WindowManager和WMS的关系" class="headerlink" title="Window、WindowManager和WMS的关系"></a>Window、WindowManager和WMS的关系</h4><p>Window是一个抽象类，具体的实现类为PhoneWindow，它对View进行管理。</p>
+<p>WindowManager是一个接口类，继承自接口ViewManager，它是用来管理Window的，它的实现类为WindowManagerImpl。如果我们想要对Window（View）进行添加、更新和删除操作就可以使用WindowManager，WindowManager会将具体的工作交由WMS来处理，WindowManager和WMS通过Binder来进行跨进程通信，WMS作为系统服务有很多API是不会暴露给WindowManager的。</p>
+<img src="https://s2.loli.net/2023/12/26/zcaJ2lviuVyeD3g.jpg" style="zoom:67%;" />
+
+<p>Window包含了View并对View进行管理，Window用虚线来表示是因为Window是一个抽象概念，用来描述一个窗口，并不是真实存在的，Window的实体其实也是View。WindowManager用来管理Window，而WindowManager所提供的功能最终会由WMS进行处理。</p>
+<h4 id="WindowManager相关方法"><a href="#WindowManager相关方法" class="headerlink" title="WindowManager相关方法"></a>WindowManager相关方法</h4><p>WindowManager是一个接口类，继承自接口ViewManager，ViewManager中定义了三个方法，分别用来添加、更新和删除View。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/view/ViewManager.java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">ViewManager</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addView</span><span class="params">(View view, ViewGroup.LayoutParams params)</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">updateViewLayout</span><span class="params">(View view, ViewGroup.LayoutParams params)</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">removeView</span><span class="params">(View view)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>WindowManager也继承了这些方法，而这些方法传入的参数都是View类型，说明Window是以View的形式存在的。WindowManager在继承ViewManager的同时，又加入很多功能，包括Window的类型和层级相关的常量、内部类以及一些方法，其中有两个方法是根据Window的特性加入的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/view/WindowManager.java</span><br><span class="line"><span class="keyword">public</span> Display <span class="title function_">getDefaultDisplay</span><span class="params">()</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">removeViewImmediate</span><span class="params">(View view)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>getDefaultDisplay()方法能够得知这个WindowManager实例将Window添加到哪个屏幕上了，换句话说，就是得到WindowManager所管理的屏幕（Display）。</p>
+<p>removeViewImmediate()方法则规定在这个方法返回前要立即执行View.onDetachedFromWindow()，来完成传入的View相关的销毁工作。</p>
+<h4 id="PhoneWindow相关方法"><a href="#PhoneWindow相关方法" class="headerlink" title="PhoneWindow相关方法"></a>PhoneWindow相关方法</h4><p>PhoneWindow是在Activity创建的attach()方法中创建的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/Activity.java</span><br><span class="line"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">attach</span><span class="params">(Context context, ActivityThread aThread,</span></span><br><span class="line"><span class="params">        Instrumentation instr, IBinder token, <span class="type">int</span> ident,</span></span><br><span class="line"><span class="params">        Application application, Intent intent, ActivityInfo info,</span></span><br><span class="line"><span class="params">        CharSequence title, Activity parent, String id,</span></span><br><span class="line"><span class="params">        NonConfigurationInstances lastNonConfigurationInstances,</span></span><br><span class="line"><span class="params">        Configuration config, String referrer, IVoiceInteractor voiceInteractor,</span></span><br><span class="line"><span class="params">        Window window, ActivityConfigCallback activityConfigCallback, IBinder assistToken,</span></span><br><span class="line"><span class="params">        IBinder shareableActivityToken)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    mWindow = <span class="keyword">new</span> <span class="title class_">PhoneWindow</span>(<span class="built_in">this</span>, window, activityConfigCallback);  <span class="comment">// 1</span></span><br><span class="line">    ...</span><br><span class="line">    mWindow.setWindowManager(</span><br><span class="line">            (WindowManager)context.getSystemService(Context.WINDOW_SERVICE),</span><br><span class="line">            mToken, mComponent.flattenToString(),</span><br><span class="line">            (info.flags &amp; ActivityInfo.FLAG_HARDWARE_ACCELERATED) != <span class="number">0</span>);  <span class="comment">// 2</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处创建了PhoneWindow，注释2处调用PhoneWindow#setWindowManager()方法，这个方法在PhoneWindow的父类Window中实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/view/Window.java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setWindowManager</span><span class="params">(WindowManager wm, IBinder appToken, String appName,</span></span><br><span class="line"><span class="params">        <span class="type">boolean</span> hardwareAccelerated)</span> &#123;</span><br><span class="line">    mAppToken = appToken;</span><br><span class="line">    mAppName = appName;</span><br><span class="line">    mHardwareAccelerated = hardwareAccelerated;</span><br><span class="line">    <span class="keyword">if</span> (wm == <span class="literal">null</span>) &#123;</span><br><span class="line">        wm = (WindowManager)mContext.getSystemService(Context.WINDOW_SERVICE);  <span class="comment">// 1</span></span><br><span class="line">    &#125;</span><br><span class="line">    mWindowManager = ((WindowManagerImpl)wm).createLocalWindowManager(<span class="built_in">this</span>);  <span class="comment">// 2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>如果传入的WindowManager为null，就会在注释1处调用Context#getSystemService()方法，并传入服务的名称Context。WINDOW_SERVICE（值为window），具体在ContextImpl中实现。</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/ContextImpl.java</span><br><span class="line"><span class="keyword">public</span> Object <span class="title function_">getSystemService</span><span class="params">(String name)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> SystemServiceRegistry.getSystemService(<span class="built_in">this</span>, name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 调用SystemServiceRegistry#getSystemService()方法。</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/SystemServiceRegistry.java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title function_">getSystemService</span><span class="params">(ContextImpl ctx, String name)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">final</span> ServiceFetcher&lt;?&gt; fetcher = SYSTEM_SERVICE_FETCHERS.get(name);</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">final</span> <span class="type">Object</span> <span class="variable">ret</span> <span class="operator">=</span> fetcher.getService(ctx);</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> SYSTEM_SERVICE_FETCHERS是一个ArrayMap，其Key为系统服务名，Value为ServiceFetcher对象。</p>
+<ul>
+<li><p>SYSTEM_SERVICE_FETCHERS是在什么时候被赋值的？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/SystemServiceRegistry.java</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> &lt;T&gt; <span class="keyword">void</span> <span class="title function_">registerService</span><span class="params">(<span class="meta">@NonNull</span> String serviceName,</span></span><br><span class="line"><span class="params">        <span class="meta">@NonNull</span> Class&lt;T&gt; serviceClass, <span class="meta">@NonNull</span> ServiceFetcher&lt;T&gt; serviceFetcher)</span> &#123;</span><br><span class="line">    SYSTEM_SERVICE_NAMES.put(serviceClass, serviceName);</span><br><span class="line">    SYSTEM_SERVICE_FETCHERS.put(serviceName, serviceFetcher);</span><br><span class="line">    SYSTEM_SERVICE_CLASS_NAMES.put(serviceName, serviceClass.getSimpleName());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>registerService()方法是什么时候被调用的？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/SystemServiceRegistry.java</span><br><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    registerService(Context.WINDOW_SERVICE, WindowManager.class,</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">CachedServiceFetcher</span>&lt;WindowManager&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> WindowManager <span class="title function_">createService</span><span class="params">(ContextImpl ctx)</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">WindowManagerImpl</span>(ctx);  <span class="comment">// 1</span></span><br><span class="line">        &#125;&#125;);</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在SystemServiceRegistry的静态代码块中会调用多个registerService()方法，registerService()方法内部会将传入的服务的名称存入到SYSTEM_SERVICE_FETCHERS中。从注释1处可以看出，传入的Context.WINDOW_SERVICE对应的就是WindowManagerImpl实例。</p>
+</li>
+</ul>
+</li>
+<li><p>mContext.getSystemService()得到WindowManagerImpl实例后转为WindowManager类型，在注释2处调用了WindowManagerImpl#createLocalWindowManager()方法。</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/view/WindowManagerImpl.java</span><br><span class="line"><span class="keyword">public</span> WindowManagerImpl <span class="title function_">createLocalWindowManager</span><span class="params">(Window parentWindow)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">WindowManagerImpl</span>(mContext, parentWindow, mWindowContextToken);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> createLocalWindowManager()方法同样也是创建WindowManagerImpl，不同的是这次创建WindowManagerImpl时将创建它的Window作为参数传了进来，这样WindowManagerImpl就持有了Window的引用，可以对Window进行操作，比如在Window中添加View，会调用WindowManagerImpl的addView()方法，如下所示：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/view/WindowManagerImpl.java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addView</span><span class="params">(<span class="meta">@NonNull</span> View view, <span class="meta">@NonNull</span> ViewGroup.LayoutParams params)</span> &#123;</span><br><span class="line">    android.util.SeempLog.record_vg_layout(<span class="number">383</span>,params);</span><br><span class="line">    applyTokens(params);</span><br><span class="line">    mGlobal.addView(view, params, mContext.getDisplayNoVerify(), mParentWindow,</span><br><span class="line">            mContext.getUserId());  <span class="comment">// 1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 注释1处调用了WindowManagerGlobal的addView()方法，其中参数mParentWindow就是上面提到的Window，可以看出WindowManagerImpl虽然是WindowManage的实现类，但是没有实现什么功能，而是将功能实现委托给了WindowManagerGlobal，这里用到的是桥接模式。</p>
+</li>
+</ol>
+<p>我们来查看WindowManagerImpl中是如何定义WindowManagerGlobal的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">WindowManagerImpl</span> <span class="keyword">implements</span> <span class="title class_">WindowManager</span> &#123;</span><br><span class="line">    <span class="meta">@UnsupportedAppUsage</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">WindowManagerGlobal</span> <span class="variable">mGlobal</span> <span class="operator">=</span> WindowManagerGlobal.getInstance();  <span class="comment">// 1</span></span><br><span class="line">    <span class="meta">@UiContext</span></span><br><span class="line">    <span class="meta">@VisibleForTesting</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">final</span> Context mContext;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Window mParentWindow;  <span class="comment">// 2</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">WindowManagerImpl</span><span class="params">(Context context, Window parentWindow,</span></span><br><span class="line"><span class="params">            <span class="meta">@Nullable</span> IBinder windowContextToken)</span> &#123;</span><br><span class="line">        mContext = context;</span><br><span class="line">        mParentWindow = parentWindow;  <span class="comment">// 3</span></span><br><span class="line">        mWindowContextToken = windowContextToken;</span><br><span class="line">        mWindowMetricsController = <span class="keyword">new</span> <span class="title class_">WindowMetricsController</span>(mContext);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处可以看出WindowManagerGlobal是一个单例，说明在一个进程中只有一个WindowManagerGlobal实例。</p>
+<p>注释2处结合注释3处说明这个WindowManagerImpl实例会作为哪个Window的子Window，这也就说明在一个进程中WindowManagerImpl可能会有多个实例。</p>
+<p>通过如上的源码分析，WindowManager的关联类如下图所示：</p>
+<p><img src="https://s2.loli.net/2023/12/26/3aeDTIOg9qxCkcV.jpg"></p>
+<p>从图中可以看出，PhoneWindow继承自Window，Window通过setWindowManager()方法与WindowManager发生关联。WindowManager继承自接口ViewManager，WindowManagerImpl是WindowManager接口的实现类，但是具体的功能都会委托给WindowManagerGlobal来实现。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/03/09/Window%E7%9B%B8%E5%85%B3%E7%B1%BB/" data-id="cltjvv1bg000l8q2ufce3dyyu" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/03/09/Window%E7%9A%84%E5%88%A0%E9%99%A4%E8%BF%87%E7%A8%8B/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/03/09/Window%E7%9A%84%E5%B1%9E%E6%80%A7/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">March 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/03/09/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E5%B9%BF%E6%92%AD%E7%9A%84%E5%8F%91%E9%80%81%E5%92%8C%E6%8E%A5%E6%94%B6%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E6%B6%88%E6%81%AF%E5%BE%AA%E7%8E%AF%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E8%BD%AF%E9%87%8D%E5%90%AF%E5%8A%9F%E8%83%BD%E8%B0%83%E7%A0%94/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E4%B8%8A%E4%B8%8B%E6%96%87Context/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

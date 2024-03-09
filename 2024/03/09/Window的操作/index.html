@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Window的操作 基于Android U  Window的操作包括对Window的添加、更新和删除。对于Window的操作，最终都是交由WMS来进行处理的。Window的操作分为两大部分，一部分是WindowManager处理部分，另一部分是WMS处理部分。我们知道Window分为三大类，分别是Application Window（应用程序窗口）、Sub Window（子窗口）和System W">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/03/09/Window%E7%9A%84%E6%93%8D%E4%BD%9C/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Window的操作 基于Android U  Window的操作包括对Window的添加、更新和删除。对于Window的操作，最终都是交由WMS来进行处理的。Window的操作分为两大部分，一部分是WindowManager处理部分，另一部分是WMS处理部分。我们知道Window分为三大类，分别是Application Window（应用程序窗口）、Sub Window（子窗口）和System W">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2023/12/27/bwHXhjU24NpDLqr.jpg">
+<meta property="og:image" content="https://s2.loli.net/2023/12/27/nKkuiBsDlYT1G9Q.jpg">
+<meta property="og:image" content="https://s2.loli.net/2023/12/27/ICf2YOJdMFAU5zt.jpg">
+<meta property="og:image" content="https://s2.loli.net/2023/12/27/Rwc8Y5zdnsveihG.jpg">
+<meta property="article:published_time" content="2024-03-09T07:30:58.570Z">
+<meta property="article:modified_time" content="2024-03-09T07:30:58.570Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/12/27/bwHXhjU24NpDLqr.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Window的操作" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/09/Window%E7%9A%84%E6%93%8D%E4%BD%9C/" class="article-date">
+  <time class="dt-published" datetime="2024-03-09T07:30:58.570Z" itemprop="datePublished">2024-03-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Window的操作"><a href="#Window的操作" class="headerlink" title="Window的操作"></a><center>Window的操作</center></h2><blockquote>
+<p>基于Android U</p>
+</blockquote>
+<p>Window的操作包括对Window的添加、更新和删除。对于Window的操作，最终都是交由WMS来进行处理的。Window的操作分为两大部分，一部分是WindowManager处理部分，另一部分是WMS处理部分。我们知道Window分为三大类，分别是Application Window（应用程序窗口）、Sub Window（子窗口）和System Window（系统窗口），对于不同类型的Window添加过程会有所不同，但是对于WMS处理部分，添加的过程基本上是一样的，WMS对于这三大类的Window基本上是“一视同仁”的，如下图。</p>
+<img src="https://s2.loli.net/2023/12/27/bwHXhjU24NpDLqr.jpg" style="zoom:60%;" />
+
+<h4 id="系统窗口的添加过程"><a href="#系统窗口的添加过程" class="headerlink" title="系统窗口的添加过程"></a>系统窗口的添加过程</h4><p>这里以系统窗口StatusBar为例，StatusBar是SystemUI的重要组成部分，具体就是指系统状态栏，用于显示时间、电量和信号等信息。</p>
+<p><img src="https://s2.loli.net/2023/12/27/nKkuiBsDlYT1G9Q.jpg"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/phone/CentralSurfacesImpl.java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">createAndAddWindows</span><span class="params">(<span class="meta">@Nullable</span> RegisterStatusBarResult result)</span> &#123;</span><br><span class="line">    makeStatusBarView(result);  <span class="comment">// 1</span></span><br><span class="line">    mNotificationShadeWindowController.attach();</span><br><span class="line">    mStatusBarWindowController.attach();  <span class="comment">// 2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处构建StatusBar的视图。</p>
+<p>注释2处添加StatusBar的视图。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/window/StatusBarWindowController.java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">attach</span><span class="params">()</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    mLp = getBarLayoutParams(mContext.getDisplay().getRotation());  <span class="comment">// 1</span></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    mWindowManager.addView(mStatusBarWindowView, mLp);  <span class="comment">// 2</span></span><br><span class="line">    mLpChanged.copyFrom(mLp);</span><br><span class="line"></span><br><span class="line">    mContentInsetsProvider.addCallback(<span class="built_in">this</span>::calculateStatusBarLocationsForAllRotations);</span><br><span class="line">    calculateStatusBarLocationsForAllRotations();</span><br><span class="line">    mIsAttached = <span class="literal">true</span>;</span><br><span class="line">    apply(mCurrentState);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> WindowManager.LayoutParams <span class="title function_">getBarLayoutParams</span><span class="params">(<span class="type">int</span> rotation)</span> &#123;</span><br><span class="line">    WindowManager.<span class="type">LayoutParams</span> <span class="variable">lp</span> <span class="operator">=</span> getBarLayoutParamsForRotation(rotation);</span><br><span class="line">    lp.paramsForRotation = <span class="keyword">new</span> <span class="title class_">WindowManager</span>.LayoutParams[<span class="number">4</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">rot</span> <span class="operator">=</span> Surface.ROTATION_0; rot &lt;= Surface.ROTATION_270; rot++) &#123;</span><br><span class="line">        lp.paramsForRotation[rot] = getBarLayoutParamsForRotation(rot);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> lp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> WindowManager.LayoutParams <span class="title function_">getBarLayoutParamsForRotation</span><span class="params">(<span class="type">int</span> rotation)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">height</span> <span class="operator">=</span> SystemBarUtils.getStatusBarHeightForRotation(mContext, rotation);</span><br><span class="line">    WindowManager.<span class="type">LayoutParams</span> <span class="variable">lp</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">WindowManager</span>.LayoutParams(</span><br><span class="line">            WindowManager.LayoutParams.MATCH_PARENT,</span><br><span class="line">            height,</span><br><span class="line">            WindowManager.LayoutParams.TYPE_STATUS_BAR,  <span class="comment">// 3</span></span><br><span class="line">            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE</span><br><span class="line">                    | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH</span><br><span class="line">                    | WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS,</span><br><span class="line">            PixelFormat.TRANSLUCENT);</span><br><span class="line">    lp.privateFlags |= PRIVATE_FLAG_COLOR_SPACE_AGNOSTIC;</span><br><span class="line">    lp.token = <span class="keyword">new</span> <span class="title class_">Binder</span>();</span><br><span class="line">    lp.gravity = Gravity.TOP;</span><br><span class="line">    lp.setFitInsetsTypes(<span class="number">0</span> <span class="comment">/* types */</span>);</span><br><span class="line">    lp.setTitle(<span class="string">&quot;StatusBar&quot;</span>);</span><br><span class="line">    lp.packageName = mContext.getPackageName();</span><br><span class="line">    lp.layoutInDisplayCutoutMode = LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS;</span><br><span class="line">    <span class="keyword">final</span> <span class="type">InsetsFrameProvider</span> <span class="variable">gestureInsetsProvider</span> <span class="operator">=</span></span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">InsetsFrameProvider</span>(mInsetsSourceOwner, <span class="number">0</span>, mandatorySystemGestures());</span><br><span class="line">    <span class="keyword">final</span> <span class="type">int</span> <span class="variable">safeTouchRegionHeight</span> <span class="operator">=</span> mContext.getResources().getDimensionPixelSize(</span><br><span class="line">            com.android.internal.R.dimen.display_cutout_touchable_region_size);</span><br><span class="line">    <span class="keyword">if</span> (safeTouchRegionHeight &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        gestureInsetsProvider.setMinimalInsetsSizeInDisplayCutoutSafe(</span><br><span class="line">                Insets.of(<span class="number">0</span>, safeTouchRegionHeight, <span class="number">0</span>, <span class="number">0</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    lp.providedInsets = <span class="keyword">new</span> <span class="title class_">InsetsFrameProvider</span>[] &#123;</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">InsetsFrameProvider</span>(mInsetsSourceOwner, <span class="number">0</span>, statusBars())</span><br><span class="line">                    .setInsetsSize(getInsets(height)),</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">InsetsFrameProvider</span>(mInsetsSourceOwner, <span class="number">0</span>, tappableElement())</span><br><span class="line">                    .setInsetsSize(getInsets(height)),</span><br><span class="line">            gestureInsetsProvider</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">return</span> lp;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处通过getBarLayoutParams()创建LayoutParams来配置StatusBar视图的属性，包括Width、Height、Type、Flag、Gravity等。注释3处还设置了TYPE_STATUS_BAR，表示StatusBar视图的窗口类型是状态栏。</p>
+<p>注释2处调用了WindowManager的addView()方法，addView()方法定义在WindowManager的父类接口ViewManager中，而addView()方法则是在WindowManagerImpl中实现的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/view/WindowManagerImpl.java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addView</span><span class="params">(<span class="meta">@NonNull</span> View view, <span class="meta">@NonNull</span> ViewGroup.LayoutParams params)</span> &#123;</span><br><span class="line">    android.util.SeempLog.record_vg_layout(<span class="number">383</span>,params);</span><br><span class="line">    applyTokens(params);</span><br><span class="line">    mGlobal.addView(view, params, mContext.getDisplayNoVerify(), mParentWindow,</span><br><span class="line">            mContext.getUserId());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>addView()方法的第一个参数是View，说明窗口也是以View的形式存在的。addView()方法中会调用WindowManagerGlobal的addView()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/view/WindowManagerGlobal.java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addView</span><span class="params">(View view, ViewGroup.LayoutParams params,</span></span><br><span class="line"><span class="params">        Display display, Window parentWindow, <span class="type">int</span> userId)</span> &#123;</span><br><span class="line">    ... <span class="comment">// 参数检查</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> WindowManager.<span class="type">LayoutParams</span> <span class="variable">wparams</span> <span class="operator">=</span> (WindowManager.LayoutParams) params;</span><br><span class="line">    <span class="keyword">if</span> (parentWindow != <span class="literal">null</span>) &#123;</span><br><span class="line">        parentWindow.adjustLayoutParamsForSubWindow(wparams);  <span class="comment">// 1</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// If there&#x27;s no parent, then hardware acceleration for this view is</span></span><br><span class="line">        <span class="comment">// set from the application&#x27;s hardware acceleration setting.</span></span><br><span class="line">        <span class="keyword">final</span> <span class="type">Context</span> <span class="variable">context</span> <span class="operator">=</span> view.getContext();</span><br><span class="line">        <span class="keyword">if</span> (context != <span class="literal">null</span></span><br><span class="line">                &amp;&amp; (context.getApplicationInfo().flags</span><br><span class="line">                        &amp; ApplicationInfo.FLAG_HARDWARE_ACCELERATED) != <span class="number">0</span>) &#123;</span><br><span class="line">            wparams.flags |= WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ViewRootImpl root;</span><br><span class="line">    <span class="type">View</span> <span class="variable">panelParentView</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">synchronized</span> (mLock) &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="comment">// 2</span></span><br><span class="line">        <span class="keyword">if</span> (windowlessSession == <span class="literal">null</span>) &#123;</span><br><span class="line">            root = <span class="keyword">new</span> <span class="title class_">ViewRootImpl</span>(view.getContext(), display);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            root = <span class="keyword">new</span> <span class="title class_">ViewRootImpl</span>(view.getContext(), display,</span><br><span class="line">                    windowlessSession, <span class="keyword">new</span> <span class="title class_">WindowlessWindowLayout</span>());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        view.setLayoutParams(wparams);</span><br><span class="line">        ...</span><br><span class="line">        mViews.add(view);  <span class="comment">// 3</span></span><br><span class="line">        mRoots.add(root);  <span class="comment">// 4</span></span><br><span class="line">        mParams.add(wparams);  <span class="comment">// 5</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// do this last because it fires off messages to start doing things</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            root.setView(view, wparams, panelParentView, userId);  <span class="comment">// 6</span></span><br><span class="line">        &#125; <span class="keyword">catch</span> (RuntimeException e) &#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>WindowManagerGlobal中维护了三个和Window操作相关的列表，分别是：View列表（ArrayList&lt;View&gt; mViews）、布局参数列表 （ArrayList&lt;WindowManager.LayoutParams&gt; mParams）和ViewRootImpl列表（ArrayList&lt;ViewRootImpl&gt; mRoots）。</p>
+<p>addView()首先会对参数view、params和display进行检查。</p>
+<p>注释1处，如果当前窗口要作为子窗口，就会根据父窗口对子窗口的WindowManager.LayoutParams类型的wparams对象进行相应调整。注释3处将添加的View保存到View列表中。注释5处将窗口的参数保存到布局参数列表中。</p>
+<p>在注释2处创建了ViewRootImpl并赋值给root，紧接着在注释4处将root存入到ViewRootImpl列表中。</p>
+<p>注释6处将窗口和窗口的参数通过setView()方法设置到ViewRootImpl中，可见我们添加窗口这一操作是通过ViewRootImpl来进行的。ViewRootImpl身负了很多职责，主要有以下几点：</p>
+<ul>
+<li>View树的根并管理View树；</li>
+<li>触发View的测量、布局和绘制；</li>
+<li>输入事件的中转站；</li>
+<li>管理Surface；</li>
+<li>负责与WMS进行进程间通信。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/view/ViewRootImpl.java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setView</span><span class="params">(View view, WindowManager.LayoutParams attrs, View panelParentView,</span></span><br><span class="line"><span class="params">        <span class="type">int</span> userId)</span> &#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="built_in">this</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (mView == <span class="literal">null</span>) &#123;</span><br><span class="line">            ...</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                ...</span><br><span class="line">                res = mWindowSession.addToDisplayAsUser(mWindow, mWindowAttributes,</span><br><span class="line">                        getHostVisibility(), mDisplay.getDisplayId(), userId,</span><br><span class="line">                        mInsetsController.getRequestedVisibleTypes(), inputChannel, mTempInsets,</span><br><span class="line">                        mTempControls, attachedFrame, compatScale);</span><br><span class="line">                ...</span><br><span class="line">            &#125; <span class="keyword">catch</span> (RemoteException | RuntimeException e) &#123;</span><br><span class="line">                ...</span><br><span class="line">            &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                ...</span><br><span class="line">            &#125;</span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用mWindowSession的addToDisplayAsUser()方法，mWindowSession是IWindowSession类型的，它是一个Binder对象，用于进行进程间通信，IWindowSession是Client端的代理，它的Server端的实现为Session，此前的代码逻辑都是运行在本地进程的，而Session的addToDisplayAsUser()方法则运行在WMS所在的进程（SystemServer进程）中。</p>
+<img src="https://s2.loli.net/2023/12/27/ICf2YOJdMFAU5zt.jpg" style="zoom:75%;" />
+
+<p>从图中可以看出，本地进程的ViewRootImpl要想和WMS进行通信需要经过Session，那么Session为何包含在WMS中呢？我们接着往下看Session的addToDisplayAsUser()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/wm/Session.java</span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">addToDisplayAsUser</span><span class="params">(IWindow window, WindowManager.LayoutParams attrs,</span></span><br><span class="line"><span class="params">        <span class="type">int</span> viewVisibility, <span class="type">int</span> displayId, <span class="type">int</span> userId, <span class="meta">@InsetsType</span> <span class="type">int</span> requestedVisibleTypes,</span></span><br><span class="line"><span class="params">        InputChannel outInputChannel, InsetsState outInsetsState,</span></span><br><span class="line"><span class="params">        InsetsSourceControl.Array outActiveControls, Rect outAttachedFrame,</span></span><br><span class="line"><span class="params">        <span class="type">float</span>[] outSizeCompatScale)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> mService.addWindow(<span class="built_in">this</span>, window, attrs, viewVisibility, displayId, userId,</span><br><span class="line">            requestedVisibleTypes, outInputChannel, outInsetsState, outActiveControls,</span><br><span class="line">            outAttachedFrame, outSizeCompatScale);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在addToDisplayAsUser()方法中调用了WMS的addWindow()方法，并将自身也就是Session作为参数传了进去，每个应用程序进程都会对应一个Session，WMS会用ArrayList来保存这些Session，这就是为什么WMS包含Session的原因。这样剩下的工作就交给WMS来处理，在WMS中会为这个添加的窗口分配Surface，并确定窗口显示次序，可见负责显示界面的是画布Surface，而不是窗口本身。WMS会将它所管理的Surface交由SurfaceFlinger处理，SurfaceFlinger会将这些Surface混合并绘制到屏幕上。</p>
+<h4 id="Activity的添加过程"><a href="#Activity的添加过程" class="headerlink" title="Activity的添加过程"></a>Activity的添加过程</h4><p>无论是哪种窗口，它的添加过程在WMS处理部分中基本是类似的，只不过会在权限和窗口显示次序等方面会有些不同。但是在WindowManager处理部分会有所不同，这里以最典型的应用程序窗口Activity为例，Activity在启动过程中，如果Activity所在的进程不存在则会创建新的进程，创建新的进程之后就会运行代表主线程的实例ActivityThread，ActivityThread管理着当前应用程序进程的线程，这在Activity的启动过程中运用得很明显，当界面要与用户进行交互时，会调用ActivithThread的handleResumeActivity()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/ActivityThread.java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handleResumeActivity</span><span class="params">(ActivityClientRecord r, <span class="type">boolean</span> finalStateRequest,</span></span><br><span class="line"><span class="params">        <span class="type">boolean</span> isForward, <span class="type">boolean</span> shouldSendCompatFakeFocus, String reason)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">if</span> (!performResumeActivity(r, finalStateRequest, reason)) &#123;  <span class="comment">// 1</span></span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> <span class="type">Activity</span> <span class="variable">a</span> <span class="operator">=</span> r.activity;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">if</span> (r.window == <span class="literal">null</span> &amp;&amp; !a.mFinished &amp;&amp; willBeVisible) &#123;</span><br><span class="line">        r.window = r.activity.getWindow();</span><br><span class="line">        <span class="type">View</span> <span class="variable">decor</span> <span class="operator">=</span> r.window.getDecorView();</span><br><span class="line">        ...</span><br><span class="line">        <span class="type">ViewManager</span> <span class="variable">wm</span> <span class="operator">=</span> a.getWindowManager();  <span class="comment">// 2</span></span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">if</span> (a.mVisibleFromClient) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!a.mWindowAdded) &#123;</span><br><span class="line">                a.mWindowAdded = <span class="literal">true</span>;</span><br><span class="line">                wm.addView(decor, l);  <span class="comment">// 3</span></span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                ...</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!willBeVisible) &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处的performResumeActivity()方法最终会调用Activity的onResume()方法。</p>
+<p>注释2处得到ViewManager类型的wm对象，注释3处调用了ViewManager的addView()方法，而addView()方法则是在WindowManagerImpl中实现的，此后的过程在上面的系统窗口StatusBar的添加过程中已经讲过，唯一需要注意的是ViewManager的addView()方法的第一个参数为DecorView，这说明Activity窗口中会包含DecorView。</p>
+<h4 id="Window的更新过程"><a href="#Window的更新过程" class="headerlink" title="Window的更新过程"></a>Window的更新过程</h4><p><img src="https://s2.loli.net/2023/12/27/Rwc8Y5zdnsveihG.jpg"></p>
+<p>Window的更新过程和Window的添加过程是类似的。需要调用ViewManager的updateViewLayout()方法，updateViewLayout()方法在WindowManagerImpl中实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/view/WindowManagerImpl.java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">updateViewLayout</span><span class="params">(<span class="meta">@NonNull</span> View view, <span class="meta">@NonNull</span> ViewGroup.LayoutParams params)</span> &#123;</span><br><span class="line">    android.util.SeempLog.record_vg_layout(<span class="number">384</span>,params);</span><br><span class="line">    applyTokens(params);</span><br><span class="line">    mGlobal.updateViewLayout(view, params);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用WindowManagerGlobal的updateViewLayout()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/view/WindowManagerGlobal.java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">updateViewLayout</span><span class="params">(View view, ViewGroup.LayoutParams params)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">final</span> WindowManager.<span class="type">LayoutParams</span> <span class="variable">wparams</span> <span class="operator">=</span> (WindowManager.LayoutParams)params;</span><br><span class="line"></span><br><span class="line">    view.setLayoutParams(wparams);  <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">synchronized</span> (mLock) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">index</span> <span class="operator">=</span> findViewLocked(view, <span class="literal">true</span>);  <span class="comment">// 2</span></span><br><span class="line">        <span class="type">ViewRootImpl</span> <span class="variable">root</span> <span class="operator">=</span> mRoots.get(index);  <span class="comment">// 3</span></span><br><span class="line">        mParams.remove(index);  <span class="comment">// 4</span></span><br><span class="line">        mParams.add(index, wparams);  <span class="comment">// 5</span></span><br><span class="line">        root.setLayoutParams(wparams, <span class="literal">false</span>);  <span class="comment">// 6</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处将更新的参数设置到View中。</p>
+<p>注释2处得到要更新的窗口在View列表中的索引，注释3处在ViewRootImpl列表中根据索引得到窗口的ViewRootImpl。</p>
+<p>注释4和5处用于更新布局参数列表，注释6处调用ViewRootImpl的setLayoutParams()方法将更新的参数设置到ViewRootImpl中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/view/ViewRootImpl.java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setLayoutParams</span><span class="params">(WindowManager.LayoutParams attrs, <span class="type">boolean</span> newView)</span> &#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="built_in">this</span>) &#123;</span><br><span class="line">        ...</span><br><span class="line">        scheduleTraversals();</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ViewRootImpl的setLayoutParams()方法在最后会调用ViewRootImpl的scheduleTraversals()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/view/ViewRootImpl.java</span><br><span class="line"><span class="keyword">void</span> <span class="title function_">scheduleTraversals</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!mTraversalScheduled) &#123;</span><br><span class="line">        mTraversalScheduled = <span class="literal">true</span>;</span><br><span class="line">        mTraversalBarrier = mHandler.getLooper().getQueue().postSyncBarrier();</span><br><span class="line">        mChoreographer.postCallback(</span><br><span class="line">                Choreographer.CALLBACK_TRAVERSAL, mTraversalRunnable, <span class="literal">null</span>);  <span class="comment">// 1</span></span><br><span class="line">        notifyRendererOfFramePending();</span><br><span class="line">        pokeDrawLockIfNeeded();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处的Choreographer译为“舞蹈指导”，用于接收显示系统的VSync信号，在下一个帧渲染时控制执行一些操作。Choreographer的postCallback()方法用于发起添加回调，这个添加的回调将在下一帧被渲染时执行。这个添加的回调指的是注释1处的TraversalRunnable类型的mTraversalRunnable。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/view/ViewRootImpl.java</span><br><span class="line"><span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">TraversalRunnable</span> <span class="keyword">implements</span> <span class="title class_">Runnable</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">        doTraversal();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在TraversalRunnable的run()方法中调用了doTraversal()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/view/ViewRootImpl.java</span><br><span class="line"><span class="keyword">void</span> <span class="title function_">doTraversal</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (mTraversalScheduled) &#123;</span><br><span class="line">        ...</span><br><span class="line">        performTraversals();</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>doTraversal()方法中又调用了performTraversals()方法，performTraversals()方法使得ViewTree开始View的工作流程。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/view/ViewRootImpl.java</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">performTraversals</span><span class="params">()</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">if</span> (mFirst || windowShouldResize || viewVisibilityChanged || params != <span class="literal">null</span></span><br><span class="line">            || mForceNextWindowRelayout) &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            ...</span><br><span class="line">            relayoutResult = relayoutWindow(params, viewVisibility, insetsPending);  <span class="comment">// 1</span></span><br><span class="line">            ...</span><br><span class="line">        &#125; <span class="keyword">catch</span> (RemoteException e) &#123;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">if</span> (!mStopped || mReportNextDraw) &#123;</span><br><span class="line">            <span class="keyword">if</span> (mWidth != host.getMeasuredWidth() || mHeight != host.getMeasuredHeight()</span><br><span class="line">                    || dispatchApplyInsets || updatedConfiguration) &#123;</span><br><span class="line">                <span class="type">int</span> <span class="variable">childWidthMeasureSpec</span> <span class="operator">=</span> getRootMeasureSpec(mWidth, lp.width,</span><br><span class="line">                        lp.privateFlags);</span><br><span class="line">                <span class="type">int</span> <span class="variable">childHeightMeasureSpec</span> <span class="operator">=</span> getRootMeasureSpec(mHeight, lp.height,</span><br><span class="line">                        lp.privateFlags);</span><br><span class="line">                ...</span><br><span class="line">                 <span class="comment">// Ask host how big it wants to be</span></span><br><span class="line">                performMeasure(childWidthMeasureSpec, childHeightMeasureSpec);  <span class="comment">// 2</span></span><br><span class="line">                ...</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">if</span> (didLayout) &#123;</span><br><span class="line">        performLayout(lp, mWidth, mHeight);  <span class="comment">// 3</span></span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!isViewVisible) &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (cancelAndRedraw) &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">if</span> (!performDraw() &amp;&amp; mActiveSurfaceSyncGroup != <span class="literal">null</span>) &#123; <span class="comment">// 4</span></span><br><span class="line">            mActiveSurfaceSyncGroup.markSyncReady();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处的relayoutWindow()方法内部会调用IWindowSession的relayout()方法来更新Window视图，最终会调用WMS的relayoutWindow()方法。</p>
+<p>注释2、3、4处分别调用performMeasure()、performLayout()、performDraw()方法，它们的内部又会调用View的measure()、layout()、draw()方法，这样就完成了View的工作流程。在performTraversals()方法中更新了Window视图，又执行Window中的View的工作流程，这样就完成了Window的更新。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/03/09/Window%E7%9A%84%E6%93%8D%E4%BD%9C/" data-id="cltjvv1bf000j8q2uajepaap4" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/03/09/Window%E7%9A%84%E5%B1%9E%E6%80%A7/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/03/09/WMS%E5%8F%8A%E5%85%B6%E6%88%90%E5%91%98/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">March 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/03/09/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E5%B9%BF%E6%92%AD%E7%9A%84%E5%8F%91%E9%80%81%E5%92%8C%E6%8E%A5%E6%94%B6%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E6%B6%88%E6%81%AF%E5%BE%AA%E7%8E%AF%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E8%BD%AF%E9%87%8D%E5%90%AF%E5%8A%9F%E8%83%BD%E8%B0%83%E7%A0%94/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E4%B8%8A%E4%B8%8B%E6%96%87Context/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

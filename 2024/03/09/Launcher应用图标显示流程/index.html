@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Launcher应用图标显示流程 基于Android U  时序图如下：   初始化  1234567891011packages&#x2F;apps&#x2F;Launcher3&#x2F;src&#x2F;com&#x2F;android&#x2F;launcher3&#x2F;Launcher.javaprotected void onCreate(Bundle savedInstanceState) &amp;#123;    ...    LauncherAppS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/03/09/Launcher%E5%BA%94%E7%94%A8%E5%9B%BE%E6%A0%87%E6%98%BE%E7%A4%BA%E6%B5%81%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Launcher应用图标显示流程 基于Android U  时序图如下：   初始化  1234567891011packages&#x2F;apps&#x2F;Launcher3&#x2F;src&#x2F;com&#x2F;android&#x2F;launcher3&#x2F;Launcher.javaprotected void onCreate(Bundle savedInstanceState) &amp;#123;    ...    LauncherAppS">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2023/12/26/GkVW5ArpuEbXPt7.jpg">
+<meta property="article:published_time" content="2024-03-09T07:30:58.566Z">
+<meta property="article:modified_time" content="2024-03-09T07:30:58.566Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/12/26/GkVW5ArpuEbXPt7.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Launcher应用图标显示流程" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/09/Launcher%E5%BA%94%E7%94%A8%E5%9B%BE%E6%A0%87%E6%98%BE%E7%A4%BA%E6%B5%81%E7%A8%8B/" class="article-date">
+  <time class="dt-published" datetime="2024-03-09T07:30:58.566Z" itemprop="datePublished">2024-03-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Launcher应用图标显示流程"><a href="#Launcher应用图标显示流程" class="headerlink" title="Launcher应用图标显示流程"></a><center>Launcher应用图标显示流程</center></h2><blockquote>
+<p>基于Android U</p>
+</blockquote>
+<p>时序图如下：</p>
+<p><img src="https://s2.loli.net/2023/12/26/GkVW5ArpuEbXPt7.jpg"></p>
+<ol>
+<li>初始化</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">packages/apps/Launcher3/src/com/android/launcher3/Launcher.java</span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(Bundle savedInstanceState)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="type">LauncherAppState</span> <span class="variable">app</span> <span class="operator">=</span> LauncherAppState.getInstance(<span class="built_in">this</span>);  <span class="comment">// 获取LauncherAppState的实例</span></span><br><span class="line">    mModel = app.getModel();  <span class="comment">// 获取LauncherModel的实例</span></span><br><span class="line">    ...    </span><br><span class="line">    <span class="keyword">if</span> (!mModel.addCallbacksAndLoad(<span class="built_in">this</span>)) &#123;  <span class="comment">// 加载，CallBacks指向Launcher</span></span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>LauncherAppState的构造方法中初始化了一个InvariantDeviceProfile类，该类的构造方法中进行了一系列的配置，如：桌面的行、列、Hotseat（桌面底部固定的应用栏）的个数、Hotseat所有应用的位置、布局id、文件夹的行列、图标的大小等。此外，还会解析device_profiles.xml文件，加载默认页的资源文件。</li>
+<li>mModel.addCallbacksAndLoad()会进行数据加载。</li>
+</ul>
+<ol start="2">
+<li>加载</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">packages/apps/Launcher3/src/com/android/launcher3/LauncherModel.java</span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">addCallbacksAndLoad</span><span class="params">(<span class="meta">@NonNull</span> <span class="keyword">final</span> Callbacks callbacks)</span> &#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (mLock) &#123;</span><br><span class="line">        addCallbacks(callbacks);</span><br><span class="line">        <span class="keyword">return</span> startLoader(<span class="keyword">new</span> <span class="title class_">Callbacks</span>[] &#123; callbacks &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">startLoader</span><span class="params">(<span class="meta">@NonNull</span> <span class="keyword">final</span> Callbacks[] newCallbacks)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">synchronized</span> (mLock) &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">if</span> (callbacksList.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            ...</span><br><span class="line">            <span class="keyword">if</span> (bindDirectly) &#123;</span><br><span class="line">                <span class="comment">// Divide the set of loaded items into those that we are binding synchronously,</span></span><br><span class="line">                <span class="comment">// and everything else that is to be bound normally (asynchronously).</span></span><br><span class="line">                launcherBinder.bindWorkspace(bindAllCallbacks, <span class="comment">/* isBindSync= */</span> <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// For now, continue posting the binding of AllApps as there are other</span></span><br><span class="line">                <span class="comment">// issues that arise from that.</span></span><br><span class="line">                launcherBinder.bindAllApps();</span><br><span class="line">                launcherBinder.bindDeepShortcuts();</span><br><span class="line">                launcherBinder.bindWidgets();</span><br><span class="line">                <span class="keyword">if</span> (FeatureFlags.CHANGE_MODEL_DELEGATE_LOADING_ORDER.get()) &#123;</span><br><span class="line">                    mModelDelegate.bindAllModelExtras(callbacksList);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// Always post the loader task, instead of running directly</span></span><br><span class="line">                <span class="comment">// (even on same thread) so that we exit any nested synchronized blocks</span></span><br><span class="line">                MODEL_EXECUTOR.post(mLoaderTask);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>bindWorkspace()：创建CellLayout，并添加到WorkSpace容器中；</p>
+<p>bindAllApps()：绑定所有icon图标到CellLayout对应的recyclerView中，即app图标加载；</p>
+<p>bindDeepShortcuts()：加载快捷方式；</p>
+<p>bindWidgets()：加载桌面widget。</p>
+<ol start="3">
+<li>加载应用程序信息</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">packages/apps/Launcher3/src/com/android/launcher3/model/BaseLauncherBinder.java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">bindAllApps</span><span class="params">()</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    executeCallbacksTask(c -&gt; c.bindAllApplications(apps, flags, packageUserKeytoUidMap),</span><br><span class="line">            mUiExecutor);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用callbacks的bindAllApplications()，这个callbacks实际指向Launcher。</p>
+<ol start="4">
+<li>加载应用图标</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">packages/apps/Launcher3/src/com/android/launcher3/Launcher.java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">bindAllApplications</span><span class="params">(AppInfo[] apps, <span class="type">int</span> flags,</span></span><br><span class="line"><span class="params">        Map&lt;PackageUserKey, Integer&gt; packageUserKeytoUidMap)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="type">AllAppsStore</span> <span class="variable">appsStore</span> <span class="operator">=</span> mAppsView.getAppsStore();</span><br><span class="line">    appsStore.setApps(apps, flags, packageUserKeytoUidMap);</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用AllAppsStore的setApps()方法，并将包含应用信息的列表apps传进去。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">packages/apps/Launcher3/src/com/android/launcher3/allapps/AllAppsStore.java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setApps</span><span class="params">(AppInfo[] apps, <span class="type">int</span> flags, Map&lt;PackageUserKey, Integer&gt; map)</span> &#123;</span><br><span class="line">    mApps = apps;</span><br><span class="line">    mModelFlags = flags;</span><br><span class="line">    notifyUpdate();</span><br><span class="line">    mPackageUserKeytoUidMap = map;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">notifyUpdate</span><span class="params">()</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">for</span> (OnUpdateListener listener : mUpdateListeners) &#123;</span><br><span class="line">        ...</span><br><span class="line">        listener.onAppsUpdated();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>setApps()会将包含应用信息的列表apps设置给mApps，然后通知View刷新界面。</p>
+<ol start="5">
+<li>刷新界面</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">packages/apps/Launcher3/src/com/android/launcher3/allapps/AlphabeticalAppsList.java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onAppsUpdated</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (mAllAppsStore == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Sort the list of apps</span></span><br><span class="line">    mApps.clear();</span><br><span class="line"></span><br><span class="line">    Stream&lt;AppInfo&gt; appSteam = Stream.of(mAllAppsStore.getApps());</span><br><span class="line">    <span class="keyword">if</span> (!hasSearchResults() &amp;&amp; mItemFilter != <span class="literal">null</span>) &#123;</span><br><span class="line">        appSteam = appSteam.filter(mItemFilter);</span><br><span class="line">    &#125;</span><br><span class="line">    appSteam = appSteam.sorted(mAppNameComparator);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// As a special case for some languages (currently only Simplified Chinese), we may need to</span></span><br><span class="line">    <span class="comment">// coalesce sections</span></span><br><span class="line">    <span class="type">Locale</span> <span class="variable">curLocale</span> <span class="operator">=</span> mActivityContext.getResources().getConfiguration().locale;</span><br><span class="line">    <span class="type">boolean</span> <span class="variable">localeRequiresSectionSorting</span> <span class="operator">=</span> curLocale.equals(Locale.SIMPLIFIED_CHINESE);</span><br><span class="line">    <span class="keyword">if</span> (localeRequiresSectionSorting) &#123;</span><br><span class="line">        <span class="comment">// Compute the section headers. We use a TreeMap with the section name comparator to</span></span><br><span class="line">        <span class="comment">// ensure that the sections are ordered when we iterate over it later</span></span><br><span class="line">        appSteam = appSteam.collect(Collectors.groupingBy(</span><br><span class="line">                info -&gt; info.sectionName,</span><br><span class="line">                () -&gt; <span class="keyword">new</span> <span class="title class_">TreeMap</span>&lt;&gt;(<span class="keyword">new</span> <span class="title class_">LabelComparator</span>()),</span><br><span class="line">                Collectors.toCollection(ArrayList::<span class="keyword">new</span>)))</span><br><span class="line">                .values()</span><br><span class="line">                .stream()</span><br><span class="line">                .flatMap(ArrayList::stream);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    appSteam.forEachOrdered(mApps::add);</span><br><span class="line">    <span class="comment">// Recompose the set of adapter items from the current set of apps</span></span><br><span class="line">    <span class="keyword">if</span> (mSearchResults.isEmpty()) &#123;</span><br><span class="line">        updateAdapterItems();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>AlphabeticalAppsList实现了OnUpdateListener接口。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/03/09/Launcher%E5%BA%94%E7%94%A8%E5%9B%BE%E6%A0%87%E6%98%BE%E7%A4%BA%E6%B5%81%E7%A8%8B/" data-id="cltjvv1bb000b8q2u5auj2jfk" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/03/09/Launcher%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/03/09/JNI%E5%8E%9F%E7%90%86/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">March 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/03/09/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E5%B9%BF%E6%92%AD%E7%9A%84%E5%8F%91%E9%80%81%E5%92%8C%E6%8E%A5%E6%94%B6%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E6%B6%88%E6%81%AF%E5%BE%AA%E7%8E%AF%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E8%BD%AF%E9%87%8D%E5%90%AF%E5%8A%9F%E8%83%BD%E8%B0%83%E7%A0%94/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E4%B8%8A%E4%B8%8B%E6%96%87Context/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

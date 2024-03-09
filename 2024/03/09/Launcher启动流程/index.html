@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Launcher启动流程 基于Android U  SystemServer进程在启动的过程中会启动PackageManagerService，PackageManagerService启动后会将系统中的应用程序安装完成。先前已经启动的AMS会将Launcher启动起来。时序图如下：  启动Launcher的入口为AMS的systemReady()方法，它在SystemServer的startOt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/03/09/Launcher%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Launcher启动流程 基于Android U  SystemServer进程在启动的过程中会启动PackageManagerService，PackageManagerService启动后会将系统中的应用程序安装完成。先前已经启动的AMS会将Launcher启动起来。时序图如下：  启动Launcher的入口为AMS的systemReady()方法，它在SystemServer的startOt">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2023/12/26/tEvs8W5fZHDCV9F.jpg">
+<meta property="article:published_time" content="2024-03-09T07:30:58.566Z">
+<meta property="article:modified_time" content="2024-03-09T07:30:58.566Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/12/26/tEvs8W5fZHDCV9F.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Launcher启动流程" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/09/Launcher%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" class="article-date">
+  <time class="dt-published" datetime="2024-03-09T07:30:58.566Z" itemprop="datePublished">2024-03-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Launcher启动流程"><a href="#Launcher启动流程" class="headerlink" title="Launcher启动流程"></a><center>Launcher启动流程</center></h2><blockquote>
+<p>基于Android U</p>
+</blockquote>
+<p>SystemServer进程在启动的过程中会启动PackageManagerService，PackageManagerService启动后会将系统中的应用程序安装完成。先前已经启动的AMS会将Launcher启动起来。时序图如下：</p>
+<p><img src="https://s2.loli.net/2023/12/26/tEvs8W5fZHDCV9F.jpg"></p>
+<p>启动Launcher的入口为AMS的systemReady()方法，它在SystemServer的startOtherServices()方法中被调用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/frameworks/base/services/java/com/android/server/SystemServer.java</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">startOtherServices</span><span class="params">(<span class="meta">@NonNull</span> TimingsTraceAndSlog t)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    mActivityManagerService.systemReady(() -&gt; &#123;</span><br><span class="line">        Slog.i(TAG, <span class="string">&quot;Making services ready&quot;</span>);</span><br><span class="line">        t.traceBegin(<span class="string">&quot;StartActivityManagerReadyPhase&quot;</span>);</span><br><span class="line">        mSystemServiceManager.startBootPhase(t, SystemService.PHASE_ACTIVITY_MANAGER_READY);</span><br><span class="line">        t.traceEnd();</span><br><span class="line">        ...</span><br><span class="line">    &#125;, t);</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="ActivityManagerService-systemReady"><a href="#ActivityManagerService-systemReady" class="headerlink" title="ActivityManagerService#systemReady"></a>ActivityManagerService#systemReady</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/am/ActivityManagerService.java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">systemReady</span><span class="params">(<span class="keyword">final</span> Runnable goingCallback, <span class="meta">@NonNull</span> TimingsTraceAndSlog t)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="built_in">this</span>) &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">isBootingSystemUser</span> <span class="operator">=</span> currentUserId == UserHandle.USER_SYSTEM;</span><br><span class="line">        <span class="keyword">if</span> (isBootingSystemUser &amp;&amp; !UserManager.isHeadlessSystemUserMode()) &#123;</span><br><span class="line">            t.traceBegin(<span class="string">&quot;startHomeOnAllDisplays&quot;</span>);</span><br><span class="line">            mAtmInternal.startHomeOnAllDisplays(currentUserId, <span class="string">&quot;systemReady&quot;</span>);</span><br><span class="line">            t.traceEnd();</span><br><span class="line">        &#125;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<p>mAtmInternal.startHomeOnAllDisplays最终调用了RootWindowContainer.startHomeOnAllDisplays()。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/frameworks/base/services/core/java/com/android/server/wm/RootWindowContainer.java</span><br><span class="line"><span class="type">boolean</span> <span class="title function_">startHomeOnAllDisplays</span><span class="params">(<span class="type">int</span> userId, String reason)</span> &#123;</span><br><span class="line">    <span class="type">boolean</span> <span class="variable">homeStarted</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> getChildCount() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">int</span> <span class="variable">displayId</span> <span class="operator">=</span> getChildAt(i).mDisplayId;</span><br><span class="line">        homeStarted |= startHomeOnDisplay(userId, reason, displayId);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> homeStarted;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在每个display上显示对应的Home界面。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/frameworks/base/services/core/java/com/android/server/wm/RootWindowContainer.java</span><br><span class="line"><span class="type">boolean</span> <span class="title function_">startHomeOnDisplay</span><span class="params">(<span class="type">int</span> userId, String reason, <span class="type">int</span> displayId)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> startHomeOnDisplay(userId, reason, displayId, <span class="literal">false</span> <span class="comment">/* allowInstrumenting */</span>, <span class="literal">false</span> <span class="comment">/* fromHomeKey */</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">boolean</span> <span class="title function_">startHomeOnDisplay</span><span class="params">(<span class="type">int</span> userId, String reason, <span class="type">int</span> displayId, <span class="type">boolean</span> allowInstrumenting, <span class="type">boolean</span> fromHomeKey)</span> &#123;</span><br><span class="line">    <span class="comment">// Fallback to top focused display or default display if the displayId is invalid.</span></span><br><span class="line">    <span class="keyword">if</span> (displayId == INVALID_DISPLAY) &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">Task</span> <span class="variable">rootTask</span> <span class="operator">=</span> getTopDisplayFocusedRootTask();</span><br><span class="line">        displayId = rootTask != <span class="literal">null</span> ? rootTask.getDisplayId() : DEFAULT_DISPLAY;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> <span class="type">DisplayContent</span> <span class="variable">display</span> <span class="operator">=</span> getDisplayContent(displayId);</span><br><span class="line">    <span class="keyword">return</span> display.reduceOnAllTaskDisplayAreas((taskDisplayArea, result) -&gt;</span><br><span class="line">                    result | startHomeOnTaskDisplayArea(userId, reason, taskDisplayArea, allowInstrumenting, fromHomeKey), <span class="literal">false</span> <span class="comment">/* initValue */</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用startHomeOnTaskDisplayArea()启动每个显示区域（DisplayArea）的Home界面。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">/frameworks/base/services/core/java/com/android/server/wm/RootWindowContainer.java</span><br><span class="line"><span class="type">boolean</span> <span class="title function_">startHomeOnTaskDisplayArea</span><span class="params">(<span class="type">int</span> userId, String reason, TaskDisplayArea taskDisplayArea, <span class="type">boolean</span> allowInstrumenting, <span class="type">boolean</span> fromHomeKey)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="type">Intent</span> <span class="variable">homeIntent</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="type">ActivityInfo</span> <span class="variable">aInfo</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">if</span> (taskDisplayArea == getDefaultTaskDisplayArea()</span><br><span class="line">                || mWmService.shouldPlacePrimaryHomeOnDisplay(</span><br><span class="line">                        taskDisplayArea.getDisplayId(), userId)) &#123;</span><br><span class="line">        homeIntent = mService.getHomeIntent();</span><br><span class="line">        aInfo = resolveHomeActivity(userId, homeIntent);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (shouldPlaceSecondaryHomeOnDisplayArea(taskDisplayArea)) &#123;</span><br><span class="line">        Pair&lt;ActivityInfo, Intent&gt; info = resolveSecondaryHomeActivity(userId, taskDisplayArea);</span><br><span class="line">        aInfo = info.first;</span><br><span class="line">        homeIntent = info.second;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">        </span><br><span class="line">    mService.getActivityStartController().startHomeActivity(homeIntent, aInfo, myReason, taskDisplayArea);</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>判断传入的TaskDisplayArea是否是默认的TaskDisplayArea。如果是，mService.getHomeIntent()获取对应的Intent，这就是传统的Launcher的启动意图。</p>
+<p>在getHomeIntent()方法中创建了Intent，并将mTopAction和mTopData传入。mTopAction的值为Intent.ACTION_MAIN，并且如果系统运行模式不是低级工厂模式，则将Intent的Category设置为Intent.CATEGORY_HOME，最后返回该Intent。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">/frameworks/base/services/core/java/com/android/server/wm/ActivityTaskManagerService.java</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 这里主要是获取Launcher的Activity对应的Intent对象以及对应的ActivityInfo</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">Intent <span class="title function_">getHomeIntent</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">Intent</span> <span class="variable">intent</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Intent</span>(mTopAction, mTopData != <span class="literal">null</span> ? Uri.parse(mTopData) : <span class="literal">null</span>);</span><br><span class="line">    intent.setComponent(mTopComponent);</span><br><span class="line">    intent.addFlags(Intent.FLAG_DEBUG_TRIAGED_MISSING);</span><br><span class="line">    <span class="keyword">if</span> (mFactoryTest != FactoryTest.FACTORY_TEST_LOW_LEVEL) &#123;</span><br><span class="line">        intent.addCategory(Intent.CATEGORY_HOME);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> intent;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/frameworks/base/services/core/java/com/android/server/wm/ActivityStartController.java</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 这里主要是进行了一通设置后，调用了ActivityStarter对象的execute方法</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">startHomeActivity</span><span class="params">(Intent intent, ActivityInfo aInfo, String reason,</span></span><br><span class="line"><span class="params">        TaskDisplayArea taskDisplayArea)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    mLastHomeActivityStartResult = obtainStarter(intent, <span class="string">&quot;startHomeActivity: &quot;</span> + reason)</span><br><span class="line">            .setOutActivity(tmpOutRecord)</span><br><span class="line">            .setCallingUid(<span class="number">0</span>)</span><br><span class="line">            .setActivityInfo(aInfo)</span><br><span class="line">            .setActivityOptions(options.toBundle())</span><br><span class="line">            .execute();</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>startHomeActivity()启动的应用程序就是Launcher，因为Launcher的AndroidManifest.xml文件中的intent-filter标签匹配了Action为Intent.ACTION_MAIN，Category为Intent.CATEGORY_HOME。</p>
+<p>execute()处理Activity启动请求的接口，executeRequest()执行一系列权限检查，对于合法的请求才继续。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/frameworks/base/services/core/java/com/android/server/wm/ActivityStarter.java</span><br><span class="line"><span class="type">int</span> <span class="title function_">execute</span><span class="params">()</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    res = executeRequest(mRequest);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>后面的步骤和《根Activity的启动过程》相同。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/03/09/Launcher%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" data-id="cltjvv1ba000a8q2ud83o6uiv" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/03/09/Service%E7%9A%84%E7%BB%91%E5%AE%9A%E8%BF%87%E7%A8%8B/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/03/09/Launcher%E5%BA%94%E7%94%A8%E5%9B%BE%E6%A0%87%E6%98%BE%E7%A4%BA%E6%B5%81%E7%A8%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">March 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/03/09/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E5%B9%BF%E6%92%AD%E7%9A%84%E5%8F%91%E9%80%81%E5%92%8C%E6%8E%A5%E6%94%B6%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E6%B6%88%E6%81%AF%E5%BE%AA%E7%8E%AF%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E8%BD%AF%E9%87%8D%E5%90%AF%E5%8A%9F%E8%83%BD%E8%B0%83%E7%A0%94/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E4%B8%8A%E4%B8%8B%E6%96%87Context/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

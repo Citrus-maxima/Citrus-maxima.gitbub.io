@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Window的添加过程（WMS处理部分） 基于Android U  我们知道Window的操作分为两大部分，一部分是WindowManager处理部分，另一部分是WMS处理部分。对于WMS处理部分，无论是系统窗口还是Activity，它们的Window的添加过程都会调用WMS的addWindow()方法。 addWindow()方法part11234567891011121314151617181">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/03/09/Window%E7%9A%84%E6%B7%BB%E5%8A%A0%E8%BF%87%E7%A8%8B%EF%BC%88WMS%E5%A4%84%E7%90%86%E9%83%A8%E5%88%86%EF%BC%89/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Window的添加过程（WMS处理部分） 基于Android U  我们知道Window的操作分为两大部分，一部分是WindowManager处理部分，另一部分是WMS处理部分。对于WMS处理部分，无论是系统窗口还是Activity，它们的Window的添加过程都会调用WMS的addWindow()方法。 addWindow()方法part11234567891011121314151617181">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-03-09T07:30:58.572Z">
+<meta property="article:modified_time" content="2024-03-09T07:30:58.572Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Window的添加过程（WMS处理部分）" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/09/Window%E7%9A%84%E6%B7%BB%E5%8A%A0%E8%BF%87%E7%A8%8B%EF%BC%88WMS%E5%A4%84%E7%90%86%E9%83%A8%E5%88%86%EF%BC%89/" class="article-date">
+  <time class="dt-published" datetime="2024-03-09T07:30:58.572Z" itemprop="datePublished">2024-03-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Window的添加过程（WMS处理部分）"><a href="#Window的添加过程（WMS处理部分）" class="headerlink" title="Window的添加过程（WMS处理部分）"></a><center>Window的添加过程（WMS处理部分）</center></h2><blockquote>
+<p>基于Android U</p>
+</blockquote>
+<p>我们知道Window的操作分为两大部分，一部分是WindowManager处理部分，另一部分是WMS处理部分。对于WMS处理部分，无论是系统窗口还是Activity，它们的Window的添加过程都会调用WMS的addWindow()方法。</p>
+<h4 id="addWindow-方法part1"><a href="#addWindow-方法part1" class="headerlink" title="addWindow()方法part1"></a>addWindow()方法part1</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/wm/WindowManagerService.java</span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">addWindow</span><span class="params">(Session session, IWindow client, LayoutParams attrs, <span class="type">int</span> viewVisibility,</span></span><br><span class="line"><span class="params">        <span class="type">int</span> displayId, <span class="type">int</span> requestUserId, <span class="meta">@InsetsType</span> <span class="type">int</span> requestedVisibleTypes,</span></span><br><span class="line"><span class="params">        InputChannel outInputChannel, InsetsState outInsetsState,</span></span><br><span class="line"><span class="params">        InsetsSourceControl.Array outActiveControls, Rect outAttachedFrame,</span></span><br><span class="line"><span class="params">        <span class="type">float</span>[] outSizeCompatScale)</span> &#123;</span><br><span class="line">    outActiveControls.set(<span class="literal">null</span>);</span><br><span class="line">    <span class="type">int</span>[] appOp = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">final</span> <span class="type">boolean</span> <span class="variable">isRoundedCornerOverlay</span> <span class="operator">=</span> (attrs.privateFlags</span><br><span class="line">            &amp; PRIVATE_FLAG_IS_ROUNDED_CORNERS_OVERLAY) != <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">res</span> <span class="operator">=</span> mPolicy.checkAddPermission(attrs.type, isRoundedCornerOverlay, attrs.packageName,</span><br><span class="line">            appOp);  <span class="comment">// 1</span></span><br><span class="line">    <span class="keyword">if</span> (res != ADD_OKAY) &#123;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">synchronized</span> (mGlobalLock) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!mDisplayReady) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;Display has not been initialialized&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="type">DisplayContent</span> <span class="variable">displayContent</span> <span class="operator">=</span> getDisplayContentOrCreate(displayId, attrs.token);  <span class="comment">// 2</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (displayContent == <span class="literal">null</span>) &#123;</span><br><span class="line">            ProtoLog.w(WM_ERROR, <span class="string">&quot;Attempted to add window to a display that does &quot;</span></span><br><span class="line">                    + <span class="string">&quot;not exist: %d. Aborting.&quot;</span>, displayId);</span><br><span class="line">            <span class="keyword">return</span> WindowManagerGlobal.ADD_INVALID_DISPLAY;</span><br><span class="line">        &#125;</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">if</span> (type &gt;= FIRST_SUB_WINDOW &amp;&amp; type &lt;= LAST_SUB_WINDOW) &#123;  <span class="comment">// 3</span></span><br><span class="line">            parentWindow = windowForClientLocked(<span class="literal">null</span>, attrs.token, <span class="literal">false</span>);  <span class="comment">// 4</span></span><br><span class="line">            <span class="keyword">if</span> (parentWindow == <span class="literal">null</span>) &#123;</span><br><span class="line">                ProtoLog.w(WM_ERROR, <span class="string">&quot;Attempted to add window with token that is not a window: &quot;</span></span><br><span class="line">                        + <span class="string">&quot;%s.  Aborting.&quot;</span>, attrs.token);</span><br><span class="line">                <span class="keyword">return</span> WindowManagerGlobal.ADD_BAD_SUBWINDOW_TOKEN;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (parentWindow.mAttrs.type &gt;= FIRST_SUB_WINDOW</span><br><span class="line">                    &amp;&amp; parentWindow.mAttrs.type &lt;= LAST_SUB_WINDOW) &#123;</span><br><span class="line">                ProtoLog.w(WM_ERROR, <span class="string">&quot;Attempted to add window with token that is a sub-window: &quot;</span></span><br><span class="line">                        + <span class="string">&quot;%s.  Aborting.&quot;</span>, attrs.token);</span><br><span class="line">                <span class="keyword">return</span> WindowManagerGlobal.ADD_BAD_SUBWINDOW_TOKEN;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>WMS的addWindow()返回的是addWindow的各种状态，比如添加Window成功，无效的display等，这些状态被定义在WindowManagerGlobal中。</p>
+<p>在注释1处根据Window的属性，调用WMP的checkAddPermission()方法来检查权限，具体在PhoneWindowManager的checkAddPermission()方法中实现，如果没有权限则不会执行后续的代码逻辑。</p>
+<p>在注释2处通过displayId来获得窗口要添加到哪个DisplayContent上，如果没有找到DisplayContent，则返回WindowManagerGlobal.ADD_INVALID_DISPLAY这一状态，其中DisplayContent用来描述一块屏幕。</p>
+<p>在注释3处，type代表一个窗口的类型，它的数值介于FIRST_SUB_WINDOW和LAST_SUB_WINDOW之间（1000～1999），这个数值定义在WindowManager中，说明这个窗口是一个子窗口。</p>
+<p>在注释4处，attrs.token是IBinder类型的对象，windowForClientLocked()方法内部会根据attrs.token作为key值从mWindowMap中得到该子窗口的父窗口。接着对父窗口进行判断，如果父窗口为null或者type的取值范围不正确则会返回错误的状态。</p>
+<h4 id="addWindow-方法part2"><a href="#addWindow-方法part2" class="headerlink" title="addWindow()方法part2"></a>addWindow()方法part2</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/wm/WindowManagerService.java</span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">addWindow</span><span class="params">(Session session, IWindow client, LayoutParams attrs, <span class="type">int</span> viewVisibility,</span></span><br><span class="line"><span class="params">        <span class="type">int</span> displayId, <span class="type">int</span> requestUserId, <span class="meta">@InsetsType</span> <span class="type">int</span> requestedVisibleTypes,</span></span><br><span class="line"><span class="params">        InputChannel outInputChannel, InsetsState outInsetsState,</span></span><br><span class="line"><span class="params">        InsetsSourceControl.Array outActiveControls, Rect outAttachedFrame,</span></span><br><span class="line"><span class="params">        <span class="type">float</span>[] outSizeCompatScale)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">synchronized</span> (mGlobalLock) &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">final</span> <span class="type">boolean</span> <span class="variable">hasParent</span> <span class="operator">=</span> parentWindow != <span class="literal">null</span>;</span><br><span class="line">        <span class="comment">// Use existing parent window token for child windows since they go in the same token</span></span><br><span class="line">        <span class="comment">// as there parent window so we can apply the same policy on them.</span></span><br><span class="line">        <span class="type">WindowToken</span> <span class="variable">token</span> <span class="operator">=</span> displayContent.getWindowToken(</span><br><span class="line">                hasParent ? parentWindow.mAttrs.token : attrs.token);  <span class="comment">// 1</span></span><br><span class="line">        <span class="comment">// If this is a child window, we want to apply the same type checking rules as the</span></span><br><span class="line">        <span class="comment">// parent window type.</span></span><br><span class="line">        <span class="keyword">final</span> <span class="type">int</span> <span class="variable">rootType</span> <span class="operator">=</span> hasParent ? parentWindow.mAttrs.type : type;  <span class="comment">// 2</span></span><br><span class="line"></span><br><span class="line">        <span class="type">boolean</span> <span class="variable">addToastWindowRequiresToken</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="type">IBinder</span> <span class="variable">windowContextToken</span> <span class="operator">=</span> attrs.mWindowContextToken;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (token == <span class="literal">null</span>) &#123;  <span class="comment">// 3</span></span><br><span class="line">             <span class="keyword">if</span> (!unprivilegedAppCanCreateTokenWith(parentWindow, callingUid, type,</span><br><span class="line">                    rootType, attrs.token, attrs.packageName)) &#123;</span><br><span class="line">                <span class="keyword">return</span> WindowManagerGlobal.ADD_BAD_APP_TOKEN;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (hasParent) &#123;</span><br><span class="line">                <span class="comment">// Use existing parent window token for child windows.</span></span><br><span class="line">                token = parentWindow.mToken;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (mWindowContextListenerController.hasListener(windowContextToken)) &#123;</span><br><span class="line">                <span class="comment">// Respect the window context token if the user provided it.</span></span><br><span class="line">                <span class="keyword">final</span> <span class="type">IBinder</span> <span class="variable">binder</span> <span class="operator">=</span> attrs.token != <span class="literal">null</span> ? attrs.token : windowContextToken;</span><br><span class="line">                <span class="keyword">final</span> <span class="type">Bundle</span> <span class="variable">options</span> <span class="operator">=</span> mWindowContextListenerController</span><br><span class="line">                        .getOptions(windowContextToken);</span><br><span class="line">                token = <span class="keyword">new</span> <span class="title class_">WindowToken</span>.Builder(<span class="built_in">this</span>, binder, type)</span><br><span class="line">                        .setDisplayContent(displayContent)</span><br><span class="line">                        .setOwnerCanManageAppTokens(session.mCanAddInternalSystemWindow)</span><br><span class="line">                        .setRoundedCornerOverlay(isRoundedCornerOverlay)</span><br><span class="line">                        .setFromClientToken(<span class="literal">true</span>)</span><br><span class="line">                        .setOptions(options)</span><br><span class="line">                        .build();</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">final</span> <span class="type">IBinder</span> <span class="variable">binder</span> <span class="operator">=</span> attrs.token != <span class="literal">null</span> ? attrs.token : client.asBinder();</span><br><span class="line">                token = <span class="keyword">new</span> <span class="title class_">WindowToken</span>.Builder(<span class="built_in">this</span>, binder, type)</span><br><span class="line">                        .setDisplayContent(displayContent)</span><br><span class="line">                        .setOwnerCanManageAppTokens(session.mCanAddInternalSystemWindow)</span><br><span class="line">                        .setRoundedCornerOverlay(isRoundedCornerOverlay)</span><br><span class="line">                        .build();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    	... <span class="comment">// 省略一些else if</span></span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处通过displayContent的getWindowToken()方法得到WindowToken。</p>
+<p>注释2处，如果有父窗口就将父窗口的type值赋值给rootType，如果没有，将当前窗口的type值赋值给rootType。</p>
+<p>注释3处，如果WindowToken为null，则创建WindowToken。</p>
+<h4 id="addWindow-方法part3"><a href="#addWindow-方法part3" class="headerlink" title="addWindow()方法part3"></a>addWindow()方法part3</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/wm/WindowManagerService.java</span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">addWindow</span><span class="params">(Session session, IWindow client, LayoutParams attrs, <span class="type">int</span> viewVisibility,</span></span><br><span class="line"><span class="params">        <span class="type">int</span> displayId, <span class="type">int</span> requestUserId, <span class="meta">@InsetsType</span> <span class="type">int</span> requestedVisibleTypes,</span></span><br><span class="line"><span class="params">        InputChannel outInputChannel, InsetsState outInsetsState,</span></span><br><span class="line"><span class="params">        InsetsSourceControl.Array outActiveControls, Rect outAttachedFrame,</span></span><br><span class="line"><span class="params">        <span class="type">float</span>[] outSizeCompatScale)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">synchronized</span> (mGlobalLock) &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">final</span> <span class="type">WindowState</span> <span class="variable">win</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">WindowState</span>(<span class="built_in">this</span>, session, client, token, parentWindow,</span><br><span class="line">                appOp[<span class="number">0</span>], attrs, viewVisibility, session.mUid, userId,</span><br><span class="line">                session.mCanAddInternalSystemWindow);  <span class="comment">// 1</span></span><br><span class="line">        <span class="keyword">if</span> (win.mDeathRecipient == <span class="literal">null</span>) &#123;  <span class="comment">// 2</span></span><br><span class="line">            <span class="comment">// Client has apparently died, so there is no reason to</span></span><br><span class="line">            <span class="comment">// continue.</span></span><br><span class="line">            ProtoLog.w(WM_ERROR, <span class="string">&quot;Adding window client %s&quot;</span></span><br><span class="line">                    + <span class="string">&quot; that is dead, aborting.&quot;</span>, client.asBinder());</span><br><span class="line">            <span class="keyword">return</span> WindowManagerGlobal.ADD_APP_EXITING;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (win.getDisplayContent() == <span class="literal">null</span>) &#123;  <span class="comment">// 3</span></span><br><span class="line">            ProtoLog.w(WM_ERROR, <span class="string">&quot;Adding window to Display that has been removed.&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> WindowManagerGlobal.ADD_INVALID_DISPLAY;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="type">DisplayPolicy</span> <span class="variable">displayPolicy</span> <span class="operator">=</span> displayContent.getDisplayPolicy();</span><br><span class="line">        displayPolicy.adjustWindowParamsLw(win, win.mAttrs);  <span class="comment">// 4</span></span><br><span class="line">        attrs.flags = sanitizeFlagSlippery(attrs.flags, win.getName(), callingUid, callingPid);</span><br><span class="line">        attrs.inputFeatures = sanitizeSpyWindow(attrs.inputFeatures, win.getName(), callingUid,</span><br><span class="line">                callingPid);</span><br><span class="line">        win.setRequestedVisibleTypes(requestedVisibleTypes);</span><br><span class="line"></span><br><span class="line">        res = displayPolicy.validateAddingWindowLw(attrs, callingPid, callingUid);  <span class="comment">// 5</span></span><br><span class="line">        ...</span><br><span class="line">        win.attach();</span><br><span class="line">        mWindowMap.put(client.asBinder(), win);  <span class="comment">// 6</span></span><br><span class="line">        win.initAppOpsState();</span><br><span class="line">        ...</span><br><span class="line">        win.mToken.addWindow(win);  <span class="comment">// 7</span></span><br><span class="line">        displayPolicy.addWindowLw(win, attrs);</span><br><span class="line">        displayPolicy.setDropInputModePolicy(win, win.mAttrs);</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处创建了WindowState，它存有窗口的所有的状态信息，在WMS中它代表一个窗口。在创建WindowState传入的参数中，this指的是WMS，client指的是IWindow，IWindow会将WMS中窗口管理的操作回调给ViewRootImpl，token指的是WindowToken。</p>
+<p>注释2、3处分别判断请求添加窗口的客户端是否已经死亡、窗口的DisplayContent是否为null，如果是则不会再执行下面的代码逻辑。</p>
+<p>注释4处调用了DisplayPolicy的adjustWindowParamsLw()方法，此方法会根据窗口的type对窗口的LayoutParams的一些成员变量进行修改。</p>
+<p>注释5处检查Window是否可以被添加到系统中。</p>
+<p>注释6处将WindowState添加到mWindowMap中。</p>
+<p>注释7处将WindowState添加到该WindowState对应的WindowToken中（实际是保存在WindowToken的父类WindowContainer中），这样WindowToken就包含了同一个组件的WindowState。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/03/09/Window%E7%9A%84%E6%B7%BB%E5%8A%A0%E8%BF%87%E7%A8%8B%EF%BC%88WMS%E5%A4%84%E7%90%86%E9%83%A8%E5%88%86%EF%BC%89/" data-id="cltjvv1bg000k8q2uesd8gsdo" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/03/09/rc%E6%96%87%E4%BB%B6/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/03/09/Window%E7%9A%84%E5%88%A0%E9%99%A4%E8%BF%87%E7%A8%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">March 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/03/09/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E5%B9%BF%E6%92%AD%E7%9A%84%E5%8F%91%E9%80%81%E5%92%8C%E6%8E%A5%E6%94%B6%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E6%B6%88%E6%81%AF%E5%BE%AA%E7%8E%AF%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E8%BD%AF%E9%87%8D%E5%90%AF%E5%8A%9F%E8%83%BD%E8%B0%83%E7%A0%94/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E4%B8%8A%E4%B8%8B%E6%96%87Context/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Configuration变更时更新应用程序配置 基于Android U，只保留了关键调用步骤，略去了细节。  当设备配置发生变更时，系统会调用ATMS的updateConfiguration()方法，来通知ATMS处理configuration change事件。时序图如下。  12345678910111213141516frameworks&#x2F;base&#x2F;services&#x2F;core&#x2F;java&#x2F;c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/03/09/Configuration%E5%8F%98%E6%9B%B4%E6%97%B6%E6%9B%B4%E6%96%B0%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Configuration变更时更新应用程序配置 基于Android U，只保留了关键调用步骤，略去了细节。  当设备配置发生变更时，系统会调用ATMS的updateConfiguration()方法，来通知ATMS处理configuration change事件。时序图如下。  12345678910111213141516frameworks&#x2F;base&#x2F;services&#x2F;core&#x2F;java&#x2F;c">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2023/12/26/YJPIMfsWNOnxBhR.jpg">
+<meta property="article:published_time" content="2024-03-09T07:30:58.563Z">
+<meta property="article:modified_time" content="2024-03-09T07:30:58.563Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/12/26/YJPIMfsWNOnxBhR.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Configuration变更时更新应用程序配置" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/09/Configuration%E5%8F%98%E6%9B%B4%E6%97%B6%E6%9B%B4%E6%96%B0%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E9%85%8D%E7%BD%AE/" class="article-date">
+  <time class="dt-published" datetime="2024-03-09T07:30:58.563Z" itemprop="datePublished">2024-03-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Configuration变更时更新应用程序配置"><a href="#Configuration变更时更新应用程序配置" class="headerlink" title="Configuration变更时更新应用程序配置"></a>Configuration变更时更新应用程序配置</h2><blockquote>
+<p>基于Android U，只保留了关键调用步骤，略去了细节。</p>
+</blockquote>
+<p>当设备配置发生变更时，系统会调用ATMS的<code>updateConfiguration()</code>方法，来通知ATMS处理configuration change事件。时序图如下。</p>
+<p><img src="https://s2.loli.net/2023/12/26/YJPIMfsWNOnxBhR.jpg"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/wm/ActivityTaskManagerService.java</span><br><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">updateConfiguration</span><span class="params">(Configuration values)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">synchronized</span> (mGlobalLock) &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            ...</span><br><span class="line">            updateConfigurationLocked(values, <span class="literal">null</span>, <span class="literal">false</span>, <span class="literal">false</span> <span class="comment">/* persistent */</span>,</span><br><span class="line">                    UserHandle.USER_NULL, <span class="literal">false</span> <span class="comment">/* deferResume */</span>,</span><br><span class="line">                    mTmpUpdateConfigurationResult);  <span class="comment">// 1</span></span><br><span class="line">            <span class="keyword">return</span> mTmpUpdateConfigurationResult.changes != <span class="number">0</span>;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处调用<code>updateConfigurationLocked()</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/wm/ActivityTaskManagerService.java</span><br><span class="line"><span class="type">boolean</span> <span class="title function_">updateConfigurationLocked</span><span class="params">(Configuration values, ActivityRecord starting,</span></span><br><span class="line"><span class="params">        <span class="type">boolean</span> initLocale, <span class="type">boolean</span> persistent, <span class="type">int</span> userId, <span class="type">boolean</span> deferResume,</span></span><br><span class="line"><span class="params">        ActivityTaskManagerService.UpdateConfigurationResult result)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (values != <span class="literal">null</span>) &#123;</span><br><span class="line">            changes = updateGlobalConfigurationLocked(values, initLocale, persistent, userId);  <span class="comment">// 1</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!deferResume) &#123;</span><br><span class="line">            kept = ensureConfigAndVisibilityAfterUpdate(starting, changes);  <span class="comment">// 2</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> kept;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处更新当前配置；</p>
+<p>注释2处确保给定的Activity使用的是当前配置，如果返回true表示Activity未被重启，否则让该Activity destroyed以适配当前配置。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/wm/ActivityTaskManagerService.java</span><br><span class="line"><span class="type">boolean</span> <span class="title function_">ensureConfigAndVisibilityAfterUpdate</span><span class="params">(ActivityRecord starting, <span class="type">int</span> changes)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">if</span> (mainRootTask != <span class="literal">null</span>) &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">if</span> (starting != <span class="literal">null</span>) &#123;</span><br><span class="line">            kept = starting.ensureActivityConfiguration(changes,</span><br><span class="line">                    <span class="literal">false</span> <span class="comment">/* preserveWindow */</span>);  <span class="comment">// 1</span></span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> kept;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处调用<code>ActivityRecord#ensureActivityConfiguration()</code>真正完成Activity配置更新。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/wm/ActivityRecord.java</span><br><span class="line"><span class="type">boolean</span> <span class="title function_">ensureActivityConfiguration</span><span class="params">(<span class="type">int</span> globalChanges, <span class="type">boolean</span> preserveWindow)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> ensureActivityConfiguration(globalChanges, preserveWindow,</span><br><span class="line">            <span class="literal">false</span> <span class="comment">/* ignoreVisibility */</span>, <span class="literal">false</span> <span class="comment">/* isRequestedOrientationChanged */</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">boolean</span> <span class="title function_">ensureActivityConfiguration</span><span class="params">(<span class="type">int</span> globalChanges, <span class="type">boolean</span> preserveWindow,</span></span><br><span class="line"><span class="params">        <span class="type">boolean</span> ignoreVisibility, <span class="type">boolean</span> isRequestedOrientationChanged)</span> &#123;</span><br><span class="line">    <span class="comment">// 这里省略了一些return ture的分支</span></span><br><span class="line">    <span class="comment">// 如果马上会再次调用updateConfiguration()，则忽略本次修改，交由下次处理，节省时间</span></span><br><span class="line">    <span class="comment">// 如果当前Activity已经finish，则忽略</span></span><br><span class="line">    <span class="comment">// 如果Activity的状态是DESTROYED，则忽略</span></span><br><span class="line">    <span class="comment">// 如果Activity不可见。则忽略</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// 如果新旧配置相同，则忽略</span></span><br><span class="line">    mTmpConfig.setTo(mLastReportedConfiguration.getMergedConfiguration());</span><br><span class="line">    <span class="keyword">if</span> (getConfiguration().equals(mTmpConfig) &amp;&amp; !forceNewConfig &amp;&amp; !displayChanged) &#123;</span><br><span class="line">        ProtoLog.v(WM_DEBUG_CONFIGURATION, <span class="string">&quot;Configuration &amp; display &quot;</span></span><br><span class="line">                + <span class="string">&quot;unchanged in %s&quot;</span>, <span class="built_in">this</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 计算哪些配置值发生了改变</span></span><br><span class="line">    <span class="keyword">final</span> <span class="type">int</span> <span class="variable">changes</span> <span class="operator">=</span> getConfigurationChanges(mTmpConfig);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Update last reported values.</span></span><br><span class="line">    <span class="keyword">final</span> <span class="type">Configuration</span> <span class="variable">newMergedOverrideConfig</span> <span class="operator">=</span> getMergedOverrideConfiguration();</span><br><span class="line"></span><br><span class="line">    setLastReportedConfiguration(getProcessGlobalConfiguration(), newMergedOverrideConfig);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Activity状态是INITIALIZING，则忽略</span></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (changes == <span class="number">0</span> &amp;&amp; !forceNewConfig) &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">if</span> (displayChanged) &#123;</span><br><span class="line">            scheduleActivityMovedToDisplay(newDisplayId, newMergedOverrideConfig);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            scheduleConfigurationChanged(newMergedOverrideConfig);</span><br><span class="line">        &#125;</span><br><span class="line">        notifyDisplayCompatPolicyAboutConfigurationChange(</span><br><span class="line">                mLastReportedConfiguration.getMergedConfiguration(), mTmpConfig);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">    <span class="type">boolean</span> <span class="variable">shouldRelaunchLocked</span> <span class="operator">=</span> shouldRelaunchLocked(changes, mTmpConfig);  <span class="comment">// 1</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">if</span> (shouldRelaunchLocked || forceNewConfig) &#123;  <span class="comment">// 重启Activity</span></span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">if</span> (mState == PAUSING) &#123;</span><br><span class="line">            ...</span><br><span class="line">            <span class="comment">// 如果当前Activity处于PAUSING状态，则标记其需要重启，等到PAUSING后reLaunch</span></span><br><span class="line">            deferRelaunchUntilPaused = <span class="literal">true</span>;</span><br><span class="line">            preserveWindowOnDeferredRelaunch = preserveWindow;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            ...</span><br><span class="line">            relaunchActivityLocked(preserveWindow);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// All done...  tell the caller we weren&#x27;t able to keep this activity around.</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Activity可以自己处理配置变更走这里</span></span><br><span class="line">    <span class="keyword">if</span> (displayChanged) &#123;</span><br><span class="line">        scheduleActivityMovedToDisplay(newDisplayId, newMergedOverrideConfig);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        scheduleConfigurationChanged(newMergedOverrideConfig);</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>决定是否需要reLaunch的关键参数是<code>shouldRelaunchLocked</code>和<code>forceNewConfig</code>，任一值为true，就会重启Activity，而不会调用<code>Activity#onConfigurationChanged()</code>。</p>
+<p>注释1处<code>shouldRelaunchLocked()</code>会通过对比事件是否在Activity自己可以处理的范围内来决定是否reLaunch，其中包括<code>AndroidManifest.xml</code>中配置的<code>android:configChanges</code>属性。</p>
+<ol>
+<li><p>重启Activity分支</p>
+<p>执行<code>ActivityRecord#relaunchActivityLocked()</code>，经过层层调用，最终调用到<code>ActivityThread#handleRelaunchActivityInner()</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/ActivityThread.java</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">handleRelaunchActivityInner</span><span class="params">(ActivityClientRecord r, <span class="type">int</span> configChanges,</span></span><br><span class="line"><span class="params">        List&lt;ResultInfo&gt; pendingResults, List&lt;ReferrerIntent&gt; pendingIntents,</span></span><br><span class="line"><span class="params">        PendingTransactionActions pendingActions, <span class="type">boolean</span> startsNotResumed,</span></span><br><span class="line"><span class="params">        Configuration overrideConfig, String reason)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    handleDestroyActivity(r, <span class="literal">false</span>, configChanges, <span class="literal">true</span>, reason);</span><br><span class="line">    ...</span><br><span class="line">    handleLaunchActivity(r, pendingActions, mLastReportedDeviceId, customIntent);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在<code>handleRelaunchActivityInner()</code>中，先调用<code>handleDestroyActivity()</code>销毁当前Activity，然后调用<code>handleLaunchActivity()</code>重启Activity。Activity有一个回调方法<code>onRetainNonConfigurationInstance()</code>，当设备信息变更时，会保存该方法返回的Object，之后可以在重启的Activity中通过<code>getLastNonConfigurationInstance()</code>获取该Object。</p>
+</li>
+<li><p>不重启Activity分支</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/wm/ActivityRecord.java</span><br><span class="line"><span class="type">boolean</span> <span class="title function_">ensureActivityConfiguration</span><span class="params">(<span class="type">int</span> globalChanges, <span class="type">boolean</span> preserveWindow,</span></span><br><span class="line"><span class="params">        <span class="type">boolean</span> ignoreVisibility, <span class="type">boolean</span> isRequestedOrientationChanged)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// Activity可以自己处理配置变更走这里</span></span><br><span class="line">    <span class="keyword">if</span> (displayChanged) &#123;</span><br><span class="line">        scheduleActivityMovedToDisplay(newDisplayId, newMergedOverrideConfig);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        scheduleConfigurationChanged(newMergedOverrideConfig);</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这两个分支最终都会调用<code>ActivityThread#handleActivityConfigurationChanged()</code>方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/ActivityThread.java</span><br><span class="line"><span class="keyword">void</span> <span class="title function_">handleActivityConfigurationChanged</span><span class="params">(ActivityClientRecord r,</span></span><br><span class="line"><span class="params">        <span class="meta">@NonNull</span> Configuration overrideConfig, <span class="type">int</span> displayId, <span class="type">boolean</span> alwaysReportChange)</span> &#123;</span><br><span class="line">    ... </span><br><span class="line">    <span class="keyword">final</span> <span class="type">Configuration</span> <span class="variable">reportedConfig</span> <span class="operator">=</span> performConfigurationChangedForActivity(r,</span><br><span class="line">            mConfigurationController.getCompatConfiguration(),</span><br><span class="line">            movedToDifferentDisplay ? displayId : r.activity.getDisplayId(),</span><br><span class="line">            alwaysReportChange);</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用<code>performConfigurationChangedForActivity</code>()。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/ActivityThread.java</span><br><span class="line"><span class="keyword">private</span> Configuration <span class="title function_">performConfigurationChangedForActivity</span><span class="params">(ActivityClientRecord r,</span></span><br><span class="line"><span class="params">        Configuration newBaseConfig, <span class="type">int</span> displayId, <span class="type">boolean</span> alwaysReportChange)</span> &#123;</span><br><span class="line">    r.tmpConfig.setTo(newBaseConfig);</span><br><span class="line">    <span class="keyword">if</span> (r.overrideConfig != <span class="literal">null</span>) &#123;</span><br><span class="line">        r.tmpConfig.updateFrom(r.overrideConfig);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">final</span> <span class="type">Configuration</span> <span class="variable">reportedConfig</span> <span class="operator">=</span> performActivityConfigurationChanged(r,</span><br><span class="line">            r.tmpConfig, r.overrideConfig, displayId, alwaysReportChange);</span><br><span class="line">    freeTextLayoutCachesIfNeeded(r.activity.mCurrentConfig.diff(r.tmpConfig));</span><br><span class="line">    <span class="keyword">return</span> reportedConfig;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用<code>performActivityConfigurationChanged()</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Configuration <span class="title function_">performActivityConfigurationChanged</span><span class="params">(ActivityClientRecord r,</span></span><br><span class="line"><span class="params">        Configuration newConfig, Configuration amOverrideConfig, <span class="type">int</span> displayId,</span></span><br><span class="line"><span class="params">        <span class="type">boolean</span> alwaysReportChange)</span> &#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="type">Activity</span> <span class="variable">activity</span> <span class="operator">=</span> r.activity;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">final</span> <span class="type">Configuration</span> <span class="variable">currentResConfig</span> <span class="operator">=</span> activity.getResources().getConfiguration();</span><br><span class="line">    <span class="keyword">final</span> <span class="type">int</span> <span class="variable">diff</span> <span class="operator">=</span> currentResConfig.diffPublicOnly(newConfig);</span><br><span class="line">    <span class="keyword">final</span> <span class="type">boolean</span> <span class="variable">hasPublicResConfigChange</span> <span class="operator">=</span> diff != <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// TODO(b/173090263): Use diff instead after the improvement of AssetManager and</span></span><br><span class="line">    <span class="comment">// ResourcesImpl constructions.</span></span><br><span class="line">    <span class="keyword">final</span> <span class="type">boolean</span> <span class="variable">shouldUpdateResources</span> <span class="operator">=</span> hasPublicResConfigChange</span><br><span class="line">            || shouldUpdateResources(activityToken, currentResConfig, newConfig,</span><br><span class="line">            amOverrideConfig, movedToDifferentDisplay, hasPublicResConfigChange);</span><br><span class="line">    <span class="keyword">final</span> <span class="type">boolean</span> <span class="variable">shouldReportChange</span> <span class="operator">=</span> shouldReportChange(</span><br><span class="line">            activity.mCurrentConfig, newConfig, r.mSizeConfigurations,</span><br><span class="line">            activity.mActivityInfo.getRealConfigChanged(), alwaysReportChange);</span><br><span class="line">    <span class="comment">// Nothing significant, don&#x27;t proceed with updating and reporting.</span></span><br><span class="line">    <span class="keyword">if</span> (!shouldUpdateResources &amp;&amp; !shouldReportChange) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">final</span> <span class="type">Configuration</span> <span class="variable">configToReport</span> <span class="operator">=</span> createNewConfigAndUpdateIfNotNull(newConfig,</span><br><span class="line">            contextThemeWrapperOverrideConfig);</span><br><span class="line">    ...</span><br><span class="line">    activity.mConfigChangeFlags = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (shouldReportChange) &#123;</span><br><span class="line">        activity.mCalled = <span class="literal">false</span>;</span><br><span class="line">        activity.mCurrentConfig = <span class="keyword">new</span> <span class="title class_">Configuration</span>(newConfig);</span><br><span class="line">        activity.onConfigurationChanged(configToReport);  <span class="comment">// 1</span></span><br><span class="line">        <span class="keyword">if</span> (!activity.mCalled) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">SuperNotCalledException</span>(<span class="string">&quot;Activity &quot;</span> + activity.getLocalClassName() +</span><br><span class="line">                            <span class="string">&quot; did not call through to super.onConfigurationChanged()&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> configToReport;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处调用<code>Activity.onConfigurationChanged()</code>。</p>
+</li>
+</ol>
+<p>总结：设备配置发生变更时，系统会根据一系列条件决定是重启Activity，还是调用<code>Activity.onConfigurationChanged()</code>。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/03/09/Configuration%E5%8F%98%E6%9B%B4%E6%97%B6%E6%9B%B4%E6%96%B0%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E9%85%8D%E7%BD%AE/" data-id="cltjvv1b800068q2u04tsh2rv" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/03/09/Init%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/03/09/ContentProvider%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">March 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/03/09/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E5%B9%BF%E6%92%AD%E7%9A%84%E5%8F%91%E9%80%81%E5%92%8C%E6%8E%A5%E6%94%B6%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E6%B6%88%E6%81%AF%E5%BE%AA%E7%8E%AF%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E8%BD%AF%E9%87%8D%E5%90%AF%E5%8A%9F%E8%83%BD%E8%B0%83%E7%A0%94/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E4%B8%8A%E4%B8%8B%E6%96%87Context/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

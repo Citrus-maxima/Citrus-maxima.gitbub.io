@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="rc文件rc文件由安卓初始化语言编写，是配置文件，不是程序，不会被编译&#x2F;链接。可用于初始化系统服务、设置属性、创建系统资源等操作。rc文件在Init进程中完成扫描、解析、加载、执行等操作。 官方文档为system&#x2F;core&#x2F;init&#x2F;README.md。 语法 语法组成  由五部分组成  Action（行为） Commands（命令） Services（服务） Options（选项） I">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/03/09/rc%E6%96%87%E4%BB%B6/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="rc文件rc文件由安卓初始化语言编写，是配置文件，不是程序，不会被编译&#x2F;链接。可用于初始化系统服务、设置属性、创建系统资源等操作。rc文件在Init进程中完成扫描、解析、加载、执行等操作。 官方文档为system&#x2F;core&#x2F;init&#x2F;README.md。 语法 语法组成  由五部分组成  Action（行为） Commands（命令） Services（服务） Options（选项） I">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-03-09T07:30:58.573Z">
+<meta property="article:modified_time" content="2024-03-09T07:30:58.573Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-rc文件" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/09/rc%E6%96%87%E4%BB%B6/" class="article-date">
+  <time class="dt-published" datetime="2024-03-09T07:30:58.573Z" itemprop="datePublished">2024-03-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="rc文件"><a href="#rc文件" class="headerlink" title="rc文件"></a><center>rc文件</center></h2><p>rc文件由安卓初始化语言编写，是配置文件，不是程序，不会被编译&#x2F;链接。可用于初始化系统服务、设置属性、创建系统资源等操作。rc文件在Init进程中完成扫描、解析、加载、执行等操作。</p>
+<p>官方文档为<code>system/core/init/README.md</code>。</p>
+<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><ul>
+<li><p>语法组成</p>
+<ul>
+<li><p>由五部分组成</p>
+<ol>
+<li>Action（行为）</li>
+<li>Commands（命令）</li>
+<li>Services（服务）</li>
+<li>Options（选项）</li>
+<li>Imports（导入）</li>
+</ol>
+</li>
+<li><p>Comments（注释）：以#开头的行，表示注释（允许前导空格）。</p>
+</li>
+<li><p>Section（段落&#x2F;分组）</p>
+<p>rc文件的基本单位，有三种类型：on、service、import</p>
+</li>
+<li><p>关键字和参数以空格分割，每个语句以行为单位。</p>
+</li>
+<li><p>C语言风格的反斜杠转义字符（“\”）可以用来为参数添加空格。</p>
+</li>
+<li><p>为了防止字符串中的空格把其切割成多个部分，需要对其使用双引号。</p>
+</li>
+<li><p>行尾的反斜杠用来表示下面一行是同一行。</p>
+</li>
+<li><p>Actions和Services暗示着一个新语句的开始，这两个关键字后面跟着的Commands或者Options都属于这个新语句。</p>
+</li>
+<li><p>Actions和Services有唯一的名字，如果出现和已有动作或者服务重名的，将会被当成错误忽略掉。</p>
+</li>
+</ul>
+</li>
+<li><p>on</p>
+<ul>
+<li><code>on early-init</code>：Init之前，加载完所有rc文件后即执行，init.rc在early-init执行的是<code>start ueventd</code>。</li>
+<li><code>on init</code>：在&#x2F;init.conf（启动配置文件）被装载之后，加载propety各项属性文件之前执行，在Init变为property service之前都属于Init阶段。</li>
+<li><code>late-init</code>：初始化之后执行。</li>
+<li><code>on early-boot</code>：启动属性服务后即执行。</li>
+<li><code>on boot</code>：boot的时候执行。</li>
+<li><code>on property:xxxxx=x</code>：当某个属性设置为预期值时执行。</li>
+<li><code>device-added-&lt;path&gt;</code>：指定设备被添加时触发。</li>
+<li><code>device-removed-&lt;path&gt;</code> ：指定设备被移除时触发。</li>
+<li><code>service-exited-&lt;name&gt; </code>：在特定服务（service）退出时触发。</li>
+</ul>
+</li>
+<li><p>Trigger</p>
+<p>触发器，本质上是字符串，用于匹配包含该字符串的事件（Event）。</p>
+<ol>
+<li><p>属性触发器</p>
+<p>属性变为指定的属性值时触发。</p>
+</li>
+<li><p>事件触发器</p>
+<p>通过QueueEventTrigger函数（C++），或trigger command触发。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">on xxx:</span><br><span class="line">	trigger sss</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>Trigger可以由多个属性触发器 + 一个事件触发器组成。</p>
+</li>
+<li><p>Command</p>
+<p>命令。</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&#96;bootchart [start</td>
+<td align="left">stop]&#96;</td>
+</tr>
+<tr>
+<td><code>chmod &lt;octal-mode&gt; &lt;path&gt;</code></td>
+<td align="left">设置文件权限</td>
+</tr>
+<tr>
+<td><code>chown &lt;owner&gt; &lt;group&gt; &lt;path&gt;</code></td>
+<td align="left">设置文件所有者和所有组</td>
+</tr>
+<tr>
+<td><code>class_start &lt;serviceclass&gt;</code></td>
+<td align="left">对于所有属于该class的service，若没有在运行中，则启动它们</td>
+</tr>
+<tr>
+<td><code>class_stop &lt;serviceclass&gt;</code></td>
+<td align="left">对于所有属于该class的service，若在运行中，则终止它们，且将状态改为不可用（disabled）</td>
+</tr>
+<tr>
+<td><code>class_reset &lt;serviceclass&gt;</code></td>
+<td align="left">终止，但不设置成disabled</td>
+</tr>
+<tr>
+<td><code>class_restart [--only-enabled] &lt;serviceclass&gt;</code></td>
+<td align="left">重新启动指定类的所有服务。如果指定了“–only-enabled”，则跳过禁用的服务。</td>
+</tr>
+<tr>
+<td><code>copy &lt;src&gt; &lt;dst&gt;</code></td>
+<td align="left">复制文件，可用于二进制、大量文件场景。复制后文件权限为0600，若目标文件已存在则终止操作</td>
+</tr>
+<tr>
+<td><code>copy_per_line &lt;src&gt; &lt;dst&gt;</code></td>
+<td align="left">逐行复制文件</td>
+</tr>
+<tr>
+<td><code>domainname &lt;name&gt;</code></td>
+<td align="left">设置域名</td>
+</tr>
+<tr>
+<td><code>enable &lt;servicename&gt;</code></td>
+<td align="left">将disabled的service设置为enable状态，如果service预期运行，则运行它</td>
+</tr>
+<tr>
+<td><code>exec [ &lt;seclabel&gt; [ &lt;user&gt; [ &lt;group&gt;\ ] ] ] -- &lt;command&gt; [ &lt;argument&gt;\*] </code></td>
+<td align="left">创建进程（fork）并且执行命令，可选参数为seclabel（安全上下文，security context），用户和组。Init进程会阻塞直至命令运行结束</td>
+</tr>
+<tr>
+<td><code>exec_background [ &lt;seclabel&gt; [ &lt;user&gt; [ &lt;group&gt;\* ] ] ] -- &lt;command&gt; [ &lt;argument&gt;\* ]</code></td>
+<td align="left">与“exec”命令的处理方式类似。不同之处在于，Init 不会停止执行命令，直到进程退出“exec_background”</td>
+</tr>
+<tr>
+<td><code>exec_start &lt;service&gt;</code></td>
+<td align="left">启动一个已声明的service，并阻塞Init直至该service运行结束。它与<code>exec</code>命令类似，只不过启动对象是已声明的service</td>
+</tr>
+<tr>
+<td><code>export &lt;name&gt; &lt;value&gt;</code></td>
+<td align="left">设置global域下的环境变量，所有进程（因为它们都是Init的子进程）都可与读取到该变量</td>
+</tr>
+<tr>
+<td><code>hostname &lt;name&gt;</code></td>
+<td align="left">设置host name</td>
+</tr>
+<tr>
+<td><code>ifup &lt;interface&gt;</code></td>
+<td align="left">启用网络</td>
+</tr>
+<tr>
+<td><code>insmod [-f] &lt;path&gt; [&lt;options&gt;]</code></td>
+<td align="left">安装module到路径path</td>
+</tr>
+<tr>
+<td><code>interface_start &lt;name&gt;</code> <code>interface_restart &lt;name&gt;</code> <code>interface_stop &lt;name&gt;</code></td>
+<td align="left">找到提供接口name的服务（如果存在），并分别对其运行“start”、“restart”或“stop”命令</td>
+</tr>
+<tr>
+<td><code>load_exports &lt;path&gt;</code></td>
+<td align="left">打开位于path的文件，并导出其中声明的全局环境变量</td>
+</tr>
+<tr>
+<td><code>load_persist_props</code></td>
+<td align="left">当&#x2F;data被解密时，加载persistent属性。在默认的init.rc中会执行该逻辑</td>
+</tr>
+<tr>
+<td><code>loglevel &lt;level&gt;</code></td>
+<td align="left">设置内核日志级别</td>
+</tr>
+<tr>
+<td><code>mark_post_data</code></td>
+<td align="left">&#x2F;data被挂载后标记point</td>
+</tr>
+<tr>
+<td><code>mkdir &lt;path&gt; [mode] [owner] [group]</code></td>
+<td align="left">创建目录，可选参数为读写权限、拥有者、组别，其默认值分别为755、root、root group</td>
+</tr>
+<tr>
+<td><code>mount_all &lt;fstab&gt; [ &lt;path&gt; ]\* [--&lt;option&gt;]</code></td>
+<td align="left">在fs_mgr-format的fstab上执行fs_mgr_mount_all，导入指定path下的.rc文件。可选参数为”early”和”late”</td>
+</tr>
+<tr>
+<td><code>mount &lt;type&gt; &lt;device&gt; &lt;dir&gt; [ &lt;flag&gt;\* ] [&lt;options&gt;]</code></td>
+<td align="left">将设备挂载到指定目录，flags包括”ro”, “rw”, “remount”, “noatime”等。options包括”barier&#x3D;1”, “noauto_da_alloc”等。</td>
+</tr>
+<tr>
+<td><code>perform_apex_config</code></td>
+<td align="left">挂载 APEX 后执行任务</td>
+</tr>
+<tr>
+<td><code>restart [--only-if-running] &lt;service&gt;</code></td>
+<td align="left">停止并重新启动正在运行的服务，如果服务当前正在重新启动，则不执行任何操作，否则，它只是启动服务。如果指定了“–only-if-running”，则仅当服务已在运行时重新启动服务。</td>
+</tr>
+<tr>
+<td><code>restorecon &lt;path&gt; [ &lt;path&gt;\* ]</code></td>
+<td align="left">恢复目录下的文件</td>
+</tr>
+<tr>
+<td><code>restorecon_recursive &lt;path&gt; [ &lt;path&gt;\* ]</code></td>
+<td align="left">递归恢复目录下的文件</td>
+</tr>
+<tr>
+<td><code>rm &lt;path&gt;</code></td>
+<td align="left">对于指定path调用unlink</td>
+</tr>
+<tr>
+<td><code>rmdir &lt;path&gt;</code></td>
+<td align="left">对于指定path调用rmdir</td>
+</tr>
+<tr>
+<td>&#96;readahead &lt;file</td>
+<td align="left">dir&gt; [–fully]&#96;</td>
+</tr>
+<tr>
+<td><code>setprop &lt;name&gt; &lt;value&gt;</code></td>
+<td align="left">设置属性值</td>
+</tr>
+<tr>
+<td><code>setrlimit &lt;resource&gt; &lt;cur&gt; &lt;max&gt;</code></td>
+<td align="left">设置资源的rlimit</td>
+</tr>
+<tr>
+<td><code>start &lt;service&gt;</code></td>
+<td align="left">开启service， 注意这个操作不是阻塞的，意味着start顺序不表示运行顺序，如果service之间有依赖顺序，须谨慎使用</td>
+</tr>
+<tr>
+<td><code>stop &lt;service&gt;</code></td>
+<td align="left">停止服务</td>
+</tr>
+<tr>
+<td><code>swapon_all &lt;fstab&gt;</code></td>
+<td align="left">在指定的fstab文件上调用fs_mgr_swapon_all</td>
+</tr>
+<tr>
+<td><code>symlink &lt;target&gt; &lt;path&gt;</code></td>
+<td align="left">创建符号链接</td>
+</tr>
+<tr>
+<td><code>sysclktz &lt;mins_west_of_gmt&gt;</code></td>
+<td align="left">设置系统时钟基础值（如果是GMT则为0）</td>
+</tr>
+<tr>
+<td><code>trigger &lt;event&gt;</code></td>
+<td align="left">触发一个事件，用于action之间互相触发</td>
+</tr>
+<tr>
+<td><code>umount &lt;path&gt;</code></td>
+<td align="left">卸载挂载在path上的文件系统</td>
+</tr>
+<tr>
+<td><code>umount_all [ &lt;fstab&gt; ]</code></td>
+<td align="left">对给定的 fstab 文件调用 fs_mgr_umount_all</td>
+</tr>
+<tr>
+<td><code>verity_update_state</code></td>
+<td align="left">更新dm-verity状态并设置 adb remount 使用的 partition.<em>mount-point</em>.verified属性</td>
+</tr>
+<tr>
+<td><code>wait &lt;path&gt; [ &lt;timeout&gt; ]</code></td>
+<td align="left">轮询指定path的文件是否存在，直到它出现或者超时，默认超时时间为5s</td>
+</tr>
+<tr>
+<td><code>wait_for_prop &lt;name&gt; &lt;value&gt;</code></td>
+<td align="left">等待直至属性被定义为指定值</td>
+</tr>
+<tr>
+<td><code>write &lt;path&gt; &lt;content&gt;</code></td>
+<td align="left">打开path的文件并写入一个string，若文件不存在则先创建它。若文件存在则续写</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>Action</p>
+<ol>
+<li>Action是一系列Command的集合；</li>
+<li>每个Action拥有一个Trigger，Trigger用来决定Action什么时候被执行；</li>
+<li>当Trigger被触发，相应的Action会被添加到任务队列中（队尾插入），如果已在队列中则忽略；</li>
+<li>Action中的每条命令，将会被顺序取出并执行。</li>
+</ol>
+<ul>
+<li><p>语法格式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">on &lt;trigger&gt; [&amp;&amp; &lt;trigger&gt;]*</span><br><span class="line">	&lt;command&gt;</span><br><span class="line">	&lt;command&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>例子</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">on zygote-start &amp;&amp; property:ro.crypto.state=unsupport</span><br><span class="line">	start netd</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>Option</p>
+<p>Option是Services的修饰符（选项），通过Option告知Init如何对待Services。</p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>capabilities &lt;capability&gt; [&lt;capability&gt;\*]</code></td>
+<td>当运行该service时，设置capability，capability是Linux系统中以”CAP_”为前缀的属性</td>
+</tr>
+<tr>
+<td><code>class &lt;name&gt; [ &lt;name&gt;\* ]</code></td>
+<td>声明service的类名，用来给service归类，所有在同一类名下的service可以被同时开启&#x2F;终止。默认类名是<code>default</code>。 例如可以将开机过程中的动画service归入<code>amination</code>类</td>
+</tr>
+<tr>
+<td><code>console [&lt;console&gt;]</code></td>
+<td>表明service需要在console环境下使用，可选参数声明了默认console以外的环境。通常默认的console是<code>/dev/console</code>。</td>
+</tr>
+<tr>
+<td><code>critical [window=&lt;fatal crash window mins&gt;] [target=&lt;fatal reboot target&gt;]</code></td>
+<td>这是对设备至关重要的一个服务。如果它在四分钟内退出超过四次，则设备将重启进入恢复模式。</td>
+</tr>
+<tr>
+<td><code>disabled</code></td>
+<td>表明service不会自动启动，必须显式地通过名字来启动</td>
+</tr>
+<tr>
+<td><code>enter_namespace &lt;type&gt; &lt;path&gt;</code></td>
+<td>进入位于path的type类型的命名空间</td>
+</tr>
+<tr>
+<td><code>file &lt;path&gt; &lt;type&gt;</code></td>
+<td>打开一个文件，并将fd传给启动的进程。type取值为”r”、”w”或者”rw”</td>
+</tr>
+<tr>
+<td><code>gentle_kill</code></td>
+<td>此服务停止时将发送 SIGTERM 而不是 SIGKILL。200 毫秒超时后，将发送 SIGKILL。</td>
+</tr>
+<tr>
+<td><code>group &lt;groupname&gt; [&lt;groupbame&gt;\*]</code></td>
+<td>在执行该service前，切换组为<code>&lt;groupname&gt;</code>，默认是root。除了（必需的）第一个组名之外，其他组名用于设置进程的补充组（通过 setgroups()）。</td>
+</tr>
+<tr>
+<td><code>interface &lt;interface name&gt; &lt;instance name&gt;</code></td>
+<td>将此服务与其提供的 AIDL 或 HIDL 服务列表相关联</td>
+</tr>
+<tr>
+<td><code>ioprio &lt;class&gt; &lt;priority&gt;</code></td>
+<td>设置IO优先级</td>
+</tr>
+<tr>
+<td><code>keycodes &lt;keycode&gt; [ &lt;keycode&gt;\* ]</code></td>
+<td>设置将触发此服务的键码。如果同时按下与设置的键码对应的所有键，则服务将启动。通常用于启动bugreport服务。</td>
+</tr>
+<tr>
+<td><code>memcg.limit_in_bytes &lt;value&gt;</code></td>
+<td>设置子进程的memory.limit_in_bytes ，不小于0</td>
+</tr>
+<tr>
+<td><code>memcg.limit_property &lt;value&gt;</code></td>
+<td>设置子进程的memory.limit_in_bytes为指定属性的值</td>
+</tr>
+<tr>
+<td><code>memcg.soft_limit_in_bytes &lt;value&gt;</code></td>
+<td>设置子进程的memory.soft_limit_in_bytes ，不小于0</td>
+</tr>
+<tr>
+<td><code>memcg.swappiness &lt;value&gt;</code></td>
+<td>设置子进程的memory.swappiness，不小于0</td>
+</tr>
+<tr>
+<td>&#96;namespace &lt;pid</td>
+<td>mnt&gt;&#96;</td>
+</tr>
+<tr>
+<td><code>oneshot</code></td>
+<td>当service退出时，不主动重启</td>
+</tr>
+<tr>
+<td><code>onrestart</code></td>
+<td>当service重启（restart） 时，执行该command</td>
+</tr>
+<tr>
+<td><code>oom_score_adjust &lt;value&gt;</code></td>
+<td>设置子进程的&#x2F;proc&#x2F;self&#x2F;oom_score_adj ，取值范围-1000~1000</td>
+</tr>
+<tr>
+<td><code>override</code></td>
+<td>此service旨在覆盖具有相同名称的服务的先前定义</td>
+</tr>
+<tr>
+<td><code>priority &lt;priority&gt;</code></td>
+<td>设置service进程的优先级，范围-20~19，默认优先级是0</td>
+</tr>
+<tr>
+<td><code>reboot_on_failure &lt;target&gt;</code></td>
+<td>如果无法启动此进程，或者进程终止时退出码不是 CLD_EXITED 或状态不是“0”，使用 target中指定的目标重启系统</td>
+</tr>
+<tr>
+<td><code>restart_period &lt;seconds&gt;</code></td>
+<td>如果非一次性服务退出，它将在其开始时间加上此时间段重新启动</td>
+</tr>
+<tr>
+<td><code>rlimit &lt;resource&gt; &lt;cur&gt; &lt;max&gt;</code></td>
+<td>将给定的 rlimit 应用于服务</td>
+</tr>
+<tr>
+<td><code>seclabel &lt;seclabel&gt;</code></td>
+<td>在运行该service之前，修改<code>seclabel</code>属性，通常从rootfs启动的service会使用该选项，如ueventd, adbd</td>
+</tr>
+<tr>
+<td><code>setenv &lt;name&gt; &lt;value&gt;</code></td>
+<td>表明在service的进程中设置一个环境属性</td>
+</tr>
+<tr>
+<td><code>shutdown &lt;shutdown_behavior&gt;</code></td>
+<td>设置该service进程的关机行为。若未声明，当关机时该service被SIGTERM和SIGKILL信号终止。被声明为<code>critical</code>的service不会在关机期间被终止，直至完全关机。被声明为<code>shutdown critical</code>的service会在关机期间启动（如果它没有在运行）</td>
+</tr>
+<tr>
+<td><code>sigstop</code></td>
+<td>在调用 exec 之前立即将 SIGSTOP 发送到服务，用于调试</td>
+</tr>
+<tr>
+<td><code>socket &lt;name&gt; &lt;type&gt; &lt;perm&gt; [&lt;user&gt;[&lt;group&gt;[&lt;seclabel&gt;]]]</code></td>
+<td>启动一个名为<code>/dev/socket/name</code>的socket，并且将它的fd传给当前进程，type必须是”dgram”、”stream”、或者”seqpacket”，seclabel是SELinux的设置</td>
+</tr>
+<tr>
+<td><code>stdio_to_kmsg</code></td>
+<td>将 stdout 和 stderr 重定向到 devkmsg_debug</td>
+</tr>
+<tr>
+<td><code>task_profiles &lt;profile&gt; [ &lt;profile&gt;\* ]</code></td>
+<td>设置任务配置文件</td>
+</tr>
+<tr>
+<td><code>timeout_period &lt;seconds&gt;</code></td>
+<td>提供超时，超过该时间点后，服务将被终止</td>
+</tr>
+<tr>
+<td><code>updatable</code></td>
+<td>标记该服务可以在启动序列中稍后被 APEX 覆盖（通过“覆盖”选项）</td>
+</tr>
+<tr>
+<td><code>user &lt;username&gt;</code></td>
+<td>在执行该service前，切换用户为<code>&lt;username&gt;</code>，默认是root</td>
+</tr>
+<tr>
+<td><code>writepid &lt;file&gt; [ &lt;file&gt;\* ]</code></td>
+<td>将创建子进程时，将其pid写入指定的文件</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>Services</p>
+<p>Services指一些Programs（程序），这些程序由Init启动&#x2F;重启。</p>
+<ul>
+<li><p>语法格式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">service &lt;name&gt; &lt;pathname&gt; [&lt;argument&gt;]*</span><br><span class="line">	&lt;option&gt;</span><br><span class="line">	&lt;option&gt;</span><br><span class="line">	&lt;option&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>例子</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">service gocsdk /system/bin/gocsdk</span><br><span class="line">    class main</span><br><span class="line">    disabled</span><br><span class="line">    oneshot</span><br></pre></td></tr></table></figure>
+
+<p>gocsdk是服务的名字，这个可执行文件的位置在&#x2F;system&#x2F;bin&#x2F;gocsdk。disabled、oneshot是options，用来描述service的特点。</p>
+</li>
+</ul>
+</li>
+<li><p>Import</p>
+<p>引入其他rc文件。</p>
+<ul>
+<li><p>语法格式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &lt;path&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果path传入的是一个目录，则解析该目录下全部配置文件，非递归，嵌套目录不会被解析。</p>
+</li>
+<li><p>Init进程只在三个时间点执行import指令：</p>
+<ol>
+<li>在启动过程中解析系统根目录的&#x2F;init.rc，或者是ro.boot.init_rc属性指明的rc文件；</li>
+<li>在解析完&#x2F;init.rc，启动第一阶段时解析&#x2F;{system,vendor,odm}&#x2F;etc&#x2F;init&#x2F;文件；</li>
+<li>在mount_all指令中解析&#x2F;{system,vendor,odm}&#x2F;etc&#x2F;init&#x2F;。</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/03/09/rc%E6%96%87%E4%BB%B6/" data-id="cltjvv1bi000p8q2u9vesfbhq" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/03/09/Zygote%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/03/09/Window%E7%9A%84%E6%B7%BB%E5%8A%A0%E8%BF%87%E7%A8%8B%EF%BC%88WMS%E5%A4%84%E7%90%86%E9%83%A8%E5%88%86%EF%BC%89/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">March 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/03/09/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E5%B9%BF%E6%92%AD%E7%9A%84%E5%8F%91%E9%80%81%E5%92%8C%E6%8E%A5%E6%94%B6%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E6%B6%88%E6%81%AF%E5%BE%AA%E7%8E%AF%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E8%BD%AF%E9%87%8D%E5%90%AF%E5%8A%9F%E8%83%BD%E8%B0%83%E7%A0%94/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E4%B8%8A%E4%B8%8B%E6%96%87Context/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

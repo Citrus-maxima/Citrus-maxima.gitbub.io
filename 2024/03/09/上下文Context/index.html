@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="上下文Context 基于Android U  Context意为上下文，是一个应用程序环境信息的接口。它的使用场景总的来说分为两大类，分别是：  使用Context调用方法，比如启动Activity、访问资源、调用系统服务等。 调用方法时传入Context，比如弹出Toast、创建Dialog等。  Activity、Service和Application都间接地继承自Context，因此我们可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/03/09/%E4%B8%8A%E4%B8%8B%E6%96%87Context/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="上下文Context 基于Android U  Context意为上下文，是一个应用程序环境信息的接口。它的使用场景总的来说分为两大类，分别是：  使用Context调用方法，比如启动Activity、访问资源、调用系统服务等。 调用方法时传入Context，比如弹出Toast、创建Dialog等。  Activity、Service和Application都间接地继承自Context，因此我们可">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2024/01/03/Gubp61ZmkDIcVdY.jpg">
+<meta property="og:image" content="https://s2.loli.net/2024/01/03/78Io3ZtzYm5AdlF.jpg">
+<meta property="og:image" content="https://s2.loli.net/2024/01/03/jfPZ8H7DeuUIdB6.jpg">
+<meta property="article:published_time" content="2024-03-09T07:30:58.575Z">
+<meta property="article:modified_time" content="2024-03-09T07:30:58.575Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2024/01/03/Gubp61ZmkDIcVdY.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-上下文Context" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/09/%E4%B8%8A%E4%B8%8B%E6%96%87Context/" class="article-date">
+  <time class="dt-published" datetime="2024-03-09T07:30:58.575Z" itemprop="datePublished">2024-03-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="上下文Context"><a href="#上下文Context" class="headerlink" title="上下文Context"></a><center>上下文Context</center></h2><blockquote>
+<p>基于Android U</p>
+</blockquote>
+<p>Context意为上下文，是一个应用程序环境信息的接口。它的使用场景总的来说分为两大类，分别是：</p>
+<ul>
+<li>使用Context调用方法，比如启动Activity、访问资源、调用系统服务等。</li>
+<li>调用方法时传入Context，比如弹出Toast、创建Dialog等。</li>
+</ul>
+<p>Activity、Service和Application都间接地继承自Context，因此我们可以计算出一个应用程序进程中有多少个Context，这个数量等于Activity和Service的总个数加1，1指的是Application的数量。</p>
+<p>Context是一个抽象类，它的内部定义了很多方法以及静态变量，它的具体实现类为ContextImpl。和Context相关联的类，除了ContextImpl，还有ContextWrapper、ContextThemeWrapper和Activity等。</p>
+<img src="https://s2.loli.net/2024/01/03/Gubp61ZmkDIcVdY.jpg" style="zoom:50%;" />
+
+<p>ContextImpl和ContextWrapper继承自Context，ContextWrapper内部包含Context类型的mBase对象，mBase具体指向ContextImpl。ContextImpl提供了很多功能，但是外界需要使用并拓展ContextImpl的功能，因此设计上使用了装饰模式，ContextWrapper是装饰类，它对ContextImpl进行包装，ContextWrapper主要是起了方法传递的作用，ContextWrapper中几乎所有的方法都是调用ContextImpl的相应方法来实现的。ContextThemeWrapper、Service和Application都继承自ContextWrapper，这样它们都可以通过mBase来使用Context的方法，同时它们也是装饰类，在ContextWrapper的基础上又添加了不同的功能。ContextThemeWrapper中包含和主题相关的方法（比如getTheme方法），因此需要主题的Activity继承ContextThemeWrapper，而不需要主题的Service继承ContextWrapper。</p>
+<p>Context的关联类采用了装饰模式，主要有以下的优点：</p>
+<ul>
+<li>使用者（比如Service）能够更方便地使用Context。</li>
+<li>如果ContextImpl发生了变化，它的装饰者ContextWrapper不需要做任何修改。</li>
+<li>ContextImpl的实现不会暴露给使用者，使用者也不必关心ContextImpl的实现。</li>
+<li>通过组合而非继承的方式，拓展ContextImpl的功能，在运行时选择不同的装饰者，实现不同的功能。</li>
+</ul>
+<h4 id="Application-Context的创建过程"><a href="#Application-Context的创建过程" class="headerlink" title="Application Context的创建过程"></a>Application Context的创建过程</h4><p><img src="https://s2.loli.net/2024/01/03/78Io3ZtzYm5AdlF.jpg"></p>
+<p>我们通过调用getApplicationContext来获取应用程序全局的Application Context，那么Application Context是如何创建的呢？在一个应用程序启动完成后，应用程序就会有一个全局的Application Context，那么我们就从应用程序启动过程开始着手。</p>
+<p>从ActivityThread的performLaunchActivity()方法开始（前面的调用部分可以看《根Activity的启动过程》）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/ActivityThread.java</span><br><span class="line"><span class="keyword">private</span> Activity <span class="title function_">performLaunchActivity</span><span class="params">(ActivityClientRecord r, Intent customIntent)</span> &#123;</span><br><span class="line">   ...</span><br><span class="line"></span><br><span class="line">   <span class="type">ContextImpl</span> <span class="variable">appContext</span> <span class="operator">=</span> createBaseContextForActivity(r);</span><br><span class="line">   <span class="type">Activity</span> <span class="variable">activity</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">   <span class="keyword">try</span> &#123;</span><br><span class="line">       java.lang.<span class="type">ClassLoader</span> <span class="variable">cl</span> <span class="operator">=</span> appContext.getClassLoader();</span><br><span class="line">       activity = mInstrumentation.newActivity(</span><br><span class="line">               cl, component.getClassName(), r.intent);  <span class="comment">// 1</span></span><br><span class="line">       StrictMode.incrementExpectedActivityCount(activity.getClass());</span><br><span class="line">       r.intent.setExtrasClassLoader(cl);</span><br><span class="line">       r.intent.prepareToEnterProcess(isProtectedComponent(r.activityInfo),</span><br><span class="line">               appContext.getAttributionSource());</span><br><span class="line">       <span class="keyword">if</span> (r.state != <span class="literal">null</span>) &#123;</span><br><span class="line">           r.state.setClassLoader(cl);</span><br><span class="line">       &#125;</span><br><span class="line">   &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">       ...</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">try</span> &#123;</span><br><span class="line">       <span class="type">Application</span> <span class="variable">app</span> <span class="operator">=</span> r.packageInfo.makeApplicationInner(<span class="literal">false</span>, mInstrumentation);  <span class="comment">// 2</span></span><br><span class="line">       ...</span><br><span class="line">       <span class="keyword">if</span> (activity != <span class="literal">null</span>) &#123;</span><br><span class="line">           ...</span><br><span class="line">           activity.attach(appContext, <span class="built_in">this</span>, getInstrumentation(), r.token,</span><br><span class="line">                   r.ident, app, r.intent, r.activityInfo, title, r.parent,</span><br><span class="line">                   r.embeddedID, r.lastNonConfigurationInstances, config,</span><br><span class="line">                   r.referrer, r.voiceInteractor, window, r.activityConfigCallback,</span><br><span class="line">                   r.assistToken, r.shareableActivityToken);  <span class="comment">// 3</span></span><br><span class="line">           ...</span><br><span class="line">           <span class="comment">// 4</span></span><br><span class="line">           <span class="keyword">if</span> (r.isPersistable()) &#123;</span><br><span class="line">               mInstrumentation.callActivityOnCreate(activity, r.state, r.persistentState);</span><br><span class="line">           &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">               mInstrumentation.callActivityOnCreate(activity, r.state);</span><br><span class="line">           &#125;</span><br><span class="line">           ...</span><br><span class="line">       &#125;</span><br><span class="line">       ...</span><br><span class="line">   &#125; <span class="keyword">catch</span> (SuperNotCalledException e) &#123;</span><br><span class="line">       ...</span><br><span class="line">   &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">       ...</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">return</span> activity;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处创建Activity实例，这里的Activity指的是我们要启动的新的XXXActivity。调用了Instrumentation类的newActivity()方法；</p>
+<p>注释2处尝试<strong>创建Application</strong>，r.packageInfo返回的是LoadedApk对象，调用了LoadedApk的makeApplicationInner()方法。</p>
+<p>注释3处创建Activity的PhoneWindow，并将当前线程设置成主线程。我们在这个fork出来的新进程中还没有创建其他线程，这个Activity也是该App启动的第一个Activity，所以这个Activity就是在主线程中运行的。</p>
+<p>注释4处调用了Instrumentation的callActivityOnCreate()，执行新Activity的onCreate生命周期。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/LoadedApk.java</span><br><span class="line"><span class="keyword">public</span> Application <span class="title function_">makeApplicationInner</span><span class="params">(<span class="type">boolean</span> forceDefaultAppClass,</span></span><br><span class="line"><span class="params">        Instrumentation instrumentation)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> makeApplicationInner(forceDefaultAppClass, instrumentation,</span><br><span class="line">            <span class="comment">/* allowDuplicateInstances= */</span> <span class="literal">false</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> Application <span class="title function_">makeApplicationInner</span><span class="params">(<span class="type">boolean</span> forceDefaultAppClass,</span></span><br><span class="line"><span class="params">        Instrumentation instrumentation, <span class="type">boolean</span> allowDuplicateInstances)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (mApplication != <span class="literal">null</span>) &#123;  <span class="comment">// 1</span></span><br><span class="line">        <span class="keyword">return</span> mApplication;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">    <span class="type">Application</span> <span class="variable">app</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="type">ContextImpl</span> <span class="variable">appContext</span> <span class="operator">=</span> ContextImpl.createAppContext(mActivityThread, <span class="built_in">this</span>);  <span class="comment">// 2</span></span><br><span class="line">        <span class="comment">// The network security config needs to be aware of multiple</span></span><br><span class="line">        <span class="comment">// applications in the same process to handle discrepancies</span></span><br><span class="line">        NetworkSecurityConfigProvider.handleNewApplication(appContext);</span><br><span class="line">        app = mActivityThread.mInstrumentation.newApplication(</span><br><span class="line">                cl, appClass, appContext);  <span class="comment">// 3</span></span><br><span class="line">        appContext.setOuterContext(app);  <span class="comment">// 4</span></span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    mActivityThread.mAllApplications.add(app);</span><br><span class="line">    mApplication = app;  <span class="comment">// 5</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> app;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处如果mApplication不为null则返回mApplication，这里假设是第一次启动应用程序，因此mApplication为null。</p>
+<p>注释2处通过ContextImpl的createAppContext()方法来创建ContextImpl。</p>
+<p>注释3处<strong>创建Application</strong>，在Instrumentation的newApplication()方法中传入了ClassLoader类型的对象以及注释2处创建的ContextImpl。</p>
+<p>注释4处将Application赋值给ContextImpl的Context类型的成员变量mOuterContext，这样ContextImpl中也包含了Application的引用。</p>
+<p>注释5处将Application赋值给LoadedApk的成员变量mApplication，这个mApplication是Application类型的对象，它用来代表Application Context。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/Instrumentation.java</span><br><span class="line"><span class="keyword">public</span> Application <span class="title function_">newApplication</span><span class="params">(ClassLoader cl, String className, Context context)</span></span><br><span class="line">        <span class="keyword">throws</span> InstantiationException, IllegalAccessException, </span><br><span class="line">        ClassNotFoundException &#123;</span><br><span class="line">    <span class="type">Application</span> <span class="variable">app</span> <span class="operator">=</span> getFactory(context.getPackageName())</span><br><span class="line">            .instantiateApplication(cl, className);  <span class="comment">// 1</span></span><br><span class="line">    app.attach(context);  <span class="comment">// 2</span></span><br><span class="line">    <span class="keyword">return</span> app;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处通过反射来创建Application，注释2处调用了Application的attach()方法，将ContextImpl传进去，最后返回该Application。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/Application.java</span><br><span class="line"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">attach</span><span class="params">(Context context)</span> &#123;</span><br><span class="line">    attachBaseContext(context);</span><br><span class="line">    mLoadedApk = ContextImpl.getImpl(context).mPackageInfo;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用attachBaseContext()，它在Application的父类ContextWrapper中实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/content/ContextWrapper.java</span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">attachBaseContext</span><span class="params">(Context base)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (mBase != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;Base context already set&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    mBase = base;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个base一路传递过来指的是ContextImpl，它是Context的实现类，将ContextImpl赋值给ContextWrapper的Context类型的成员变量mBase，这样在ContextWrapper中就可以使用Context的方法，而Application继承自ContextWrapper，同样可以使用Context的方法。Application的attach()方法的作用就是使Application可以使用Context的方法，这样Application才可以用来代表Application Context。</p>
+<h4 id="Application-Context的获取过程"><a href="#Application-Context的获取过程" class="headerlink" title="Application Context的获取过程"></a>Application Context的获取过程</h4><p>我们通过调用getApplicationContext()方法来获得Application Context，getApplicationContext()方法在ContextWrapper中实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/content/ContextWrapper.java</span><br><span class="line"><span class="keyword">public</span> Context <span class="title function_">getApplicationContext</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> mBase.getApplicationContext();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>mBase指的是ContextImpl。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/ContextImpl.java</span><br><span class="line"><span class="keyword">public</span> Context <span class="title function_">getApplicationContext</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> (mPackageInfo != <span class="literal">null</span>) ?</span><br><span class="line">            mPackageInfo.getApplication() : mMainThread.getApplication();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果LoadedApk类型的mPackageInfo不为null，则调用LoadedApk的getApplication()方法，否则调用ActivityThread的getApplication()方法。由于应用程序这时已经启动，因此LoadedApk不会为null。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/LoadedApk.java</span><br><span class="line">Application <span class="title function_">getApplication</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> mApplication;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的mApplication在上文LoadedApk的makeApplication()方法的注释5处被赋值。这样我们通过getApplication()方法就获取到了Application Context。</p>
+<h4 id="Activity的Context创建过程"><a href="#Activity的Context创建过程" class="headerlink" title="Activity的Context创建过程"></a>Activity的Context创建过程</h4><p><img src="https://s2.loli.net/2024/01/03/jfPZ8H7DeuUIdB6.jpg"></p>
+<p>想要在Activity中使用Context提供的方法，务必要先创建Context。Activity的Context会在Activity的启动过程中被创建。</p>
+<p>从ActivityThread的performLaunchActivity()方法开始（前面的调用部分可以看《根Activity的启动过程》）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/ActivityThread.java</span><br><span class="line"><span class="keyword">private</span> Activity <span class="title function_">performLaunchActivity</span><span class="params">(ActivityClientRecord r, Intent customIntent)</span> &#123;</span><br><span class="line">   ...</span><br><span class="line"></span><br><span class="line">   <span class="type">ContextImpl</span> <span class="variable">appContext</span> <span class="operator">=</span> createBaseContextForActivity(r);  <span class="comment">// 1</span></span><br><span class="line">   <span class="type">Activity</span> <span class="variable">activity</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">   <span class="keyword">try</span> &#123;</span><br><span class="line">       java.lang.<span class="type">ClassLoader</span> <span class="variable">cl</span> <span class="operator">=</span> appContext.getClassLoader();</span><br><span class="line">       activity = mInstrumentation.newActivity(</span><br><span class="line">               cl, component.getClassName(), r.intent);  <span class="comment">// 2</span></span><br><span class="line">       ...</span><br><span class="line">   &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">       ...</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">try</span> &#123;</span><br><span class="line">       </span><br><span class="line">       ...</span><br><span class="line">       <span class="keyword">if</span> (activity != <span class="literal">null</span>) &#123;</span><br><span class="line">           ...</span><br><span class="line">           appContext.setOuterContext(activity);  <span class="comment">// 3</span></span><br><span class="line">           activity.attach(appContext, <span class="built_in">this</span>, getInstrumentation(), r.token,</span><br><span class="line">                   r.ident, app, r.intent, r.activityInfo, title, r.parent,</span><br><span class="line">                   r.embeddedID, r.lastNonConfigurationInstances, config,</span><br><span class="line">                   r.referrer, r.voiceInteractor, window, r.activityConfigCallback,</span><br><span class="line">                   r.assistToken, r.shareableActivityToken);  <span class="comment">// 4</span></span><br><span class="line">           ...</span><br><span class="line">           <span class="comment">// 5</span></span><br><span class="line">           <span class="keyword">if</span> (r.isPersistable()) &#123;</span><br><span class="line">               mInstrumentation.callActivityOnCreate(activity, r.state, r.persistentState);</span><br><span class="line">           &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">               mInstrumentation.callActivityOnCreate(activity, r.state);</span><br><span class="line">           &#125;</span><br><span class="line">           ...</span><br><span class="line">       &#125;</span><br><span class="line">       ...</span><br><span class="line">   &#125; <span class="keyword">catch</span> (SuperNotCalledException e) &#123;</span><br><span class="line">       ...</span><br><span class="line">   &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">       ...</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">return</span> activity;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释2处用来创建Activity的实例。</p>
+<p>注释1处通过createBaseContextForActivity()方法来创建Activity的ContextImpl，并将ContextImpl传入注释4处的activity的attach()方法中。</p>
+<p>注释3处调用了ContextImpl的setOuterContext()方法，将此前创建的Acitivity实例赋值给ContextImpl的成员变量mOuterContext，这样ContextImpl也可以访问Activity的变量和方法。</p>
+<p>注释5处mInstrumentation的callActivityOnCreate()方法中会调用Activity的onCreate()方法。</p>
+<ol>
+<li><p>createBaseContextForActivity()</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/ActivityThread.java</span><br><span class="line"><span class="keyword">private</span> ContextImpl <span class="title function_">createBaseContextForActivity</span><span class="params">(ActivityClientRecord r)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="type">ContextImpl</span> <span class="variable">appContext</span> <span class="operator">=</span> ContextImpl.createActivityContext(</span><br><span class="line">            <span class="built_in">this</span>, r.packageInfo, r.activityInfo, r.token, displayId, r.overrideConfig);</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> appContext;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在createBaseContextForActivity()中会调用ContextImpl的createActivityContext()方法来创建ContextImpl。</p>
+</li>
+<li><p>activity.attach()</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/Activity.java</span><br><span class="line"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">attach</span><span class="params">(Context context, ActivityThread aThread,</span></span><br><span class="line"><span class="params">        Instrumentation instr, IBinder token, <span class="type">int</span> ident,</span></span><br><span class="line"><span class="params">        Application application, Intent intent, ActivityInfo info,</span></span><br><span class="line"><span class="params">        CharSequence title, Activity parent, String id,</span></span><br><span class="line"><span class="params">        NonConfigurationInstances lastNonConfigurationInstances,</span></span><br><span class="line"><span class="params">        Configuration config, String referrer, IVoiceInteractor voiceInteractor,</span></span><br><span class="line"><span class="params">        Window window, ActivityConfigCallback activityConfigCallback, IBinder assistToken,</span></span><br><span class="line"><span class="params">        IBinder shareableActivityToken)</span> &#123;</span><br><span class="line">    attachBaseContext(context);  <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line">    mFragments.attachHost(<span class="literal">null</span> <span class="comment">/*parent*/</span>);</span><br><span class="line">    mActivityInfo = info;</span><br><span class="line"></span><br><span class="line">    mWindow = <span class="keyword">new</span> <span class="title class_">PhoneWindow</span>(<span class="built_in">this</span>, window, activityConfigCallback);  <span class="comment">// 2</span></span><br><span class="line">    mWindow.setWindowControllerCallback(mWindowControllerCallback);</span><br><span class="line">    mWindow.setCallback(<span class="built_in">this</span>);  <span class="comment">// 3</span></span><br><span class="line">    mWindow.setOnWindowDismissedCallback(<span class="built_in">this</span>);</span><br><span class="line">    mWindow.getLayoutInflater().setPrivateFactory(<span class="built_in">this</span>);</span><br><span class="line">    ...</span><br><span class="line">    mWindow.setWindowManager(</span><br><span class="line">            (WindowManager)context.getSystemService(Context.WINDOW_SERVICE),</span><br><span class="line">            mToken, mComponent.flattenToString(),</span><br><span class="line">            (info.flags &amp; ActivityInfo.FLAG_HARDWARE_ACCELERATED) != <span class="number">0</span>);  <span class="comment">// 4</span></span><br><span class="line">    <span class="keyword">if</span> (mParent != <span class="literal">null</span>) &#123;</span><br><span class="line">        mWindow.setContainer(mParent.getWindow());</span><br><span class="line">    &#125;</span><br><span class="line">    mWindowManager = mWindow.getWindowManager();  <span class="comment">// 5</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在注释2处创建PhoneWindow，它代表应用程序窗口。PhoneWindow在运行中会间接触发很多事件，比如点击、菜单弹出、屏幕焦点变化等事件，这些事件需要转发给与PhoneWindow关联的Activity，转发操作通过Window.Callback接口实现，Activity实现了这个接口。在注释3处将当前Activity通过Window的setCallback()方法传递给PhoneWindow。在注释4处为PhoneWindow设置WindowManager，在注释5处获取WindowManager并赋值给Activity的成员变量mWindowManager，这样在Activity中就可以通过getWindowManager()方法来获取WindowManager。</p>
+<p>注释1处的attachBaseContext()方法在ContextThemeWrapper中实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/view/ContextThemeWrapper.java</span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">attachBaseContext</span><span class="params">(Context newBase)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>.attachBaseContext(newBase);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>attachBaseContext()调用ContextThemeWrapper父类ContextWrapper的attachBaseContext()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/content/ContextWrapper.java</span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">attachBaseContext</span><span class="params">(Context base)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (mBase != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;Base context already set&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    mBase = base;  <span class="comment">// 1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处的base指的是一路传递过来的Activity的ContextImpl，将它赋值给ContextWrapper的成员变量mBase。这样ContextWrapper的功能就可以交由ContextImpl来处理。举个例子，如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/content/ContextWrapper.java</span><br><span class="line"><span class="keyword">public</span> Resources.Theme <span class="title function_">getTheme</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> mBase.getTheme();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当我们调用ContextWrapper的getTheme()方法时，其实就是调用了ContextImpl的getTheme()方法。</p>
+<p>总结：在启动Activity的过程中创建ContextImpl，并赋值给ContextWrapper的成员变量mBase。Activity继承自ContextWrapper的子类ContextThemeWrapper，这样在Activity中就可以使用Context中定义的方法了。</p>
+</li>
+</ol>
+<h4 id="Service的Context创建过程"><a href="#Service的Context创建过程" class="headerlink" title="Service的Context创建过程"></a>Service的Context创建过程</h4><p>Service的Context创建过程与Activity的Context创建过程类似，是在Service的启动过程中被创建的。</p>
+<p>我们从ActivityThread的handleCreateService()开始分析。</p>
+<p>handleMessage()方法根据消息类型为CREATE_SERVICE，会调用handleCreateService()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/ActivityThread.java</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">handleCreateService</span><span class="params">(CreateServiceData data)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="type">ContextImpl</span> <span class="variable">context</span> <span class="operator">=</span> ContextImpl.getImpl(service</span><br><span class="line">                .createServiceBaseContext(<span class="built_in">this</span>, packageInfo));  <span class="comment">// 1</span></span><br><span class="line">        ...</span><br><span class="line">        context.setOuterContext(service);</span><br><span class="line">        service.attach(context, <span class="built_in">this</span>, data.info.name, data.token, app,</span><br><span class="line">                ActivityManager.getService());  <span class="comment">// 2</span></span><br><span class="line">        ...</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处通过ContextImpl的createServiceBaseContext()方法创建了ContextImpl，并将该ContextImpl传入注释2处service的attach()方法中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/Service.java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">attach</span><span class="params">(</span></span><br><span class="line"><span class="params">        Context context,</span></span><br><span class="line"><span class="params">        ActivityThread thread, String className, IBinder token,</span></span><br><span class="line"><span class="params">        Application application, Object activityManager)</span> &#123;</span><br><span class="line">    attachBaseContext(context);  <span class="comment">// 1</span></span><br><span class="line">    mThread = thread;           <span class="comment">// <span class="doctag">NOTE:</span>  unused - remove?</span></span><br><span class="line">    mClassName = className;</span><br><span class="line">    mToken = token;</span><br><span class="line">    mApplication = application;</span><br><span class="line">    mActivityManager = (IActivityManager)activityManager;</span><br><span class="line">    mStartCompatibility = getApplicationInfo().targetSdkVersion</span><br><span class="line">            &lt; Build.VERSION_CODES.ECLAIR;</span><br><span class="line"></span><br><span class="line">    setContentCaptureOptions(application.getContentCaptureOptions());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处调用了attachBaseContext()。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/Service.java</span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">attachBaseContext</span><span class="params">(Context newBase)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>.attachBaseContext(newBase);  <span class="comment">// 1</span></span><br><span class="line">    <span class="keyword">if</span> (newBase != <span class="literal">null</span>) &#123;</span><br><span class="line">        newBase.setContentCaptureOptions(getContentCaptureOptions());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处调用了ContextWrapper的attachBaseContext()。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/content/ContextWrapper.java</span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">attachBaseContext</span><span class="params">(Context base)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (mBase != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;Base context already set&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    mBase = base;  <span class="comment">// 1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处的base指的是一路传递过来的Service的ContextImpl，将它赋值给ContextWrapper的成员变量mBase。这样在ContextWrapper中就可以使用Context的方法，而Service继承自ContextWrapper，同样可以使用Context的方法。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/03/09/%E4%B8%8A%E4%B8%8B%E6%96%87Context/" data-id="cltjvv1bj000q8q2ufheg179d" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/03/09/%E8%BD%AF%E9%87%8D%E5%90%AF%E5%8A%9F%E8%83%BD%E8%B0%83%E7%A0%94/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/03/09/%E5%B9%BF%E6%92%AD%E7%9A%84%E6%B3%A8%E5%86%8C%E8%BF%87%E7%A8%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">March 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/03/09/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E5%B9%BF%E6%92%AD%E7%9A%84%E5%8F%91%E9%80%81%E5%92%8C%E6%8E%A5%E6%94%B6%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E6%B6%88%E6%81%AF%E5%BE%AA%E7%8E%AF%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E8%BD%AF%E9%87%8D%E5%90%AF%E5%8A%9F%E8%83%BD%E8%B0%83%E7%A0%94/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E4%B8%8A%E4%B8%8B%E6%96%87Context/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

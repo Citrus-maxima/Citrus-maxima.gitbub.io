@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="AMS的启动过程 基于Android U  AMS的启动是在SystemServer进程中启动的。从SystemServer的main()方法开始。 1234frameworks&#x2F;base&#x2F;services&#x2F;java&#x2F;com&#x2F;android&#x2F;server&#x2F;SystemServer.javapublic static void main(String[] args) &amp;#123;    new Sy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/03/09/AMS%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="AMS的启动过程 基于Android U  AMS的启动是在SystemServer进程中启动的。从SystemServer的main()方法开始。 1234frameworks&#x2F;base&#x2F;services&#x2F;java&#x2F;com&#x2F;android&#x2F;server&#x2F;SystemServer.javapublic static void main(String[] args) &amp;#123;    new Sy">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-03-09T07:30:58.559Z">
+<meta property="article:modified_time" content="2024-03-09T07:30:58.560Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-AMS的启动过程" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/09/AMS%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/" class="article-date">
+  <time class="dt-published" datetime="2024-03-09T07:30:58.559Z" itemprop="datePublished">2024-03-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="AMS的启动过程"><a href="#AMS的启动过程" class="headerlink" title="AMS的启动过程"></a><center>AMS的启动过程</center></h2><blockquote>
+<p>基于Android U</p>
+</blockquote>
+<p>AMS的启动是在SystemServer进程中启动的。从SystemServer的main()方法开始。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/java/com/android/server/SystemServer.java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">SystemServer</span>().run();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用了run()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/java/com/android/server/SystemServer.java</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="comment">// 创建消息Looper</span></span><br><span class="line">        Looper.prepareMainLooper();</span><br><span class="line">        ...</span><br><span class="line">        <span class="comment">// Initialize native services.</span></span><br><span class="line">        System.loadLibrary(<span class="string">&quot;android_servers&quot;</span>);  <span class="comment">// 1</span></span><br><span class="line">        ...</span><br><span class="line">        <span class="comment">// Initialize the system context.</span></span><br><span class="line">        <span class="comment">// 创建系统的Context</span></span><br><span class="line">        createSystemContext();</span><br><span class="line">        ...</span><br><span class="line">        <span class="comment">// Create the system service manager.</span></span><br><span class="line">        mSystemServiceManager = <span class="keyword">new</span> <span class="title class_">SystemServiceManager</span>(mSystemContext);  <span class="comment">// 2</span></span><br><span class="line">        mSystemServiceManager.setStartInfo(mRuntimeRestart,</span><br><span class="line">                mRuntimeStartElapsedTime, mRuntimeStartUptime);</span><br><span class="line">        mDumper.addDumpable(mSystemServiceManager);</span><br><span class="line"></span><br><span class="line">        LocalServices.addService(SystemServiceManager.class, mSystemServiceManager);</span><br><span class="line">        ...</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// Start services.</span></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        t.traceBegin(<span class="string">&quot;StartServices&quot;</span>);</span><br><span class="line">        <span class="comment">// 启动引导服务</span></span><br><span class="line">        startBootstrapServices(t);  <span class="comment">//3</span></span><br><span class="line">        <span class="comment">// 启动核心服务</span></span><br><span class="line">        startCoreServices(t);  <span class="comment">// 4</span></span><br><span class="line">        <span class="comment">// 启动其他服务</span></span><br><span class="line">        startOtherServices(t);  <span class="comment">// 5</span></span><br><span class="line">        <span class="comment">// 启动apex服务</span></span><br><span class="line">        startApexServices(t);  <span class="comment">// 6</span></span><br><span class="line">        <span class="comment">// Only update the timeout after starting all the services so that we use</span></span><br><span class="line">        <span class="comment">// the default timeout to start system server.</span></span><br><span class="line">        updateWatchdogTimeout(t);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// Loop forever.</span></span><br><span class="line">    Looper.loop();</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;Main thread loop unexpectedly exited&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处加载了动态库libandroid_servers.so。</p>
+<p>注释2处创建SystemServiceManager，它会对系统的服务进行创建、启动和生命周期管理。</p>
+<p>注释3处的startBootstrapServices()方法中用SystemServiceManager启动了ActivityManagerService、PowerManagerService、PackageManagerService等服务。</p>
+<p>注释4处的startCoreServices()方法中则启动了BatteryService、UsageStatsService、WebViewUpdateService等服务。</p>
+<p>注释5处的startOtherServices()方法中启动了AlarmManagerService、VrManagerService、InputManagerService等服务，主要是一些和设备功能相关的服务，是一些非紧要和不需要立即启动的服务。</p>
+<p>注释6处的startApexServices()方法会遍历所有已安装的Apex服务，并调用它们的启动方法，使它们在系统启动时自动运行。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/java/com/android/server/SystemServer.java</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">startBootstrapServices</span><span class="params">(<span class="meta">@NonNull</span> TimingsTraceAndSlog t)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// Activity manager runs the show.</span></span><br><span class="line">    t.traceBegin(<span class="string">&quot;StartActivityManager&quot;</span>);</span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> Might need to move after migration to WM.</span></span><br><span class="line">    <span class="type">ActivityTaskManagerService</span> <span class="variable">atm</span> <span class="operator">=</span> mSystemServiceManager.startService(</span><br><span class="line">            ActivityTaskManagerService.Lifecycle.class).getService();</span><br><span class="line">    mActivityManagerService = ActivityManagerService.Lifecycle.startService(</span><br><span class="line">            mSystemServiceManager, atm);  <span class="comment">// 1</span></span><br><span class="line">    mActivityManagerService.setSystemServiceManager(mSystemServiceManager);</span><br><span class="line">    mActivityManagerService.setInstaller(installer);</span><br><span class="line">    mWindowManagerGlobalLock = atm.getGlobalLock();</span><br><span class="line">    t.traceEnd();</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用ActivityManagerService#Lifecycle.startService()。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/am/ActivityManagerService$Lifecycle</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">Lifecycle</span> <span class="keyword">extends</span> <span class="title class_">SystemService</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ActivityManagerService mService;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ActivityTaskManagerService sAtm;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Lifecycle</span><span class="params">(Context context)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>(context);</span><br><span class="line">        mService = <span class="keyword">new</span> <span class="title class_">ActivityManagerService</span>(context, sAtm);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> ActivityManagerService <span class="title function_">startService</span><span class="params">(</span></span><br><span class="line"><span class="params">            SystemServiceManager ssm, ActivityTaskManagerService atm)</span> &#123;</span><br><span class="line">        sAtm = atm;</span><br><span class="line">        <span class="keyword">return</span> ssm.startService(ActivityManagerService.Lifecycle.class).getService();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用SystemServiceManager的startService()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/SystemServiceManager.java</span><br><span class="line"><span class="keyword">public</span> &lt;T <span class="keyword">extends</span> <span class="title class_">SystemService</span>&gt; T <span class="title function_">startService</span><span class="params">(Class&lt;T&gt; serviceClass)</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">final</span> T service;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Constructor&lt;T&gt; constructor = serviceClass.getConstructor(Context.class);</span><br><span class="line">            service = constructor.newInstance(mContext);  <span class="comment">// 1</span></span><br><span class="line">        &#125; <span class="keyword">catch</span> (InstantiationException ex) &#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IllegalAccessException ex) &#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125; <span class="keyword">catch</span> (NoSuchMethodException ex) &#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InvocationTargetException ex) &#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        startService(service);  <span class="comment">// 2</span></span><br><span class="line">        <span class="keyword">return</span> service;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">startService</span><span class="params">(<span class="meta">@NonNull</span> <span class="keyword">final</span> SystemService service)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// Register it.</span></span><br><span class="line">    mServices.add(service);  <span class="comment">// 3</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        service.onStart();  <span class="comment">// 4</span></span><br><span class="line">    &#125; <span class="keyword">catch</span> (RuntimeException ex) &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处SystemServiceManager中通过反射，调用了ActivityManagerService$Lifecycle的构造方法。</p>
+<p>注释2处又调用了startService()。</p>
+<p>注释3处将service对象添加到ArrayList类型的mServices中来完成注册。</p>
+<p>注释4处调用service.onStart()来启动service对象，即ActivityManagerService$Lifecycle.onStart()。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/am/ActivityManagerService$Lifecycle</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">Lifecycle</span> <span class="keyword">extends</span> <span class="title class_">SystemService</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ActivityManagerService mService;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Lifecycle</span><span class="params">(Context context)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>(context);</span><br><span class="line">        mService = <span class="keyword">new</span> <span class="title class_">ActivityManagerService</span>(context, sAtm);  <span class="comment">// 1</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onStart</span><span class="params">()</span> &#123;</span><br><span class="line">        mService.start();  <span class="comment">// 2</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> ActivityManagerService <span class="title function_">getService</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> mService;  <span class="comment">// 3</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码需要结合SystemServiceManager的startService()方法来分析。</p>
+<p>注释1处，在Lifecycle的构造方法中创建了AMS实例。当调用SystemService类型的service的onStart()方法时，实际上是调用了注释2处AMS的start()方法。注释3处的Lifecycle的getService()方法返回AMS实例，这样我们就知道SystemServer的startBootstrapServices()方法的注释1处实际得到的就是AMS实例。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/03/09/AMS%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/" data-id="cltjvv1az00008q2u58ye9j9y" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/03/09/AMS%E4%B8%8E%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%BF%9B%E7%A8%8B/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/03/08/Android%E5%85%A8%E6%A0%88%E7%9F%A5%E8%AF%86%E4%BD%93%E7%B3%BB/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Android全栈知识体系</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">March 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/03/09/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E5%B9%BF%E6%92%AD%E7%9A%84%E5%8F%91%E9%80%81%E5%92%8C%E6%8E%A5%E6%94%B6%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E6%B6%88%E6%81%AF%E5%BE%AA%E7%8E%AF%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E8%BD%AF%E9%87%8D%E5%90%AF%E5%8A%9F%E8%83%BD%E8%B0%83%E7%A0%94/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E4%B8%8A%E4%B8%8B%E6%96%87Context/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

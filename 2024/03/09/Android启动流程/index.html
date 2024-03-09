@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Android启动流程从上电开始到系统服务启动完成。整个流程的可以简述为：BootLoader -&gt; Kernel -&gt; Native-&gt; Framework-&gt; App  上电引导芯片从固化在ROM里预设的代码开始执行。它将引导加载程序加载到RAM中并开始执行。 BootloaderBootloader的主要作用是准备硬件环境，引导Linux Kernel（Linux内核">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/03/09/Android%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Android启动流程从上电开始到系统服务启动完成。整个流程的可以简述为：BootLoader -&gt; Kernel -&gt; Native-&gt; Framework-&gt; App  上电引导芯片从固化在ROM里预设的代码开始执行。它将引导加载程序加载到RAM中并开始执行。 BootloaderBootloader的主要作用是准备硬件环境，引导Linux Kernel（Linux内核">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2023/08/20/PGQjbu91vAdHFRy.png">
+<meta property="article:published_time" content="2024-03-09T07:30:58.562Z">
+<meta property="article:modified_time" content="2024-03-09T07:30:58.562Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/08/20/PGQjbu91vAdHFRy.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Android启动流程" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/09/Android%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" class="article-date">
+  <time class="dt-published" datetime="2024-03-09T07:30:58.562Z" itemprop="datePublished">2024-03-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="Android启动流程"><a href="#Android启动流程" class="headerlink" title="Android启动流程"></a><center>Android启动流程</center></h1><p>从上电开始到系统服务启动完成。整个流程的可以简述为：BootLoader -&gt; Kernel -&gt; Native-&gt; Framework-&gt; App</p>
+<p><img src="https://s2.loli.net/2023/08/20/PGQjbu91vAdHFRy.png"></p>
+<h3 id="上电"><a href="#上电" class="headerlink" title="上电"></a>上电</h3><p>引导芯片从固化在ROM里预设的代码开始执行。它将引导加载程序加载到RAM中并开始执行。</p>
+<h3 id="Bootloader"><a href="#Bootloader" class="headerlink" title="Bootloader"></a>Bootloader</h3><p>Bootloader的主要作用是准备硬件环境，引导Linux Kernel（Linux内核）的启动。<br>启动过程中，会区分本次要启动的系统是Android系统或Recovery模式还是Fastboot模式，完成引导加载程序后，它将执行跳转到Linux内核。</p>
+<h3 id="Kernel"><a href="#Kernel" class="headerlink" title="Kernel"></a>Kernel</h3><p>Android系统底层基于Linux Kernel, Linux内核在Android上启动的方式与在其他系统上类似。在kernel进入c语言阶段后，会开始执行start_kernel函数，它将设置系统运行所需的一切：初始化中断控制器，设置内存保护，缓存和调度等。最后调用rest_init函数启动三个进程（idle、init、kthreadd），来开启操作系统的正式运行。</p>
+<ul>
+<li><u>swapper(idle)进程（pid&#x3D;0）</u>，这是系统初始化过程kernel创建的第一个进程，也是唯一一个没有通过fork产生的进程，运行在内核态。用于初始化进程管理、内存管理、加载Display、Camera、Binder等驱动，以及启动<u>init进程（pid&#x3D;1）</u>和<u>kthreadd进程（pid&#x3D;2）</u>；</li>
+<li>init进程，是用户空间的第一个进程，也是<strong>用户进程的鼻祖</strong>。init进程由idle通过kernel_thread创建，在内和空间完成初始化后，加载init程序，并最终转变为用户空间的init进程，完成系统的初始化。在系统启动完成后，init将演变为守护进程监视系统的其他进程。</li>
+<li>kthreadd进程，这是Linux系统的内核进程，是所有<strong>内核进程的鼻祖</strong>。kthreadd进程由idle通过kernel_thread创建，并始终运行在内核空间，负责所有内核线程的调度和管理。它的任务就是管理和调度其他内核线程kernel_thread，它会循环执行一个kthreadd的函数，该函数的作用就是运行kthread_create_list全局链表中维护的kthread，我们调用kernel_thread创建的内核线程会被加入到此链表中，因此所有的内核线程都是直接或者间接地以kthreadd为父进程。一旦内存管理单元和缓存被初始化，系统将能够使用虚拟内存并启动用户空间进程。 内核将在根文件系统中查找init进程入口(在Android目录的system&#x2F;core&#x2F;hw&#x2F;init下找到)，并将其作为初始用户空间进程启动。</li>
+</ul>
+<p>这层真正的大主管是kthreadd进程，会创建内核工作线程kworkder，软中断线程ksoftirqd，thermal等内核守护线程。</p>
+<h3 id="Native"><a href="#Native" class="headerlink" title="Native"></a>Native</h3><p>进入用户空间。</p>
+<ul>
+<li>这层init进程是大主管。它负责孵化各种系统级服务、守护进程等。最重要的是孵化出Zygote进程。</li>
+<li>Media Server进程：负责启动和管理整个C++ framework，包含AudioFlinger、Camera Service等服务。</li>
+</ul>
+<h3 id="Framework"><a href="#Framework" class="headerlink" title="Framework"></a>Framework</h3><p>在Native之上，也是用户空间，主要给app层提供api以及系统服务。</p>
+<ul>
+<li>这层大主管是Zygote进程。它负责注册Zygote Socket服务端套接字，加载虚拟机，preloadClasses和preloadResouces。</li>
+<li>System Server进程：负责启动和管理整个Java framework，包含AMS、PMS、WMS等服务。</li>
+</ul>
+<h3 id="APP"><a href="#APP" class="headerlink" title="APP"></a>APP</h3><p>所有的App进程都是由Zygote进程fork生成的。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/03/09/Android%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" data-id="cltjvv1b600048q2u33t2f1yx" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/03/09/ContentProvider%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/03/09/Binder%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">March 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/03/09/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E5%B9%BF%E6%92%AD%E7%9A%84%E5%8F%91%E9%80%81%E5%92%8C%E6%8E%A5%E6%94%B6%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E6%B6%88%E6%81%AF%E5%BE%AA%E7%8E%AF%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E8%BD%AF%E9%87%8D%E5%90%AF%E5%8A%9F%E8%83%BD%E8%B0%83%E7%A0%94/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E4%B8%8A%E4%B8%8B%E6%96%87Context/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

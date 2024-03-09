@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Service的启动过程 基于Android U  ContextImpl到AMS的调用过程 要启动Service，我们会调用startService()方法，它在ContextWrapper中实现。 1234frameworks&#x2F;base&#x2F;core&#x2F;java&#x2F;android&#x2F;content&#x2F;ContextWrapper.javapublic @Nullable ComponentName sta">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/03/09/Service%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Service的启动过程 基于Android U  ContextImpl到AMS的调用过程 要启动Service，我们会调用startService()方法，它在ContextWrapper中实现。 1234frameworks&#x2F;base&#x2F;core&#x2F;java&#x2F;android&#x2F;content&#x2F;ContextWrapper.javapublic @Nullable ComponentName sta">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2023/12/27/mtPFyJ5lHMspi9C.jpg">
+<meta property="article:published_time" content="2024-03-09T07:30:58.567Z">
+<meta property="article:modified_time" content="2024-03-09T07:30:58.567Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/12/27/mtPFyJ5lHMspi9C.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Service的启动过程" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/09/Service%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/" class="article-date">
+  <time class="dt-published" datetime="2024-03-09T07:30:58.567Z" itemprop="datePublished">2024-03-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Service的启动过程"><a href="#Service的启动过程" class="headerlink" title="Service的启动过程"></a><center>Service的启动过程</center></h2><blockquote>
+<p>基于Android U</p>
+</blockquote>
+<h4 id="ContextImpl到AMS的调用过程"><a href="#ContextImpl到AMS的调用过程" class="headerlink" title="ContextImpl到AMS的调用过程"></a>ContextImpl到AMS的调用过程</h4><p><img src="https://s2.loli.net/2023/12/27/mtPFyJ5lHMspi9C.jpg"></p>
+<p>要启动Service，我们会调用startService()方法，它在ContextWrapper中实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/content/ContextWrapper.java</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@Nullable</span> ComponentName <span class="title function_">startService</span><span class="params">(Intent service)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> mBase.startService(service);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>mBase指的是ContextImpl，Activity的attach()方法中将ContextImpl赋值给ContextWrapper的成员变量mBase。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/ContextImpl.java</span><br><span class="line"><span class="keyword">public</span> ComponentName <span class="title function_">startService</span><span class="params">(Intent service)</span> &#123;</span><br><span class="line">    warnIfCallingFromSystemProcess();</span><br><span class="line">    <span class="keyword">return</span> startServiceCommon(service, <span class="literal">false</span>, mUser);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> ComponentName <span class="title function_">startServiceCommon</span><span class="params">(Intent service, <span class="type">boolean</span> requireForeground,</span></span><br><span class="line"><span class="params">        UserHandle user)</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        validateServiceIntent(service);</span><br><span class="line">        service.prepareToLeaveProcess(<span class="built_in">this</span>);</span><br><span class="line">        <span class="type">ComponentName</span> <span class="variable">cn</span> <span class="operator">=</span> ActivityManager.getService().startService(</span><br><span class="line">                mMainThread.getApplicationThread(), service,</span><br><span class="line">                service.resolveTypeIfNeeded(getContentResolver()), requireForeground,</span><br><span class="line">                getOpPackageName(), getAttributionTag(), user.getIdentifier());  <span class="comment">// 1</span></span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">return</span> cn;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (RemoteException e) &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在startService()方法中会返回startServiceCommon()方法，在startServiceCommon()方法中会在注释1处调用AMS的代理IActivityManager的startService()方法，最终调用的是AMS的startService()方法。</p>
+<h4 id="ActivityThread启动Service"><a href="#ActivityThread启动Service" class="headerlink" title="ActivityThread启动Service"></a>ActivityThread启动Service</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/am/ActivityManagerService.java</span><br><span class="line"><span class="keyword">private</span> ComponentName <span class="title function_">startService</span><span class="params">(IApplicationThread caller, Intent service,</span></span><br><span class="line"><span class="params">        String resolvedType, <span class="type">boolean</span> requireForeground, String callingPackage,</span></span><br><span class="line"><span class="params">        String callingFeatureId, <span class="type">int</span> userId, <span class="type">boolean</span> isSdkSandboxService,</span></span><br><span class="line"><span class="params">        <span class="type">int</span> sdkSandboxClientAppUid, String sdkSandboxClientAppPackage, String instanceName)</span></span><br><span class="line">        <span class="keyword">throws</span> TransactionTooLargeException &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">final</span> <span class="type">int</span> <span class="variable">callingPid</span> <span class="operator">=</span> Binder.getCallingPid();</span><br><span class="line">    <span class="keyword">final</span> <span class="type">int</span> <span class="variable">callingUid</span> <span class="operator">=</span> Binder.getCallingUid();</span><br><span class="line">    <span class="keyword">final</span> <span class="type">long</span> <span class="variable">origId</span> <span class="operator">=</span> Binder.clearCallingIdentity();</span><br><span class="line">    ComponentName res;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="built_in">this</span>) &#123;</span><br><span class="line">            res = mServices.startServiceLocked(caller, service,</span><br><span class="line">                    resolvedType, callingPid, callingUid,</span><br><span class="line">                    requireForeground, callingPackage, callingFeatureId, userId,</span><br><span class="line">                    isSdkSandboxService, sdkSandboxClientAppUid, sdkSandboxClientAppPackage,</span><br><span class="line">                    instanceName);  <span class="comment">// 1</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处调用mServices的startServiceLocked()方法，mServices的类型是ActiveServices。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/am/ActiveServices.java</span><br><span class="line">ComponentName <span class="title function_">startServiceLocked</span><span class="params">(IApplicationThread caller, Intent service, String resolvedType,</span></span><br><span class="line"><span class="params">        <span class="type">int</span> callingPid, <span class="type">int</span> callingUid, <span class="type">boolean</span> fgRequired,</span></span><br><span class="line"><span class="params">        String callingPackage, <span class="meta">@Nullable</span> String callingFeatureId, <span class="keyword">final</span> <span class="type">int</span> userId,</span></span><br><span class="line"><span class="params">        BackgroundStartPrivileges backgroundStartPrivileges, <span class="type">boolean</span> isSdkSandboxService,</span></span><br><span class="line"><span class="params">        <span class="type">int</span> sdkSandboxClientAppUid, String sdkSandboxClientAppPackage, String instanceName)</span></span><br><span class="line">        <span class="keyword">throws</span> TransactionTooLargeException &#123;</span><br><span class="line">    ...</span><br><span class="line">    </span><br><span class="line">    <span class="type">ServiceLookupResult</span> <span class="variable">res</span> <span class="operator">=</span> retrieveServiceLocked(service, instanceName, isSdkSandboxService,</span><br><span class="line">            sdkSandboxClientAppUid, sdkSandboxClientAppPackage, resolvedType, callingPackage,</span><br><span class="line">            callingPid, callingUid, userId, <span class="literal">true</span>, callerFg, <span class="literal">false</span>, <span class="literal">false</span>, <span class="literal">null</span>, <span class="literal">false</span>);  <span class="comment">// 1</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="type">ServiceRecord</span> <span class="variable">r</span> <span class="operator">=</span> res.record;  <span class="comment">// 2</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">final</span> <span class="type">ComponentName</span> <span class="variable">realResult</span> <span class="operator">=</span></span><br><span class="line">            startServiceInnerLocked(r, service, callingUid, callingPid,</span><br><span class="line">                    callingProcessName, callingProcessState,</span><br><span class="line">                    fgRequired, callerFg,</span><br><span class="line">                    backgroundStartPrivileges, callingPackage);  <span class="comment">// 3</span></span><br><span class="line">    <span class="keyword">if</span> (res.aliasComponent != <span class="literal">null</span></span><br><span class="line">            &amp;&amp; !realResult.getPackageName().startsWith(<span class="string">&quot;!&quot;</span>)</span><br><span class="line">            &amp;&amp; !realResult.getPackageName().startsWith(<span class="string">&quot;?&quot;</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span> res.aliasComponent;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> realResult;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处的retrieveServiceLocked()方法会查找是否有与参数service对应的ServiceRecord，如果没有找到，就会调用PackageManagerService去获取参数service对应的Service信息，并封装到ServiceRecord中，最后将ServiceRecord封装为ServiceLookupResult返回。其中ServiceRecord用于描述一个Service，和ActivityRecord类似。</p>
+<p>在注释2处通过注释1处返回的ServiceLookupResult得到参数service对应的ServiceRecord，并传入到注释3处的startServiceInnerLocked()方法中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/am/ActiveServices.java</span><br><span class="line"><span class="keyword">private</span> ComponentName <span class="title function_">startServiceInnerLocked</span><span class="params">(ServiceRecord r, Intent service,</span></span><br><span class="line"><span class="params">        <span class="type">int</span> callingUid, <span class="type">int</span> callingPid, String callingProcessName,</span></span><br><span class="line"><span class="params">        <span class="type">int</span> callingProcessState, <span class="type">boolean</span> fgRequired, <span class="type">boolean</span> callerFg,</span></span><br><span class="line"><span class="params">        BackgroundStartPrivileges backgroundStartPrivileges, String callingPackage)</span></span><br><span class="line">        <span class="keyword">throws</span> TransactionTooLargeException &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="type">ComponentName</span> <span class="variable">cmp</span> <span class="operator">=</span> startServiceInnerLocked(smap, service, r, callerFg, addToStarting,</span><br><span class="line">            callingUid, callingProcessName, callingProcessState,</span><br><span class="line">            wasStartRequested, callingPackage);</span><br><span class="line">    <span class="keyword">return</span> cmp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>继续调用startServiceInnerLocked()。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/am/ActiveServices.java</span><br><span class="line">ComponentName <span class="title function_">startServiceInnerLocked</span><span class="params">(ServiceMap smap, Intent service, ServiceRecord r,</span></span><br><span class="line"><span class="params">        <span class="type">boolean</span> callerFg, <span class="type">boolean</span> addToStarting, <span class="type">int</span> callingUid, String callingProcessName,</span></span><br><span class="line"><span class="params">        <span class="type">int</span> callingProcessState, <span class="type">boolean</span> wasStartRequested, String callingPackage)</span></span><br><span class="line">        <span class="keyword">throws</span> TransactionTooLargeException &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="type">String</span> <span class="variable">error</span> <span class="operator">=</span> bringUpServiceLocked(r, service.getFlags(), callerFg,</span><br><span class="line">            <span class="literal">false</span> <span class="comment">/* whileRestarting */</span>,</span><br><span class="line">            <span class="literal">false</span> <span class="comment">/* permissionsReviewRequired */</span>,</span><br><span class="line">            <span class="literal">false</span> <span class="comment">/* packageFrozen */</span>,</span><br><span class="line">            <span class="literal">true</span> <span class="comment">/* enqueueOomAdj */</span>);  <span class="comment">// 1</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">if</span> (error != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ComponentName</span>(<span class="string">&quot;!!&quot;</span>, error);</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> r.name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处调用了bringUpServiceLocked()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/am/ActiveServices.java</span><br><span class="line"><span class="keyword">private</span> String <span class="title function_">bringUpServiceLocked</span><span class="params">(ServiceRecord r, <span class="type">int</span> intentFlags, <span class="type">boolean</span> execInFg,</span></span><br><span class="line"><span class="params">        <span class="type">boolean</span> whileRestarting, <span class="type">boolean</span> permissionsReviewRequired, <span class="type">boolean</span> packageFrozen,</span></span><br><span class="line"><span class="params">        <span class="type">boolean</span> enqueueOomAdj)</span></span><br><span class="line">        <span class="keyword">throws</span> TransactionTooLargeException &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">return</span> bringUpServiceInnerLocked(r, intentFlags, execInFg, whileRestarting,</span><br><span class="line">                permissionsReviewRequired, packageFrozen, enqueueOomAdj);</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用bringUpServiceInnerLocked()。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/am/ActiveServices.java</span><br><span class="line"><span class="keyword">private</span> String <span class="title function_">bringUpServiceInnerLocked</span><span class="params">(ServiceRecord r, <span class="type">int</span> intentFlags, <span class="type">boolean</span> execInFg,</span></span><br><span class="line"><span class="params">        <span class="type">boolean</span> whileRestarting, <span class="type">boolean</span> permissionsReviewRequired, <span class="type">boolean</span> packageFrozen,</span></span><br><span class="line"><span class="params">        <span class="type">boolean</span> enqueueOomAdj)</span></span><br><span class="line">        <span class="keyword">throws</span> TransactionTooLargeException &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">final</span> <span class="type">String</span> <span class="variable">procName</span> <span class="operator">=</span> r.processName;  <span class="comment">// 1</span></span><br><span class="line">    ...</span><br><span class="line">    ProcessRecord app;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!isolated) &#123;</span><br><span class="line">        app = mAm.getProcessRecordLocked(procName, r.appInfo.uid);  <span class="comment">// 2</span></span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">if</span> (app != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">final</span> <span class="type">IApplicationThread</span> <span class="variable">thread</span> <span class="operator">=</span> app.getThread();</span><br><span class="line">            <span class="keyword">final</span> <span class="type">int</span> <span class="variable">pid</span> <span class="operator">=</span> app.getPid();</span><br><span class="line">            <span class="keyword">final</span> <span class="type">UidRecord</span> <span class="variable">uidRecord</span> <span class="operator">=</span> app.getUidRecord();</span><br><span class="line">            <span class="keyword">if</span> (thread != <span class="literal">null</span>) &#123;  <span class="comment">// 3</span></span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    ...</span><br><span class="line">                    realStartServiceLocked(r, app, thread, pid, uidRecord, execInFg,</span><br><span class="line">                            enqueueOomAdj);  <span class="comment">// 4</span></span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">                &#125; <span class="keyword">catch</span> (TransactionTooLargeException e) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> e;</span><br><span class="line">                &#125; <span class="keyword">catch</span> (RemoteException e) &#123;</span><br><span class="line">                    Slog.w(TAG, <span class="string">&quot;Exception when starting service &quot;</span> + r.shortInstanceName, e);</span><br><span class="line">                &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                    Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (app == <span class="literal">null</span> &amp;&amp; !permissionsReviewRequired &amp;&amp; !packageFrozen) &#123;  <span class="comment">// 5</span></span><br><span class="line">        <span class="keyword">if</span> (r.isSdkSandbox) &#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            app = mAm.startProcessLocked(procName, r.appInfo, <span class="literal">true</span>, intentFlags,</span><br><span class="line">                    hostingRecord, ZYGOTE_POLICY_FLAG_EMPTY, <span class="literal">false</span>, isolated);  <span class="comment">// 6</span></span><br><span class="line">        &#125;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处得到ServiceRecord的processName值并赋给procName，其中processName用来描述Service想要在哪个进程中运行，默认是当前进程，我们也可以在AndroidManifest.xml文件中设置android:process属性来新开启一个进程运行Service。</p>
+<p>在注释2处将procName和Service的uid传入到AMS的getProcessRecordLocked()方法中，查询是否存在一个与Service对应的ProcessRecord类型的对象app，ProcessRecord主要用来描述运行的应用程序进程的信息。</p>
+<p>在注释5处判断Service对应的app为null则说明用来运行Service的应用程序进程不存在，则调用注释6处的AMS的startProcessLocked()方法来创建对应的应用程序进程。</p>
+<p>这里只讨论没有设置android:process属性，即应用程序进程存在的情况。在注释3处判断如果用来运行Service的应用程序进程存在，则调用注释4处的realStartServiceLocked()方法来启动Service。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/am/ActiveServices.java</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">realStartServiceLocked</span><span class="params">(ServiceRecord r, ProcessRecord app,</span></span><br><span class="line"><span class="params">        IApplicationThread thread, <span class="type">int</span> pid, UidRecord uidRecord, <span class="type">boolean</span> execInFg,</span></span><br><span class="line"><span class="params">        <span class="type">boolean</span> enqueueOomAdj)</span> <span class="keyword">throws</span> RemoteException &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">        thread.scheduleCreateService(r, r.serviceInfo,</span><br><span class="line">                <span class="literal">null</span> <span class="comment">/* compatInfo (unused but need to keep method signature) */</span>,</span><br><span class="line">                app.mState.getReportedProcState());</span><br><span class="line">        ...</span><br><span class="line">    &#125; <span class="keyword">catch</span> (DeadObjectException e) &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在realStartServiceLocked()中调用了thread的scheduleCreateService()方法。其中thread是IApplicationThread类型的，它的实现是ActivityThread的内部类ApplicationThread。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/ActivityThread$ApplicationThread</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">scheduleCreateService</span><span class="params">(IBinder token,</span></span><br><span class="line"><span class="params">        ServiceInfo info, CompatibilityInfo compatInfo, <span class="type">int</span> processState)</span> &#123;</span><br><span class="line">    updateProcessState(processState, <span class="literal">false</span>);</span><br><span class="line">    <span class="type">CreateServiceData</span> <span class="variable">s</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CreateServiceData</span>();</span><br><span class="line">    s.token = token;</span><br><span class="line">    s.info = info;</span><br><span class="line"></span><br><span class="line">    sendMessage(H.CREATE_SERVICE, s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>scheduleCreateService()方法将启动Service的参数封装成CreateServiceData，sendMessage()方法向H类发送类型为CREATE_SERVICE的消息，并将CreateServiceData传递过去。sendMessage()方法有多个重载方法，最终调用的sendMessage()方法如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/ActivityThread.java</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">sendMessage</span><span class="params">(<span class="type">int</span> what, Object obj, <span class="type">int</span> arg1, <span class="type">int</span> arg2, <span class="type">boolean</span> async)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="type">Message</span> <span class="variable">msg</span> <span class="operator">=</span> Message.obtain();</span><br><span class="line">    msg.what = what;</span><br><span class="line">    msg.obj = obj;</span><br><span class="line">    msg.arg1 = arg1;</span><br><span class="line">    msg.arg2 = arg2;</span><br><span class="line">    <span class="keyword">if</span> (async) &#123;</span><br><span class="line">        msg.setAsynchronous(<span class="literal">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    mH.sendMessage(msg);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的mH指的是H，它是ActivityThread的内部类并继承自Handler，是应用程序进程中主线程的消息管理类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/ActivityThread.java</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">H</span> <span class="keyword">extends</span> <span class="title class_">Handler</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">handleMessage</span><span class="params">(Message msg)</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">switch</span> (msg.what) &#123;</span><br><span class="line">            ...</span><br><span class="line">            <span class="keyword">case</span> CREATE_SERVICE:</span><br><span class="line">                ...</span><br><span class="line">                handleCreateService((CreateServiceData)msg.obj);</span><br><span class="line">                ...</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>handleMessage()方法根据消息类型为CREATE_SERVICE，会调用handleCreateService()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/ActivityThread.java</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">handleCreateService</span><span class="params">(CreateServiceData data)</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">final</span> <span class="type">LoadedApk</span> <span class="variable">packageInfo</span> <span class="operator">=</span> getPackageInfoNoCheck(data.info.applicationInfo);  <span class="comment">// 1</span></span><br><span class="line">    <span class="type">Service</span> <span class="variable">service</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">final</span> java.lang.ClassLoader cl;</span><br><span class="line">        <span class="comment">// 2</span></span><br><span class="line">        <span class="keyword">if</span> (data.info.splitName != <span class="literal">null</span>) &#123;</span><br><span class="line">            cl = packageInfo.getSplitClassLoader(data.info.splitName);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            cl = packageInfo.getClassLoader();</span><br><span class="line">        &#125;</span><br><span class="line">        service = packageInfo.getAppFactory()</span><br><span class="line">                .instantiateService(cl, data.info.name, data.intent);  <span class="comment">// 3</span></span><br><span class="line">        <span class="type">ContextImpl</span> <span class="variable">context</span> <span class="operator">=</span> ContextImpl.getImpl(service</span><br><span class="line">                .createServiceBaseContext(<span class="built_in">this</span>, packageInfo));  <span class="comment">// 4</span></span><br><span class="line">        <span class="keyword">if</span> (data.info.splitName != <span class="literal">null</span>) &#123;</span><br><span class="line">            context = (ContextImpl) context.createContextForSplit(data.info.splitName);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (data.info.attributionTags != <span class="literal">null</span> &amp;&amp; data.info.attributionTags.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">final</span> <span class="type">String</span> <span class="variable">attributionTag</span> <span class="operator">=</span> data.info.attributionTags[<span class="number">0</span>];</span><br><span class="line">            context = (ContextImpl) context.createAttributionContext(attributionTag);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// Service resources must be initialized with the same loaders as the application</span></span><br><span class="line">        <span class="comment">// context.</span></span><br><span class="line">        context.getResources().addLoaders(</span><br><span class="line">                app.getResources().getLoaders().toArray(<span class="keyword">new</span> <span class="title class_">ResourcesLoader</span>[<span class="number">0</span>]));</span><br><span class="line"></span><br><span class="line">        context.setOuterContext(service);</span><br><span class="line">        service.attach(context, <span class="built_in">this</span>, data.info.name, data.token, app,</span><br><span class="line">                ActivityManager.getService());  <span class="comment">// 5</span></span><br><span class="line">        <span class="keyword">if</span> (!service.isUiContext()) &#123; <span class="comment">// WindowProviderService is a UI Context.</span></span><br><span class="line">            <span class="type">VirtualDeviceManager</span> <span class="variable">vdm</span> <span class="operator">=</span> context.getSystemService(VirtualDeviceManager.class);</span><br><span class="line">            <span class="keyword">if</span> (mLastReportedDeviceId == Context.DEVICE_ID_DEFAULT</span><br><span class="line">                    || vdm.isValidVirtualDeviceId(mLastReportedDeviceId)) &#123;</span><br><span class="line">                service.updateDeviceId(mLastReportedDeviceId);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        service.onCreate();  <span class="comment">// 6</span></span><br><span class="line">        mServicesData.put(data.token, data);</span><br><span class="line">        mServices.put(data.token, service);  <span class="comment">// 7</span></span><br><span class="line">        ...</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处获取要启动Service的应用程序的LoadedApk，LoadedApk是一个APK文件的描述类；</p>
+<p>注释2处获取类加载器；</p>
+<p>注释3处根据CreateServiceData对象中存储的Service信息，创建Service实例；</p>
+<p>注释4处创建Service的上下文环境ContextImpl对象；</p>
+<p>注释5处通过Service的attach()方法来初始化Service；</p>
+<p>注释6处调用Service的onCreate()方法，这样Service就启动了；</p>
+<p>注释7处将启动的Service加入到ActivityThread的成员变量mServices中，其中mService是ArrayMap类型。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/03/09/Service%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/" data-id="cltjvv1bc000c8q2u48mn5rkv" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/03/09/WMS%E7%9A%84%E5%88%9B%E5%BB%BA/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/03/09/Service%E7%9A%84%E7%BB%91%E5%AE%9A%E8%BF%87%E7%A8%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">March 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/03/09/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E5%B9%BF%E6%92%AD%E7%9A%84%E5%8F%91%E9%80%81%E5%92%8C%E6%8E%A5%E6%94%B6%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E6%B6%88%E6%81%AF%E5%BE%AA%E7%8E%AF%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E8%BD%AF%E9%87%8D%E5%90%AF%E5%8A%9F%E8%83%BD%E8%B0%83%E7%A0%94/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E4%B8%8A%E4%B8%8B%E6%96%87Context/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

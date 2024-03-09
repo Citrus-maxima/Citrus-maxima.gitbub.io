@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="软重启作用软重启即用户空间中进程的运行时重启。  用于应用需要重启的更新（例如，对APEX包的更新），会重启用户空间。 可以清除临时错误，而无需删除任何数据或设置。如，冻结、性能缓慢和其他软件相关问题。  启用软重启功能设置系统属性init.userspace_reboot.is_supported&#x3D;1 判断系统是否支持软重启 adb shell getprop | grep init.users">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/03/09/%E8%BD%AF%E9%87%8D%E5%90%AF%E5%8A%9F%E8%83%BD%E8%B0%83%E7%A0%94/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="软重启作用软重启即用户空间中进程的运行时重启。  用于应用需要重启的更新（例如，对APEX包的更新），会重启用户空间。 可以清除临时错误，而无需删除任何数据或设置。如，冻结、性能缓慢和其他软件相关问题。  启用软重启功能设置系统属性init.userspace_reboot.is_supported&#x3D;1 判断系统是否支持软重启 adb shell getprop | grep init.users">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-03-09T07:30:58.576Z">
+<meta property="article:modified_time" content="2024-03-09T07:30:58.576Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-软重启功能调研" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/09/%E8%BD%AF%E9%87%8D%E5%90%AF%E5%8A%9F%E8%83%BD%E8%B0%83%E7%A0%94/" class="article-date">
+  <time class="dt-published" datetime="2024-03-09T07:30:58.576Z" itemprop="datePublished">2024-03-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="软重启作用"><a href="#软重启作用" class="headerlink" title="软重启作用"></a>软重启作用</h4><p>软重启即用户空间中进程的运行时重启。</p>
+<ol>
+<li>用于应用需要重启的更新（例如，对APEX包的更新），会重启用户空间。</li>
+<li>可以清除临时错误，而无需删除任何数据或设置。如，冻结、性能缓慢和其他软件相关问题。</li>
+</ol>
+<h4 id="启用软重启功能"><a href="#启用软重启功能" class="headerlink" title="启用软重启功能"></a>启用软重启功能</h4><p>设置系统属性<code>init.userspace_reboot.is_supported=1</code></p>
+<h4 id="判断系统是否支持软重启"><a href="#判断系统是否支持软重启" class="headerlink" title="判断系统是否支持软重启"></a>判断系统是否支持软重启</h4><ol>
+<li><p><code>adb shell getprop | grep init.userspace_reboot.is_supported</code>判断系统属性值；</p>
+</li>
+<li><p>调用API：<code>PowerManager.isRebootingUserspace()</code>，最终也是判断系统属性值。</p>
+</li>
+</ol>
+<h4 id="请求软重启"><a href="#请求软重启" class="headerlink" title="请求软重启"></a>请求软重启</h4><ol>
+<li><p>调用<code>PowerManager.reboot(PowerManager.REBOOT_USERSPACE)</code></p>
+</li>
+<li><p><code>adb shell svc power reboot userspace</code></p>
+</li>
+<li><p><code>adb reboot userspace</code></p>
+</li>
+</ol>
+<h4 id="判断软重启是否成功"><a href="#判断软重启是否成功" class="headerlink" title="判断软重启是否成功"></a>判断软重启是否成功</h4><p>软重启失败会回退到硬重启。硬重启成功会亮屏且听到一声通知提示音；软重启成功仅听到一声通知提示音，不会自动亮屏。</p>
+<h4 id="重启时长"><a href="#重启时长" class="headerlink" title="重启时长"></a>重启时长</h4><p>以输入命令按下Enter或点击“重新启动”作为开始，以听到通知提示音为结束，计算时长。</p>
+<p>该数据在M2381设备测得，仅作参考。</p>
+<ol>
+<li><code>adb shell svc power reboot userspace</code>，软重启，约13秒；</li>
+<li><code>adb reboot userspace</code>，软重启，约20秒；</li>
+<li>长按电源键，点击“重新启动”，硬重启，约22秒。</li>
+</ol>
+<h4 id="软重启流程"><a href="#软重启流程" class="headerlink" title="软重启流程"></a>软重启流程</h4><p>以<code>adb shell svc power reboot userspace</code>为例。</p>
+<ul>
+<li><p><code>init.cpp#SecondStageMain</code>中的死循环监听关机命令 -&gt;</p>
+</li>
+<li><p><code>reboot.cpp#HandlePowerctlMessage()</code> -&gt; </p>
+</li>
+<li><p><code>reboot.cpp#HandleUserspaceReboot()</code></p>
+<ol>
+<li><p>根据<code>init.userspace_reboot.is_supported</code>判断系统是否支持软重启</p>
+</li>
+<li><p>触发<code>userspace-reboot-requested</code>事件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">on userspace-reboot-requested</span><br><span class="line">  setprop sys.boot_completed &quot;&quot;</span><br><span class="line">  setprop dev.bootcomplete &quot;&quot;</span><br><span class="line">  setprop sys.init.updatable_crashing &quot;&quot;</span><br><span class="line">  setprop sys.init.updatable_crashing_process_name &quot;&quot;</span><br><span class="line">  setprop sys.user.0.ce_available &quot;&quot;</span><br><span class="line">  setprop sys.shutdown.requested &quot;&quot;</span><br><span class="line">  setprop service.bootanim.exit &quot;&quot;</span><br><span class="line">  setprop service.bootanim.progress &quot;&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>reboot.cpp#DoUserspaceReboot()</code></p>
+<p>设置属性<code>sys.init.userspace_reboot.in_progress</code>为true，设置失败则软重启失败；</p>
+<p>重置属性<code>sys.powerctl</code>为””，重置失败则软重启失败；</p>
+<p>记录enabled状态的服务，重启时需要手动enable；</p>
+<p>终止上一步记录的服务，超时则软重启失败；</p>
+<p>卸载zram支持设备，卸载失败则软重启失败；</p>
+<p>执行<code>/system/bin/vdc volume reset</code>命令，执行失败则软重启失败；</p>
+<p>卸载apex包，否则它们可能阻止&#x2F;data的彻底卸载，卸载失败则软重启失败；</p>
+<p>切换到bootstrap命名空间，切换失败则软重启失败；</p>
+<p>移除apex中定义的服务；</p>
+<p>重新enable服务；</p>
+<p>触发<code>userspace-reboot-resume</code>(见备注1)</p>
+</li>
+</ol>
+</li>
+</ul>
+<p>备注1：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">on userspace-reboot-resume</span><br><span class="line">    # 启动vold进程，卸载/data镜像目录，播放动画</span><br><span class="line">    # 见备注2</span><br><span class="line">    trigger userspace-reboot-fs-remount</span><br><span class="line"></span><br><span class="line">    # 挂载/data，创建/data下的目录，启动bootchart、tombstoned、apexd、logd、logd-reinit、odsign</span><br><span class="line">    # 执行derive_sdk、derive_classpath、apexd-snapshotde</span><br><span class="line">    # 见备注3</span><br><span class="line">    trigger post-fs-data</span><br><span class="line"></span><br><span class="line">    # 执行update_verifier_nonencrypted，启动statsd、netd、zygote、zygote_secondary</span><br><span class="line">    # 见备注4</span><br><span class="line">    trigger zygote-start</span><br><span class="line"></span><br><span class="line">    # 见备注5</span><br><span class="line">    trigger early-boot</span><br><span class="line"></span><br><span class="line">    # 对网络、内存管理、文件系统进行设置，启动class为hal和core的服务</span><br><span class="line">    # 见备注6</span><br><span class="line">    trigger boot</span><br></pre></td></tr></table></figure>
+
+<p>备注2：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">on userspace-reboot-fs-remount</span><br><span class="line">    # vold是一个守护进程，用来管理Android中存储类的热插拔事件，其中包括设备开关机过程中存储设备各分区的挂卸载</span><br><span class="line">    # 预防重启过程中，vold因为一些原因没有正常运行</span><br><span class="line">    start vold</span><br><span class="line">    exec - system system -- /system/bin/vdc checkpoint resetCheckpoint</span><br><span class="line">    exec - system system -- /system/bin/vdc checkpoint markBootAttempt</span><br><span class="line">    # 卸载/data镜像目录</span><br><span class="line">    umount /data_mirror/data_ce/null/0</span><br><span class="line">    umount /data_mirror/data_ce/null</span><br><span class="line">    umount /data_mirror/data_de/null</span><br><span class="line">    umount /data_mirror/cur_profiles</span><br><span class="line">    umount /data_mirror/ref_profiles</span><br><span class="line">    umount /data_mirror</span><br><span class="line">    remount_userdata</span><br><span class="line">    # 播放动画</span><br><span class="line">    start bootanim</span><br></pre></td></tr></table></figure>
+
+<p>备注3：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line">on post-fs-data</span><br><span class="line"></span><br><span class="line">    mark_post_data</span><br><span class="line"></span><br><span class="line">    # Start checkpoint before we touch data</span><br><span class="line">    exec - system system -- /system/bin/vdc checkpoint prepareCheckpoint</span><br><span class="line"></span><br><span class="line">    # We chown/chmod /data again so because mount is run as root + defaults</span><br><span class="line">    chown system system /data</span><br><span class="line">    chmod 0771 /data</span><br><span class="line">    # 恢复/data的安全上下文</span><br><span class="line">    restorecon /data</span><br><span class="line"></span><br><span class="line">    # 创建DE密钥</span><br><span class="line">    installkey /data</span><br><span class="line"></span><br><span class="line">    # 启动bootchart，bootchart是系统启动过程性能分析的工具</span><br><span class="line">    mkdir /data/bootchart 0755 shell shell encryption=Require</span><br><span class="line">    bootchart start</span><br><span class="line"></span><br><span class="line">    # /dev/urandom是随机数设备。避免可预测的熵池，继承上次启动的熵</span><br><span class="line">    copy /data/system/entropy.dat /dev/urandom</span><br><span class="line"></span><br><span class="line">    mkdir /data/vendor 0771 root root encryption=Require</span><br><span class="line">    mkdir /data/vendor_ce 0771 root root encryption=None</span><br><span class="line">    mkdir /data/vendor_de 0771 root root encryption=None</span><br><span class="line">    mkdir /data/vendor/hardware 0771 root root</span><br><span class="line"></span><br><span class="line">    # 启动tombstoned</span><br><span class="line">    mkdir /data/anr 0775 system system encryption=Require</span><br><span class="line">    mkdir /data/tombstones 0771 system system encryption=Require</span><br><span class="line">    mkdir /data/vendor/tombstones 0771 root root</span><br><span class="line">    mkdir /data/vendor/tombstones/wifi 0771 wifi wifi</span><br><span class="line">    start tombstoned</span><br><span class="line"></span><br><span class="line">    # 设置默认的mount namespace</span><br><span class="line">    enter_default_mount_ns</span><br><span class="line"></span><br><span class="line">    # 创建密钥库目录结构，为启动apexd做准备</span><br><span class="line">    mkdir /data/misc 01771 system misc encryption=Require</span><br><span class="line">    mkdir /data/misc/keystore 0700 keystore keystore</span><br><span class="line">    # work around b/183668221</span><br><span class="line">    restorecon /data/misc /data/misc/keystore</span><br><span class="line"></span><br><span class="line">    # 设置odsign签名密钥的启动级别为MAX_BOOT_LEVEL=30</span><br><span class="line">    setprop keystore.boot_level 30</span><br><span class="line"></span><br><span class="line">    # 现在/data已挂载并且我们已经创建了/data/misc/keystore</span><br><span class="line">    # 可以通知keystore停止允许使用early-boot密钥</span><br><span class="line">    # 并首次访问其数据库以支持MAX_BOOT_LEVEL密钥的创建和使用。</span><br><span class="line">    exec - system system -- /system/bin/vdc keymaster earlyBootEnded</span><br><span class="line"></span><br><span class="line">    # 在启动apexd前加载持久属性</span><br><span class="line">    load_persist_props</span><br><span class="line">    start logd</span><br><span class="line">    start logd-reinit</span><br><span class="line">   </span><br><span class="line">    trigger load_persist_props_action</span><br><span class="line"></span><br><span class="line">    # 启动apexd，激活APEXes.</span><br><span class="line">    mkdir /data/apex 0755 root system encryption=None</span><br><span class="line">    mkdir /data/apex/active 0755 root system</span><br><span class="line">    mkdir /data/apex/backup 0700 root system</span><br><span class="line">    mkdir /data/apex/decompressed 0755 root system encryption=Require</span><br><span class="line">    mkdir /data/apex/hashtree 0700 root system</span><br><span class="line">    mkdir /data/apex/sessions 0700 root system</span><br><span class="line">    mkdir /data/app-staging 0751 system system encryption=DeleteIfNecessary</span><br><span class="line">    mkdir /data/apex/ota_reserved 0700 root system encryption=Require</span><br><span class="line">    setprop apexd.status &quot;&quot;</span><br><span class="line">    restart apexd</span><br><span class="line"></span><br><span class="line">    # 创建/data下剩余的目录</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    exec_start derive_sdk</span><br><span class="line"></span><br><span class="line">	# 创建CE密钥</span><br><span class="line">    init_user0</span><br><span class="line"></span><br><span class="line">    # 在升级或策略更新时设置 SELinux 安全上下文。</span><br><span class="line">    restorecon --recursive --skip-ce /data</span><br><span class="line"></span><br><span class="line">    # 定义并导出*CLASSPATH变量。odsign依赖*CLASSPATH变量</span><br><span class="line">    exec_start derive_classpath</span><br><span class="line">    load_exports /data/system/environ/classpath</span><br><span class="line"></span><br><span class="line">    # on-device signing守护程序，在需要时生成ART工件</span><br><span class="line">    start odsign</span><br><span class="line"></span><br><span class="line">    # 等待odsign使用完密钥</span><br><span class="line">    wait_for_prop odsign.key.done 1</span><br><span class="line"></span><br><span class="line">    # fs-verity用于文件身份验证，锁定fs-verity密钥环，使无法添加更多密钥</span><br><span class="line">    exec -- /system/bin/fsverity_init --lock</span><br><span class="line"></span><br><span class="line">    # 将启动级别提升至1000000000；这会阻止进一步的on-device签名，用于关闭侦听进一步更新的线程。</span><br><span class="line">    setprop keystore.boot_level 1000000000</span><br><span class="line"></span><br><span class="line">    # 允许apexd在回滚时快照并恢复设备加密的apex数据。这应该在加载DE_user数据密钥后立即完成。在完成此操作并且 apexd.status变为“就绪”之前，APEX不应访问此数据。</span><br><span class="line">    exec_start apexd-snapshotde</span><br><span class="line"></span><br><span class="line">    # 检查/data中的时区数据是否比时区数据模块中的副本新，如果不是则删除</span><br><span class="line">    exec - system system -- /system/bin/tzdatacheck /apex/com.android.tzdata/etc/tz /data/misc/zoneinfo</span><br><span class="line"></span><br><span class="line">    # sys.memfd_use默认设置为false，这会使其保持禁用状态，直到确认应用程序和供应商进程不再对ashmem fds进行 IOCTL</span><br><span class="line">    setprop sys.use_memfd false</span><br><span class="line"></span><br><span class="line">    chown root system /dev/fscklogs/log</span><br><span class="line">    chmod 0770 /dev/fscklogs/log</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+
+<p><code>on post-fs-data</code>中触发了<code>load_persist_props_action</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$/system/logging/logcat/logcatd.rc</span><br><span class="line">on load_persist_props_action</span><br><span class="line">    setprop logd.logpersistd.enable true</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$/system/server_configurable_flags/disaster_recovery/flags_health_check.rc</span><br><span class="line">on load_persist_props_action</span><br><span class="line">    # check server configurable flags(which is based on persistent properties) related</span><br><span class="line">    # disaster recovery</span><br><span class="line">    mkdir /data/server_configurable_flags 0775 system system encryption=Require</span><br><span class="line">    exec - system system -- /system/bin/flags_health_check BOOT_FAILURE</span><br></pre></td></tr></table></figure>
+
+<p>备注4：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">on zygote-start &amp;&amp; property:ro.crypto.state=...</span><br><span class="line">    wait_for_prop odsign.verification.done 1</span><br><span class="line">    # A/B update verifier that marks a successful boot.</span><br><span class="line">    exec_start update_verifier_nonencrypted</span><br><span class="line">    start statsd</span><br><span class="line">    start netd</span><br><span class="line">    start zygote</span><br><span class="line">    start zygote_secondary</span><br></pre></td></tr></table></figure>
+
+<p>备注5：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$/frameworks/native/cmds/installd/installd.rc</span><br><span class="line">on early-boot</span><br><span class="line">    mkdir /config/sdcardfs/extensions/1055</span><br><span class="line">    mkdir /config/sdcardfs/extensions/1056</span><br><span class="line">    mkdir /config/sdcardfs/extensions/1057</span><br><span class="line">    ...</span><br><span class="line">    # 在1055、1056、1057文件夹下又创建了一些文件夹</span><br></pre></td></tr></table></figure>
+
+<p>&#x2F;device&#x2F;linaro&#x2F;dragonboard&#x2F;init.common.rc中也监听了early-boot，但是没有触发。</p>
+<p>备注6：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br></pre></td><td class="code"><pre><span class="line">on boot</span><br><span class="line">    # 初始化网络</span><br><span class="line">    # 启用lo回环网卡</span><br><span class="line">    ifup lo</span><br><span class="line">    hostname localhost</span><br><span class="line">    domainname localdomain</span><br><span class="line"></span><br><span class="line">    # IPsec SA默认expiration长度</span><br><span class="line">    write /proc/sys/net/core/xfrm_acq_expires 3600</span><br><span class="line"></span><br><span class="line">    # 设置内存管理的参数</span><br><span class="line">    write /proc/sys/vm/overcommit_memory 1</span><br><span class="line">    write /proc/sys/vm/min_free_order_shift 4</span><br><span class="line"></span><br><span class="line">    # System server管理zram writeback</span><br><span class="line">    # writeback功能，可以将zram中申请的物理页回写到真实的磁盘中，进一步释放内存</span><br><span class="line">    chown root system /sys/block/zram0/idle</span><br><span class="line">    chmod 0664 /sys/block/zram0/idle</span><br><span class="line">    chown root system /sys/block/zram0/writeback</span><br><span class="line">    chmod 0664 /sys/block/zram0/writeback</span><br><span class="line"></span><br><span class="line">    # to access F2FS sysfs on dm-&lt;num&gt; directly</span><br><span class="line">    mkdir /dev/sys/fs/by-name 0755 system system</span><br><span class="line">    symlink /sys/fs/f2fs/$&#123;dev.mnt.dev.data&#125; /dev/sys/fs/by-name/userdata</span><br><span class="line"></span><br><span class="line">    # dev.mnt.dev.data=dm-N, dev.mnt.blk.data=sdaN/mmcblk0pN, dev.mnt.rootdisk.data=sda/mmcblk0, or</span><br><span class="line">    # dev.mnt.dev.data=sdaN/mmcblk0pN, dev.mnt.blk.data=sdaN/mmcblk0pN, dev.mnt.rootdisk.data=sda/mmcblk0</span><br><span class="line">    mkdir /dev/sys/block/by-name 0755 system system</span><br><span class="line">    symlink /sys/class/block/$&#123;dev.mnt.dev.data&#125; /dev/sys/block/by-name/userdata</span><br><span class="line">    symlink /sys/class/block/$&#123;dev.mnt.rootdisk.data&#125; /dev/sys/block/by-name/rootdisk</span><br><span class="line"></span><br><span class="line">    # F2FS tuning. Set cp_interval larger than dirty_expire_centisecs, 30 secs,</span><br><span class="line">    # to avoid power consumption when system becomes mostly idle. Be careful</span><br><span class="line">    # to make it too large, since it may bring userdata loss, if they</span><br><span class="line">    # are not aware of using fsync()/sync() to prepare sudden power-cut.</span><br><span class="line">    write /dev/sys/fs/by-name/userdata/cp_interval 200</span><br><span class="line">    write /dev/sys/fs/by-name/userdata/gc_urgent_sleep_time 50</span><br><span class="line">    write /dev/sys/fs/by-name/userdata/iostat_enable 1</span><br><span class="line"></span><br><span class="line">    # 为POSIX_FADV_SEQUENTIAL文件设置预读乘数readahead multiplier</span><br><span class="line">    # 预读乘数会影响读性能，它控制在一个读请求之后，有多少连续数据块被保存到缓存里</span><br><span class="line">    write /dev/sys/fs/by-name/userdata/seq_file_ra_mul 16</span><br><span class="line"></span><br><span class="line">    # 将丢弃大小限制为128MB，以避免调整文件系统（dm或sda）时出现较长的IO延迟。</span><br><span class="line">    # 这需要在供应商端启用sda/mmcblk0 的selinux 条目</span><br><span class="line">    write /dev/sys/block/by-name/userdata/queue/discard_max_bytes 134217728</span><br><span class="line">    write /dev/sys/block/by-name/rootdisk/queue/discard_max_bytes 134217728</span><br><span class="line"></span><br><span class="line">    # 设置System Server和daemons.</span><br><span class="line">    chown system system /sys/power/autosleep</span><br><span class="line"></span><br><span class="line">    chown system system /sys/devices/system/cpu/cpufreq/interactive/timer_rate</span><br><span class="line">    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/timer_rate</span><br><span class="line">    chown system system /sys/devices/system/cpu/cpufreq/interactive/timer_slack</span><br><span class="line">    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/timer_slack</span><br><span class="line">    chown system system /sys/devices/system/cpu/cpufreq/interactive/min_sample_time</span><br><span class="line">    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/min_sample_time</span><br><span class="line">    chown system system /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq</span><br><span class="line">    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq</span><br><span class="line">    chown system system /sys/devices/system/cpu/cpufreq/interactive/target_loads</span><br><span class="line">    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/target_loads</span><br><span class="line">    chown system system /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load</span><br><span class="line">    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load</span><br><span class="line">    chown system system /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay</span><br><span class="line">    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay</span><br><span class="line">    chown system system /sys/devices/system/cpu/cpufreq/interactive/boost</span><br><span class="line">    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/boost</span><br><span class="line">    chown system system /sys/devices/system/cpu/cpufreq/interactive/boostpulse</span><br><span class="line">    chown system system /sys/devices/system/cpu/cpufreq/interactive/input_boost</span><br><span class="line">    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/input_boost</span><br><span class="line">    chown system system /sys/devices/system/cpu/cpufreq/interactive/boostpulse_duration</span><br><span class="line">    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/boostpulse_duration</span><br><span class="line">    chown system system /sys/devices/system/cpu/cpufreq/interactive/io_is_busy</span><br><span class="line">    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/io_is_busy</span><br><span class="line"></span><br><span class="line">    # 假设SMP对所有CPU使用共享cpufreq策略</span><br><span class="line">    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq</span><br><span class="line">    chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq</span><br><span class="line"></span><br><span class="line">    chown system system /sys/class/leds/vibrator/trigger</span><br><span class="line">    chown system system /sys/class/leds/vibrator/activate</span><br><span class="line">    chown system system /sys/class/leds/vibrator/brightness</span><br><span class="line">    chown system system /sys/class/leds/vibrator/duration</span><br><span class="line">    chown system system /sys/class/leds/vibrator/state</span><br><span class="line">    chown system system /sys/class/timed_output/vibrator/enable</span><br><span class="line">    chown system system /sys/class/leds/keyboard-backlight/brightness</span><br><span class="line">    chown system system /sys/class/leds/lcd-backlight/brightness</span><br><span class="line">    chown system system /sys/class/leds/button-backlight/brightness</span><br><span class="line">    chown system system /sys/class/leds/jogball-backlight/brightness</span><br><span class="line">    chown system system /sys/class/leds/red/brightness</span><br><span class="line">    chown system system /sys/class/leds/green/brightness</span><br><span class="line">    chown system system /sys/class/leds/blue/brightness</span><br><span class="line">    chown system system /sys/class/leds/red/device/grpfreq</span><br><span class="line">    chown system system /sys/class/leds/red/device/grppwm</span><br><span class="line">    chown system system /sys/class/leds/red/device/blink</span><br><span class="line">    chown system system /sys/module/sco/parameters/disable_esco</span><br><span class="line">    chown system system /sys/kernel/ipv4/tcp_wmem_min</span><br><span class="line">    chown system system /sys/kernel/ipv4/tcp_wmem_def</span><br><span class="line">    chown system system /sys/kernel/ipv4/tcp_wmem_max</span><br><span class="line">    chown system system /sys/kernel/ipv4/tcp_rmem_min</span><br><span class="line">    chown system system /sys/kernel/ipv4/tcp_rmem_def</span><br><span class="line">    chown system system /sys/kernel/ipv4/tcp_rmem_max</span><br><span class="line">    chown root radio /proc/cmdline</span><br><span class="line"></span><br><span class="line">    # 以段为单位定义默认初始接收窗口大小。</span><br><span class="line">    setprop net.tcp_def_init_rwnd 60</span><br><span class="line"></span><br><span class="line">    #FLYME|dzh@meizu.com|lmk-opt: disable rescue party temporarily</span><br><span class="line">    setprop persist.sys.disable_rescue true</span><br><span class="line"></span><br><span class="line">    # 更新dm-verity状态并设置partition.*.verified属性</span><br><span class="line">    verity_update_state</span><br><span class="line"></span><br><span class="line">    # 启动class为hal的服务</span><br><span class="line">    class_start hal</span><br><span class="line"></span><br><span class="line">    # 启动class为core的服务</span><br><span class="line">    class_start core</span><br></pre></td></tr></table></figure>
+
+<p>class为hal的服务有：healthd、hidl_memory、vendor.contexthub-default、confirmationui-1-0、vendor.gatekeeper-1-0。</p>
+<p>class为core的服务有：artd、audioserver、bootanim、shutdownanim、servicemanager、vndservicemanager、gpu、surfaceflinger、bufferhubd、performanced、virtual_touchpad、ueventd、console、adbd、apexd、lmkd、credstore、odsign、vold等。<br>车辆服务：carbugreportd、cartelemetryd_service、carwatchdogd、com.android.car.procfsinspector。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/03/09/%E8%BD%AF%E9%87%8D%E5%90%AF%E5%8A%9F%E8%83%BD%E8%B0%83%E7%A0%94/" data-id="cltjvv1bk000u8q2u30bggdaq" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/03/09/%E6%B6%88%E6%81%AF%E5%BE%AA%E7%8E%AF%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/03/09/%E4%B8%8A%E4%B8%8B%E6%96%87Context/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">March 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/03/09/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E5%B9%BF%E6%92%AD%E7%9A%84%E5%8F%91%E9%80%81%E5%92%8C%E6%8E%A5%E6%94%B6%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E6%B6%88%E6%81%AF%E5%BE%AA%E7%8E%AF%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E8%BD%AF%E9%87%8D%E5%90%AF%E5%8A%9F%E8%83%BD%E8%B0%83%E7%A0%94/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E4%B8%8A%E4%B8%8B%E6%96%87Context/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Window的删除过程 基于Android U  删除Window需要先调用WindowManagerImpl的removeView()方法，在removeView()方法中又调用WindowManagerGlobal的removeView()方法。为了表述得更易于理解，将要删除的Window（View）简称为V。 123456789101112131415161718frameworks&#x2F;bas">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/03/09/Window%E7%9A%84%E5%88%A0%E9%99%A4%E8%BF%87%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Window的删除过程 基于Android U  删除Window需要先调用WindowManagerImpl的removeView()方法，在removeView()方法中又调用WindowManagerGlobal的removeView()方法。为了表述得更易于理解，将要删除的Window（View）简称为V。 123456789101112131415161718frameworks&#x2F;bas">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-03-09T07:30:58.571Z">
+<meta property="article:modified_time" content="2024-03-09T07:30:58.572Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Window的删除过程" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/09/Window%E7%9A%84%E5%88%A0%E9%99%A4%E8%BF%87%E7%A8%8B/" class="article-date">
+  <time class="dt-published" datetime="2024-03-09T07:30:58.571Z" itemprop="datePublished">2024-03-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Window的删除过程"><a href="#Window的删除过程" class="headerlink" title="Window的删除过程"></a><center>Window的删除过程</center></h2><blockquote>
+<p>基于Android U</p>
+</blockquote>
+<p>删除Window需要先调用WindowManagerImpl的removeView()方法，在removeView()方法中又调用WindowManagerGlobal的removeView()方法。为了表述得更易于理解，将要删除的Window（View）简称为V。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/view/WindowManagerGlobal.java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">removeView</span><span class="params">(View view, <span class="type">boolean</span> immediate)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (view == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;view must not be null&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">synchronized</span> (mLock) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">index</span> <span class="operator">=</span> findViewLocked(view, <span class="literal">true</span>);  <span class="comment">// 1</span></span><br><span class="line">        <span class="type">View</span> <span class="variable">curView</span> <span class="operator">=</span> mRoots.get(index).getView();</span><br><span class="line">        removeViewLocked(index, immediate);  <span class="comment">// 2</span></span><br><span class="line">        <span class="keyword">if</span> (curView == view) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;Calling with view &quot;</span> + view</span><br><span class="line">                + <span class="string">&quot; but the ViewAncestor is attached to &quot;</span> + curView);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处找到V在View列表中的索引，注释2处调用removeViewLocked()方法并将这个索引传进去。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/view/WindowManagerGlobal.java</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">removeViewLocked</span><span class="params">(<span class="type">int</span> index, <span class="type">boolean</span> immediate)</span> &#123;</span><br><span class="line">    <span class="type">ViewRootImpl</span> <span class="variable">root</span> <span class="operator">=</span> mRoots.get(index);  <span class="comment">// 1</span></span><br><span class="line">    <span class="type">View</span> <span class="variable">view</span> <span class="operator">=</span> root.getView();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (root != <span class="literal">null</span>) &#123;</span><br><span class="line">        root.getImeFocusController().onWindowDismissed();  <span class="comment">// 2</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">boolean</span> <span class="variable">deferred</span> <span class="operator">=</span> root.die(immediate);  <span class="comment">// 3</span></span><br><span class="line">    <span class="keyword">if</span> (view != <span class="literal">null</span>) &#123;</span><br><span class="line">        view.assignParent(<span class="literal">null</span>);</span><br><span class="line">        <span class="keyword">if</span> (deferred) &#123;</span><br><span class="line">            mDyingViews.add(view);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处根据传入的索引在ViewRootImpl列表中获得V的ViewRootImpl。</p>
+<p>注释2处结束V的输入法相关的逻辑。</p>
+<p>注释3处调用ViewRootImpl的die()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/view/ViewRootImpl.java</span><br><span class="line"><span class="type">boolean</span> <span class="title function_">die</span><span class="params">(<span class="type">boolean</span> immediate)</span> &#123;</span><br><span class="line">    <span class="comment">// Make sure we do execute immediately if we are in the middle of a traversal or the damage</span></span><br><span class="line">    <span class="comment">// done by dispatchDetachedFromWindow will cause havoc on return.</span></span><br><span class="line">    <span class="keyword">if</span> (immediate &amp;&amp; !mIsInTraversal) &#123;  <span class="comment">// 1</span></span><br><span class="line">        doDie();  <span class="comment">// 2</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!mIsDrawing) &#123;</span><br><span class="line">        destroyHardwareRenderer();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        Log.e(mTag, <span class="string">&quot;Attempting to destroy the window while drawing!\n&quot;</span> +</span><br><span class="line">                <span class="string">&quot;  window=&quot;</span> + <span class="built_in">this</span> + <span class="string">&quot;, title=&quot;</span> + mWindowAttributes.getTitle());</span><br><span class="line">    &#125;</span><br><span class="line">    mHandler.sendEmptyMessage(MSG_DIE);</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处如果immediate为true（需要立即执行），并且mIsInTraversal值为false则执行注释2处的代码，mIsInTraversal在执行ViewRootImpl的performTraversals()方法时会被设置为true，在performTraversals()执行完时被设置为false，因此注释1处可以理解为die()方法需要立即执行并且此时ViewRootImpl不再执行performTraversals()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/view/ViewRootImpl.java</span><br><span class="line"><span class="keyword">void</span> <span class="title function_">doDie</span><span class="params">()</span> &#123;</span><br><span class="line">    checkThread();  <span class="comment">// 1</span></span><br><span class="line">    <span class="keyword">if</span> (LOCAL_LOGV) Log.v(mTag, <span class="string">&quot;DIE in &quot;</span> + <span class="built_in">this</span> + <span class="string">&quot; of &quot;</span> + mSurface);</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="built_in">this</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (mRemoved) &#123;  <span class="comment">// 2</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        mRemoved = <span class="literal">true</span>;  <span class="comment">// 3</span></span><br><span class="line">        mOnBackInvokedDispatcher.detachFromWindow();</span><br><span class="line">        <span class="keyword">if</span> (mAdded) &#123;  <span class="comment">// 4</span></span><br><span class="line">            dispatchDetachedFromWindow();  <span class="comment">// 5</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (mAdded &amp;&amp; !mFirst) &#123;  <span class="comment">// 6</span></span><br><span class="line">            destroyHardwareRenderer();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (mView != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="type">int</span> <span class="variable">viewVisibility</span> <span class="operator">=</span> mView.getVisibility();</span><br><span class="line">                <span class="type">boolean</span> <span class="variable">viewVisibilityChanged</span> <span class="operator">=</span> mViewVisibility != viewVisibility;</span><br><span class="line">                <span class="keyword">if</span> (mWindowAttributesChanged || viewVisibilityChanged) &#123;</span><br><span class="line">                    <span class="comment">// If layout params have been changed, first give them</span></span><br><span class="line">                    <span class="comment">// to the window manager to make sure it has the correct</span></span><br><span class="line">                    <span class="comment">// animation info.</span></span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        <span class="keyword">if</span> ((relayoutWindow(mWindowAttributes, viewVisibility, <span class="literal">false</span>)</span><br><span class="line">                                &amp; WindowManagerGlobal.RELAYOUT_RES_FIRST_TIME) != <span class="number">0</span>) &#123;</span><br><span class="line">                            mWindowSession.finishDrawing(</span><br><span class="line">                                mWindow, <span class="literal">null</span> <span class="comment">/* postDrawTransaction */</span>, Integer.MAX_VALUE);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (RemoteException e) &#123;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                destroySurface();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// If our window is removed, we might not get notified about losing control.</span></span><br><span class="line">        <span class="comment">// Invoking this can release the leashes as soon as possible instead of relying on GC.</span></span><br><span class="line">        mInsetsController.onControlsChanged(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line">        mAdded = <span class="literal">false</span>;</span><br><span class="line">        AnimationHandler.removeRequestor(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (mActiveSurfaceSyncGroup != <span class="literal">null</span>) &#123;</span><br><span class="line">        mActiveSurfaceSyncGroup.markSyncReady();</span><br><span class="line">        mActiveSurfaceSyncGroup = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (mHasPendingTransactions) &#123;</span><br><span class="line">        mPendingTransaction.apply();</span><br><span class="line">    &#125;</span><br><span class="line">    WindowManagerGlobal.getInstance().doRemoveView(<span class="built_in">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处用于检查执行doDie()方法的线程的正确性，在checkThread()的内部会判断执行doDie()方法的线程是否是创建V的原始线程，如果不是就会抛出异常，这是因为只有创建V的原始线程才能够操作V。</p>
+<p>注释2、3的代码用于防止doDie()方法被重复调用。</p>
+<p>注释4处V有子View就会调用注释5处的dispatchDetachedFromWindow()方法来销毁View。</p>
+<p>注释6处如果V有子View并且不是第一次被添加，就会执行后面的代码逻辑。</p>
+<p>注释7处WindowManagerGlobal的doRemoveView()方法如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/view/WindowManagerGlobal.java</span><br><span class="line"><span class="keyword">void</span> <span class="title function_">doRemoveView</span><span class="params">(ViewRootImpl root)</span> &#123;</span><br><span class="line">    <span class="type">boolean</span> allViewsRemoved;</span><br><span class="line">    <span class="keyword">synchronized</span> (mLock) &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">int</span> <span class="variable">index</span> <span class="operator">=</span> mRoots.indexOf(root);  <span class="comment">// 1</span></span><br><span class="line">        <span class="keyword">if</span> (index &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            mRoots.remove(index);</span><br><span class="line">            mParams.remove(index);</span><br><span class="line">            <span class="keyword">final</span> <span class="type">View</span> <span class="variable">view</span> <span class="operator">=</span> mViews.remove(index);</span><br><span class="line">            mDyingViews.remove(view);</span><br><span class="line">        &#125;</span><br><span class="line">        ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>WindowManagerGlobal中维护了和Window操作相关的三个列表，doRemoveView()方法会从这三个列表中清除V对应的元素。</p>
+<p>注释1处找到V对应的ViewRootImpl在ViewRootImpl列表中的索引，接着根据这个索引从ViewRootImpl列表、布局参数列表和View列表中删除与V对应的元素。</p>
+<p>我们接着回到ViewRootImpl的doDie()方法，查看注释5处的dispatchDetachedFromWindow()方法做了什么：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/view/ViewRootImpl.java</span><br><span class="line"><span class="keyword">void</span> <span class="title function_">dispatchDetachedFromWindow</span><span class="params">()</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        mWindowSession.remove(mWindow);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (RemoteException e) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用IWindowSession的remove()方法，IWindowSession在Server端的实现为Session。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/wm/Session.java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">remove</span><span class="params">(IWindow window)</span> &#123;</span><br><span class="line">    mService.removeWindow(<span class="built_in">this</span>, window);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用WMS的remove()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/wm/WindowManagerService.java</span><br><span class="line"><span class="keyword">void</span> <span class="title function_">removeWindow</span><span class="params">(Session session, IWindow client)</span> &#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (mGlobalLock) &#123;</span><br><span class="line">        <span class="type">WindowState</span> <span class="variable">win</span> <span class="operator">=</span> windowForClientLocked(session, client, <span class="literal">false</span>);  <span class="comment">// 1</span></span><br><span class="line">        <span class="keyword">if</span> (win != <span class="literal">null</span>) &#123;</span><br><span class="line">            win.removeIfPossible();  <span class="comment">// 2</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Remove embedded window map if the token belongs to an embedded window</span></span><br><span class="line">        mEmbeddedWindowController.remove(client);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注释1处用于获取Window对应的WindowState，WindowState用于保存窗口的信息，在WMS中它用来描述一个窗口。接着在注释2处调用WindowState的removeIfPossible()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/wm/WindowState.java</span><br><span class="line"><span class="keyword">void</span> <span class="title function_">removeIfPossible</span><span class="params">()</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">        removeImmediately();  <span class="comment">// 1</span></span><br><span class="line">        ...</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>removeIfPossible()方法和它的名字一样，并不是直接执行删除操作的，而是进行多个条件判断过滤，满足其中一个条件就会return，推迟删除操作。比如V正在运行一个动画，这时就得推迟删除操作，直到动画完成。通过这些条件判断过滤就会执行注释1处的removeImmediately()。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/wm/WindowState.java</span><br><span class="line"><span class="keyword">void</span> <span class="title function_">removeImmediately</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (mRemoved) &#123;  <span class="comment">// 1</span></span><br><span class="line">        <span class="comment">// Nothing to do.</span></span><br><span class="line">        ProtoLog.v(WM_DEBUG_ADD_REMOVE,</span><br><span class="line">                <span class="string">&quot;WS.removeImmediately: %s Already removed...&quot;</span>, <span class="built_in">this</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    mRemoved = <span class="literal">true</span>;  <span class="comment">// 2</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="built_in">super</span>.removeImmediately();</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">final</span> <span class="type">DisplayContent</span> <span class="variable">dc</span> <span class="operator">=</span> getDisplayContent();</span><br><span class="line">    ...</span><br><span class="line">    dc.getDisplayPolicy().removeWindowLw(<span class="built_in">this</span>);  <span class="comment">// 3</span></span><br><span class="line"></span><br><span class="line">    disposeInputChannel();</span><br><span class="line">    mOnBackInvokedCallbackInfo = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    mSession.windowRemovedLocked();  <span class="comment">// 4</span></span><br><span class="line">    ...</span><br><span class="line">    mWmService.postWindowRemoveCleanupLocked(<span class="built_in">this</span>);  <span class="comment">// 5</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>removeImmediately()方法如同它的名字一样，用于立即进行删除操作。</p>
+<p>注释1处的mRemoved为true意味着正在执行删除Window操作。注释1、2处的代码用于防止重复删除操作。</p>
+<p>注释3处如果当前要删除的Window是StatusBar、NavigationBar或NotificationShade，就会将这个Window从对应的控制器中删除。</p>
+<p>注释4处将V对应的Session从WMS的ArraySet&lt;Session&gt; mSessions中删除并清除Session对应的SurfaceSession资源（SurfaceSession是SurfaceFlinger的一个连接，通过这个连接可以创建一个或者多个Surface并渲染到屏幕上）。</p>
+<p>注释5处调用了WMS的postWindowRemoveCleanupLocked()方法用于对V进行一些集中的清理工作。</p>
+<ul>
+<li>总结<ol>
+<li>检查删除线程的正确性，如果不正确就抛出异常；</li>
+<li>从ViewRootImpl列表、布局参数列表和View列表中删除与V对应的元素。</li>
+<li>判断是否可以直接执行删除操作，如果不能就退出删除操作。</li>
+<li>执行删除操作，清理和释放与V相关的一切资源。</li>
+</ol>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/03/09/Window%E7%9A%84%E5%88%A0%E9%99%A4%E8%BF%87%E7%A8%8B/" data-id="cltjvv1be000h8q2u4xfl4644" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/03/09/Window%E7%9A%84%E6%B7%BB%E5%8A%A0%E8%BF%87%E7%A8%8B%EF%BC%88WMS%E5%A4%84%E7%90%86%E9%83%A8%E5%88%86%EF%BC%89/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/03/09/Window%E7%9B%B8%E5%85%B3%E7%B1%BB/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">March 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/03/09/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E5%B9%BF%E6%92%AD%E7%9A%84%E5%8F%91%E9%80%81%E5%92%8C%E6%8E%A5%E6%94%B6%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E6%B6%88%E6%81%AF%E5%BE%AA%E7%8E%AF%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E8%BD%AF%E9%87%8D%E5%90%AF%E5%8A%9F%E8%83%BD%E8%B0%83%E7%A0%94/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E4%B8%8A%E4%B8%8B%E6%96%87Context/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

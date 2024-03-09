@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="AMS重要的数据结构 基于Android U  ActivityRecordActivityRecord内部记录了Activity的所有信息。因此它用来描述一个Activity，它是在启动Activity时被创建的，具体是在ActivityStarter的startActivity方法中被创建的。ActivityRecord的部分重要成员变量如下所示：    名称 类型 说明    service">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/03/09/AMS%E9%87%8D%E8%A6%81%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="AMS重要的数据结构 基于Android U  ActivityRecordActivityRecord内部记录了Activity的所有信息。因此它用来描述一个Activity，它是在启动Activity时被创建的，具体是在ActivityStarter的startActivity方法中被创建的。ActivityRecord的部分重要成员变量如下所示：    名称 类型 说明    service">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.loli.net/2024/01/03/SojvHKFrc3yYag2.jpg">
+<meta property="og:image" content="https://s2.loli.net/2024/01/03/54JRsOKr8vNyU7V.jpg">
+<meta property="article:published_time" content="2024-03-09T07:30:58.560Z">
+<meta property="article:modified_time" content="2024-03-09T07:30:58.561Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2024/01/03/SojvHKFrc3yYag2.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-AMS重要的数据结构" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/03/09/AMS%E9%87%8D%E8%A6%81%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="article-date">
+  <time class="dt-published" datetime="2024-03-09T07:30:58.560Z" itemprop="datePublished">2024-03-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="AMS重要的数据结构"><a href="#AMS重要的数据结构" class="headerlink" title="AMS重要的数据结构"></a><center>AMS重要的数据结构</center></h2><blockquote>
+<p>基于Android U</p>
+</blockquote>
+<h4 id="ActivityRecord"><a href="#ActivityRecord" class="headerlink" title="ActivityRecord"></a>ActivityRecord</h4><p>ActivityRecord内部记录了Activity的所有信息。因此它用来描述一个Activity，它是在启动Activity时被创建的，具体是在ActivityStarter的startActivity方法中被创建的。ActivityRecord的部分重要成员变量如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>service</td>
+<td>ActivityManagerService</td>
+<td>AMS的引用</td>
+</tr>
+<tr>
+<td>info</td>
+<td>ActivityInfo</td>
+<td>开发者在AndroidManifest中提供的Activity信息</td>
+</tr>
+<tr>
+<td>launchedFromPackage</td>
+<td>String</td>
+<td>启动Activity的包名</td>
+</tr>
+<tr>
+<td>taskAffinity</td>
+<td>String</td>
+<td>Activity希望归属的栈</td>
+</tr>
+<tr>
+<td>task</td>
+<td>Task</td>
+<td>ActivityRecord所在的Task</td>
+</tr>
+<tr>
+<td>app</td>
+<td>WindowProcessController</td>
+<td>ActivityRecord所在的应用程序进程</td>
+</tr>
+<tr>
+<td>mState</td>
+<td>State</td>
+<td>当前Activity的状态</td>
+</tr>
+<tr>
+<td>icon</td>
+<td>int</td>
+<td>Activity的图标资源标识符</td>
+</tr>
+<tr>
+<td>theme</td>
+<td>int</td>
+<td>Activity的主题资源标识符</td>
+</tr>
+</tbody></table>
+<p>ActivityRecord中含有该ActivityRecord所在的Task，这就将ActivityRecord和Task关联在一起，它们是Activity任务栈模型的重要成员。</p>
+<h4 id="TaskFragment"><a href="#TaskFragment" class="headerlink" title="TaskFragment"></a>TaskFragment</h4><p>一个基本容器，可容纳 Activity 或其他 TaskFragment，还能够管理Activity生命周期及更新其可见性。</p>
+<p>在TaskFragment中定义了一些特殊状态的Activity，如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/wm/TaskFragment.java</span><br><span class="line"><span class="keyword">private</span> <span class="type">ActivityRecord</span> <span class="variable">mPausingActivity</span> <span class="operator">=</span> <span class="literal">null</span>;  <span class="comment">// 正在暂停的Activity</span></span><br><span class="line"><span class="type">ActivityRecord</span> <span class="variable">mLastPausedActivity</span> <span class="operator">=</span> <span class="literal">null</span>;  <span class="comment">// 上一个已经暂停的Activity</span></span><br><span class="line"><span class="keyword">private</span> <span class="type">ActivityRecord</span> <span class="variable">mResumedActivity</span> <span class="operator">=</span> <span class="literal">null</span>;  <span class="comment">// 已经Resume的Activity</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Task"><a href="#Task" class="headerlink" title="Task"></a>Task</h4><p>Task是一个TaskFragment（继承自TaskFragment），用来描述一个Activity任务栈，其内部也有很多的成员变量，如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mTaskId</td>
+<td>int</td>
+<td>任务栈的唯一标识符</td>
+</tr>
+<tr>
+<td>affinity</td>
+<td>String</td>
+<td>任务栈的倾向性</td>
+</tr>
+<tr>
+<td>intent</td>
+<td>Intent</td>
+<td>启动这个任务栈的Intent，可能为null</td>
+</tr>
+</tbody></table>
+<p>Task内部存储了任务栈的所有信息，包括任务栈的唯一标识符、任务栈的倾向性、任务栈中的Activity记录等。</p>
+<h4 id="ActivityState"><a href="#ActivityState" class="headerlink" title="ActivityState"></a>ActivityState</h4><p>在ActivityRecord中通过枚举存储了Activity的所有的状态。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/wm/ActivityRecord.java</span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">State</span> &#123;</span><br><span class="line">    INITIALIZING,</span><br><span class="line">    STARTED,</span><br><span class="line">    RESUMED,</span><br><span class="line">    PAUSING,</span><br><span class="line">    PAUSED,</span><br><span class="line">    STOPPING,</span><br><span class="line">    STOPPED,</span><br><span class="line">    FINISHING,</span><br><span class="line">    DESTROYING,</span><br><span class="line">    DESTROYED,</span><br><span class="line">    RESTARTING_PROCESS</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="ActivityTaskSupervisor"><a href="#ActivityTaskSupervisor" class="headerlink" title="ActivityTaskSupervisor"></a>ActivityTaskSupervisor</h4><p>用来替代ActivityStackSupervisor，是Activity的核心调度类，其中有一些Activity List。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/services/core/java/com/android/server/wm/ActivityTaskSupervisor.java</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> ArrayList&lt;WaitInfo&gt; mWaitingActivityLaunched = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();  <span class="comment">// 等待launch还不可见的Activity</span></span><br><span class="line"><span class="keyword">final</span> ArrayList&lt;ActivityRecord&gt; mStoppingActivities = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();  <span class="comment">// 正在stop的Activity</span></span><br><span class="line"><span class="keyword">final</span> ArrayList&lt;ActivityRecord&gt; mFinishingActivities = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();  <span class="comment">// 正在finish的Activity</span></span><br><span class="line"><span class="keyword">final</span> ArrayList&lt;ActivityRecord&gt; mNoHistoryActivities = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();  <span class="comment">// 没有历史记录的Activity</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Activity栈管理"><a href="#Activity栈管理" class="headerlink" title="Activity栈管理"></a>Activity栈管理</h4><p>有了栈管理，我们可以对应用程序进行操作，应用可以复用自身应用中以及其他应用的Activity，节省了资源。比如我们使用一款社交应用，这个应用的联系人详情界面提供了联系人的邮箱，当我们点击邮箱时会跳到发送邮件的界面。</p>
+<img src="https://s2.loli.net/2024/01/03/SojvHKFrc3yYag2.jpg" style="zoom:50%;" />
+
+<h5 id="Launch-Mode"><a href="#Launch-Mode" class="headerlink" title="Launch Mode"></a>Launch Mode</h5><p>用于设定Activity的启动方式，无论是哪种启动方式，所启动的Activity都会位于Activity栈的栈顶，主要有以下四种Launch Mode：</p>
+<ul>
+<li><p>standard：默认模式，每次启动Activity都会创建一个新的Activity实例。</p>
+</li>
+<li><p>singleTop：如果要启动的Activity已经在栈顶，则不会重新创建Activity，同时该Activity的onNewIntent()方法会被调用。如果要启动的Activity不在栈顶，则会重新创建该Activity的实例。</p>
+</li>
+<li><p>singleTask：如果要启动的Activity已经存在于它想要归属的栈中，那么将栈中位于该Activity上的所有Activity出栈，同时该Activity的onNewIntent()方法会被调用。如果要启动的Activity不存在于它想要归属的栈中，如果该栈存在，则创建该Activity的实例，如果该栈不存在，则首先要创建一个新栈，然后创建该Activity实例并压入到新栈中。</p>
+</li>
+<li><p>singleInstance：启动Activity时，首先要创建一个新栈，然后创建该Activity实例并压入新栈中，新栈中只会存在这一个Activity实例。</p>
+</li>
+</ul>
+<h5 id="Intent的FLAG"><a href="#Intent的FLAG" class="headerlink" title="Intent的FLAG"></a>Intent的FLAG</h5><p>在Intent中定义了很多FLAG，其中有几个FLAG也可以设定Activity的启动方式，如果Launch Mode和FLAG设定的Activity的启动方式有冲突，则以FLAG设定的为准。</p>
+<ul>
+<li>FLAG_ACTIVITY_SINGLE_TOP：和Launch Mode中的singleTop效果一样。</li>
+<li>FLAG_ACTIVITY_NEW_TASK：和Launch Mode中的singleTask效果一样。</li>
+<li>FLAG_ACTIVITY_CLEAR_TOP：Launch Mode中没有与此对应的模式，如果要启动的Activity已经存在于栈中，则将所有位于它上面的Activity出栈。singleTask默认具有此标记的效果。</li>
+</ul>
+<p>除了上述三个FLAG，还有一个FLAG和栈管理相关。</p>
+<ul>
+<li>FLAG_ACTIVITY_NO_HISTORY：Activity一旦退出，就不会存在于栈中。同样地，也可以在AndroidManifest.xml中设置android:noHistory。</li>
+<li>FLAG_ACTIVITY_MULTIPLE_TASK：需要和FLAG_ACTIVITY_NEW_TASK一同使用才有效果，系统会启动一个新的栈来容纳新启动的Activity。</li>
+<li>FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS：Activity不会被放入到“最近启动的Activity”列表中。</li>
+<li>FLAG_ACTIVITY_BROUGHT_TO_FRONT：这个标志位通常不是由应用程序中的代码设置的，而是Launch Mode为singleTask时，由系统加上的。</li>
+<li>FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY：这个标志位通常不是由应用程序中的代码设置的，而是从历史记录中启动的（长按Home键调出）。</li>
+<li>FLAG_ACTIVITY_CLEAR_TASK：需要和FLAG_ACTIVITY_NEW_TASK一同使用才有效果，用于清除与启动的Activity相关栈的所有其他Activity。</li>
+</ul>
+<h5 id="taskAffinity"><a href="#taskAffinity" class="headerlink" title="taskAffinity"></a>taskAffinity</h5><p>我们可以在AndroidManifest.xml中设置android:taskAffinity，用来指定Activity希望归属的栈，在默认情况下，同一个应用程序的所有的Activity都有着相同的taskAffinity。taskAffinity在下面两种情况时会产生效果。</p>
+<p>（1）taskAffinity与FLAG_ACTIVITY_NEW_TASK或者singleTask配合。如果新启动Activity的taskAffinity和栈的taskAffinity相同则加入到该栈中；如果不同，就会创建新栈。</p>
+<p>（2）taskAffinity与allowTaskReparenting配合。如果allowTaskReparenting为true，说明Activity具有转移的能力。举例：当社交应用启动了发送邮件的Activity，此时发送邮件的Activity是和社交应用处于同一个栈中的，并且这个栈位于前台。如果发送邮件的Activity的allowTaskReparenting设置为true，此后E-mail应用所在的栈位于前台时，发送邮件的Activity就会由社交应用的栈转移到与它更亲近的邮件应用（taskAffinity相同）所在的栈中。</p>
+<img src="https://s2.loli.net/2024/01/03/54JRsOKr8vNyU7V.jpg" style="zoom:50%;" />
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/03/09/AMS%E9%87%8D%E8%A6%81%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" data-id="cltjvv1b300018q2ufr764neh" data-title="" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/03/09/Android%E5%85%B3%E6%9C%BA%E6%B5%81%E7%A8%8B/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/03/09/AMS%E4%B8%8E%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%BF%9B%E7%A8%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/03/">March 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/03/09/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E5%B9%BF%E6%92%AD%E7%9A%84%E5%8F%91%E9%80%81%E5%92%8C%E6%8E%A5%E6%94%B6%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E6%B6%88%E6%81%AF%E5%BE%AA%E7%8E%AF%E5%88%9B%E5%BB%BA%E8%BF%87%E7%A8%8B/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E8%BD%AF%E9%87%8D%E5%90%AF%E5%8A%9F%E8%83%BD%E8%B0%83%E7%A0%94/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2024/03/09/%E4%B8%8A%E4%B8%8B%E6%96%87Context/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
