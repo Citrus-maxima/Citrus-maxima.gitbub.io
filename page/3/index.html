@@ -224,6 +224,39 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2024/03/09/Launcher%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" target="_self">
+          
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/03/09/Launcher%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" target="_self">
+        <div>
+          Launcher启动流程 基于Android U  SystemServer进程在启动的过程中会启动PackageManagerService，PackageManagerService启动后会将系统中的应用程序安装完成。先前已经启动的AMS会将Launcher启动起来。时序图如下：  启动Launcher的入口为AMS的systemReady()方法，它在SystemServer的startOt
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-03-09 15:30" pubdate>
+              2024-03-09
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2024/03/09/Launcher%E5%BA%94%E7%94%A8%E5%9B%BE%E6%A0%87%E6%98%BE%E7%A4%BA%E6%B5%81%E7%A8%8B/" target="_self">
           
         </a>
@@ -365,39 +398,6 @@
       <a class="index-excerpt index-excerpt__noimg" href="/2024/03/09/ContentProvider%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/" target="_self">
         <div>
           ContentProvider的启动过程 基于Android U  ContentProvider，即内容提供者，主要用于进程内和进程间的数据共享。 当ContentProvider所在进程启动时，ContentProvider会同时启动并被发布到AMS中。需要注意的是，这时ContentProvider的onCreate()先于Application的onCreate()执行。 外界无法直接访问
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-03-09 15:30" pubdate>
-              2024-03-09
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/03/09/Android%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" target="_self">
-          
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/03/09/Android%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" target="_self">
-        <div>
-          Android启动流程从上电开始到系统服务启动完成。整个流程的可以简述为：BootLoader -&gt; Kernel -&gt; Native-&gt; Framework-&gt; App  上电引导芯片从固化在ROM里预设的代码开始执行。它将引导加载程序加载到RAM中并开始执行。 BootloaderBootloader的主要作用是准备硬件环境，引导Linux Kernel（Linux内核
         </div>
       </a>
 
