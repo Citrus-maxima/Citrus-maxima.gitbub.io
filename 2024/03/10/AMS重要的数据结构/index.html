@@ -1,0 +1,803 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="包括ActivityRecord、TaskFragment、Task、ActivityState、ActivityTaskSupervisor、Activity栈管理。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AMS重要的数据结构">
+<meta property="og:url" content="http://example.com/2024/03/10/AMS%E9%87%8D%E8%A6%81%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="包括ActivityRecord、TaskFragment、Task、ActivityState、ActivityTaskSupervisor、Activity栈管理。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2024/01/03/SojvHKFrc3yYag2.jpg">
+<meta property="og:image" content="https://s2.loli.net/2024/01/03/54JRsOKr8vNyU7V.jpg">
+<meta property="article:published_time" content="2024-03-10T04:23:12.684Z">
+<meta property="article:modified_time" content="2024-03-10T04:23:12.684Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="AMS">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2024/01/03/SojvHKFrc3yYag2.jpg">
+  
+  
+  
+  <title>AMS重要的数据结构 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>柚子树</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="AMS重要的数据结构"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-03-10 12:23" pubdate>
+          2024年3月10日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          12 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">AMS重要的数据结构</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <blockquote>
+<p>基于Android U</p>
+</blockquote>
+<h4 id="ActivityRecord"><a href="#ActivityRecord" class="headerlink" title="ActivityRecord"></a>ActivityRecord</h4><p>ActivityRecord内部记录了Activity的所有信息。因此它用来描述一个Activity，它是在启动Activity时被创建的，具体是在ActivityStarter的startActivity方法中被创建的。ActivityRecord的部分重要成员变量如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>service</td>
+<td>ActivityManagerService</td>
+<td>AMS的引用</td>
+</tr>
+<tr>
+<td>info</td>
+<td>ActivityInfo</td>
+<td>开发者在AndroidManifest中提供的Activity信息</td>
+</tr>
+<tr>
+<td>launchedFromPackage</td>
+<td>String</td>
+<td>启动Activity的包名</td>
+</tr>
+<tr>
+<td>taskAffinity</td>
+<td>String</td>
+<td>Activity希望归属的栈</td>
+</tr>
+<tr>
+<td>task</td>
+<td>Task</td>
+<td>ActivityRecord所在的Task</td>
+</tr>
+<tr>
+<td>app</td>
+<td>WindowProcessController</td>
+<td>ActivityRecord所在的应用程序进程</td>
+</tr>
+<tr>
+<td>mState</td>
+<td>State</td>
+<td>当前Activity的状态</td>
+</tr>
+<tr>
+<td>icon</td>
+<td>int</td>
+<td>Activity的图标资源标识符</td>
+</tr>
+<tr>
+<td>theme</td>
+<td>int</td>
+<td>Activity的主题资源标识符</td>
+</tr>
+</tbody></table>
+<p>ActivityRecord中含有该ActivityRecord所在的Task，这就将ActivityRecord和Task关联在一起，它们是Activity任务栈模型的重要成员。</p>
+<h4 id="TaskFragment"><a href="#TaskFragment" class="headerlink" title="TaskFragment"></a>TaskFragment</h4><p>一个基本容器，可容纳 Activity 或其他 TaskFragment，还能够管理Activity生命周期及更新其可见性。</p>
+<p>在TaskFragment中定义了一些特殊状态的Activity，如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java">frameworks/base/services/core/java/com/android/server/wm/TaskFragment.java<br><span class="hljs-keyword">private</span> <span class="hljs-type">ActivityRecord</span> <span class="hljs-variable">mPausingActivity</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;  <span class="hljs-comment">// 正在暂停的Activity</span><br><span class="hljs-type">ActivityRecord</span> <span class="hljs-variable">mLastPausedActivity</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;  <span class="hljs-comment">// 上一个已经暂停的Activity</span><br><span class="hljs-keyword">private</span> <span class="hljs-type">ActivityRecord</span> <span class="hljs-variable">mResumedActivity</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;  <span class="hljs-comment">// 已经Resume的Activity</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="Task"><a href="#Task" class="headerlink" title="Task"></a>Task</h4><p>Task是一个TaskFragment（继承自TaskFragment），用来描述一个Activity任务栈，其内部也有很多的成员变量，如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mTaskId</td>
+<td>int</td>
+<td>任务栈的唯一标识符</td>
+</tr>
+<tr>
+<td>affinity</td>
+<td>String</td>
+<td>任务栈的倾向性</td>
+</tr>
+<tr>
+<td>intent</td>
+<td>Intent</td>
+<td>启动这个任务栈的Intent，可能为null</td>
+</tr>
+</tbody></table>
+<p>Task内部存储了任务栈的所有信息，包括任务栈的唯一标识符、任务栈的倾向性、任务栈中的Activity记录等。</p>
+<h4 id="ActivityState"><a href="#ActivityState" class="headerlink" title="ActivityState"></a>ActivityState</h4><p>在ActivityRecord中通过枚举存储了Activity的所有的状态。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java">frameworks/base/services/core/java/com/android/server/wm/ActivityRecord.java<br><span class="hljs-keyword">enum</span> <span class="hljs-title class_">State</span> &#123;<br>    INITIALIZING,<br>    STARTED,<br>    RESUMED,<br>    PAUSING,<br>    PAUSED,<br>    STOPPING,<br>    STOPPED,<br>    FINISHING,<br>    DESTROYING,<br>    DESTROYED,<br>    RESTARTING_PROCESS<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="ActivityTaskSupervisor"><a href="#ActivityTaskSupervisor" class="headerlink" title="ActivityTaskSupervisor"></a>ActivityTaskSupervisor</h4><p>用来替代ActivityStackSupervisor，是Activity的核心调度类，其中有一些Activity List。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java">frameworks/base/services/core/java/com/android/server/wm/ActivityTaskSupervisor.java<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> ArrayList&lt;WaitInfo&gt; mWaitingActivityLaunched = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();  <span class="hljs-comment">// 等待launch还不可见的Activity</span><br><span class="hljs-keyword">final</span> ArrayList&lt;ActivityRecord&gt; mStoppingActivities = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();  <span class="hljs-comment">// 正在stop的Activity</span><br><span class="hljs-keyword">final</span> ArrayList&lt;ActivityRecord&gt; mFinishingActivities = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();  <span class="hljs-comment">// 正在finish的Activity</span><br><span class="hljs-keyword">final</span> ArrayList&lt;ActivityRecord&gt; mNoHistoryActivities = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();  <span class="hljs-comment">// 没有历史记录的Activity</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="Activity栈管理"><a href="#Activity栈管理" class="headerlink" title="Activity栈管理"></a>Activity栈管理</h4><p>有了栈管理，我们可以对应用程序进行操作，应用可以复用自身应用中以及其他应用的Activity，节省了资源。比如我们使用一款社交应用，这个应用的联系人详情界面提供了联系人的邮箱，当我们点击邮箱时会跳到发送邮件的界面。</p>
+<img src="https://s2.loli.net/2024/01/03/SojvHKFrc3yYag2.jpg" srcset="/img/loading.gif" lazyload style="zoom:50%;" />
+
+<h5 id="Launch-Mode"><a href="#Launch-Mode" class="headerlink" title="Launch Mode"></a>Launch Mode</h5><p>用于设定Activity的启动方式，无论是哪种启动方式，所启动的Activity都会位于Activity栈的栈顶，主要有以下四种Launch Mode：</p>
+<ul>
+<li><p>standard：默认模式，每次启动Activity都会创建一个新的Activity实例。</p>
+</li>
+<li><p>singleTop：如果要启动的Activity已经在栈顶，则不会重新创建Activity，同时该Activity的onNewIntent()方法会被调用。如果要启动的Activity不在栈顶，则会重新创建该Activity的实例。</p>
+</li>
+<li><p>singleTask：如果要启动的Activity已经存在于它想要归属的栈中，那么将栈中位于该Activity上的所有Activity出栈，同时该Activity的onNewIntent()方法会被调用。如果要启动的Activity不存在于它想要归属的栈中，如果该栈存在，则创建该Activity的实例，如果该栈不存在，则首先要创建一个新栈，然后创建该Activity实例并压入到新栈中。</p>
+</li>
+<li><p>singleInstance：启动Activity时，首先要创建一个新栈，然后创建该Activity实例并压入新栈中，新栈中只会存在这一个Activity实例。</p>
+</li>
+</ul>
+<h5 id="Intent的FLAG"><a href="#Intent的FLAG" class="headerlink" title="Intent的FLAG"></a>Intent的FLAG</h5><p>在Intent中定义了很多FLAG，其中有几个FLAG也可以设定Activity的启动方式，如果Launch Mode和FLAG设定的Activity的启动方式有冲突，则以FLAG设定的为准。</p>
+<ul>
+<li>FLAG_ACTIVITY_SINGLE_TOP：和Launch Mode中的singleTop效果一样。</li>
+<li>FLAG_ACTIVITY_NEW_TASK：和Launch Mode中的singleTask效果一样。</li>
+<li>FLAG_ACTIVITY_CLEAR_TOP：Launch Mode中没有与此对应的模式，如果要启动的Activity已经存在于栈中，则将所有位于它上面的Activity出栈。singleTask默认具有此标记的效果。</li>
+</ul>
+<p>除了上述三个FLAG，还有一个FLAG和栈管理相关。</p>
+<ul>
+<li>FLAG_ACTIVITY_NO_HISTORY：Activity一旦退出，就不会存在于栈中。同样地，也可以在AndroidManifest.xml中设置android:noHistory。</li>
+<li>FLAG_ACTIVITY_MULTIPLE_TASK：需要和FLAG_ACTIVITY_NEW_TASK一同使用才有效果，系统会启动一个新的栈来容纳新启动的Activity。</li>
+<li>FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS：Activity不会被放入到“最近启动的Activity”列表中。</li>
+<li>FLAG_ACTIVITY_BROUGHT_TO_FRONT：这个标志位通常不是由应用程序中的代码设置的，而是Launch Mode为singleTask时，由系统加上的。</li>
+<li>FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY：这个标志位通常不是由应用程序中的代码设置的，而是从历史记录中启动的（长按Home键调出）。</li>
+<li>FLAG_ACTIVITY_CLEAR_TASK：需要和FLAG_ACTIVITY_NEW_TASK一同使用才有效果，用于清除与启动的Activity相关栈的所有其他Activity。</li>
+</ul>
+<h5 id="taskAffinity"><a href="#taskAffinity" class="headerlink" title="taskAffinity"></a>taskAffinity</h5><p>我们可以在AndroidManifest.xml中设置android:taskAffinity，用来指定Activity希望归属的栈，在默认情况下，同一个应用程序的所有的Activity都有着相同的taskAffinity。taskAffinity在下面两种情况时会产生效果。</p>
+<p>（1）taskAffinity与FLAG_ACTIVITY_NEW_TASK或者singleTask配合。如果新启动Activity的taskAffinity和栈的taskAffinity相同则加入到该栈中；如果不同，就会创建新栈。</p>
+<p>（2）taskAffinity与allowTaskReparenting配合。如果allowTaskReparenting为true，说明Activity具有转移的能力。举例：当社交应用启动了发送邮件的Activity，此时发送邮件的Activity是和社交应用处于同一个栈中的，并且这个栈位于前台。如果发送邮件的Activity的allowTaskReparenting设置为true，此后E-mail应用所在的栈位于前台时，发送邮件的Activity就会由社交应用的栈转移到与它更亲近的邮件应用（taskAffinity相同）所在的栈中。</p>
+<img src="https://s2.loli.net/2024/01/03/54JRsOKr8vNyU7V.jpg" srcset="/img/loading.gif" lazyload style="zoom:50%;" />
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Android/" class="category-chain-item">Android</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/AMS/" class="print-no-link">#AMS</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>AMS重要的数据结构</div>
+      <div>http://example.com/2024/03/10/AMS重要的数据结构/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年3月10日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/03/10/Android%E5%85%B3%E6%9C%BA%E6%B5%81%E7%A8%8B/" title="Android关机流程">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Android关机流程</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/03/10/AMS%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/" title="AMS的启动过程">
+                        <span class="hidden-mobile">AMS的启动过程</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script>
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          Fluid.utils.createCssLink('https://lib.baomitu.com/disqusjs/1.3.0/disqusjs.css');
+          Fluid.utils.createScript('https://lib.baomitu.com/disqusjs/1.3.0/disqus.js', function() {
+            new DisqusJS({
+              shortname: 'fluid',
+              apikey: ''
+            });
+          });
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

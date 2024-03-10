@@ -1,0 +1,918 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="JNI是Java Native Interface的缩写，译为Java本地接口，是Java与其他语言通信的桥梁。当出现一些用Java无法处理的任务时，开发人员就可以使用JNI技术来完成。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JNI原理">
+<meta property="og:url" content="http://example.com/2024/03/10/JNI%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="JNI是Java Native Interface的缩写，译为Java本地接口，是Java与其他语言通信的桥梁。当出现一些用Java无法处理的任务时，开发人员就可以使用JNI技术来完成。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-03-10T04:37:57.937Z">
+<meta property="article:modified_time" content="2024-03-10T04:37:57.937Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>JNI原理 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>柚子树</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="JNI原理"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-03-10 12:37" pubdate>
+          2024年3月10日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          37 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">JNI原理</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <blockquote>
+<p>基于Android U</p>
+</blockquote>
+<h4 id="JNI用途"><a href="#JNI用途" class="headerlink" title="JNI用途"></a>JNI用途</h4><p>JNI是Java Native Interface的缩写，译为Java本地接口，是Java与其他语言通信的桥梁。当出现一些用Java无法处理的任务时，开发人员就可以使用JNI技术来完成。一般来说主要有以下情况需要用到JNI技术。</p>
+<ul>
+<li>需要调用Java语言不支持的依赖于操作系统平台特性的一些功能。例如：需要调用当前的UNIX系统的某个功能，而Java不支持这个功能，就需要用到JNI技术来实现。</li>
+<li>为了整合一些以前的非Java语言开发的系统。例如：需要用到早期实现的C&#x2F;C++语言开发的一些功能或系统，将这些功能整合到当前的系统或新的版本中。</li>
+<li>为了节省程序的运行时间，必须采用其他语言（比如C&#x2F;C++语言）来提升运行效率。例如：游戏、音视频开发设计的音视频编解码和图像绘制需要更快的处理速度。</li>
+</ul>
+<p>JNI不只是应用于Android开发，它有着非常广泛的应用场景。JNI在Android中的应用场景也十分广泛，主要有音视频开发、热修复和插件化、逆向开发、系统源码调用等。为了更方便地使用JNI技术，Android还提供了NDK这个工具集合，NDK开发是基于JNI的，它和JNI开发本质上并没有区别。</p>
+<p>Android系统按语言来划分的话由两个世界组成，分别是Java世界和Native世界。JNI就是将它们连接在一起的桥梁。</p>
+<h4 id="MediaRecorder框架中的JNI"><a href="#MediaRecorder框架中的JNI" class="headerlink" title="MediaRecorder框架中的JNI"></a>MediaRecorder框架中的JNI</h4><p>MediaRecorder用于录音和录像。Java Framework层对应的是MediaRecorder.java，也就是我们在应用开发中直接调用的类。JNI层对应的是libmedia_jni.so，可以看到这个动态库的名称含有“_jni”，这说明它是一个JNI的动态库。Native层对应的是libmedia.so，这个动态库完成了实际调用的功能。</p>
+<h5 id="Java-Framework层的MediaRecorder"><a href="#Java-Framework层的MediaRecorder" class="headerlink" title="Java Framework层的MediaRecorder"></a>Java Framework层的MediaRecorder</h5><p>和JNI有关的源码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java">frameworks/base/media/java/android/media/MediaRecorder.java<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MediaRecorder</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">AudioRouting</span>,<br>                                      AudioRecordingMonitor,<br>                                      AudioRecordingMonitorClient,<br>                                      MicrophoneDirection<br>&#123;<br>    <span class="hljs-keyword">static</span> &#123;<br>        System.loadLibrary(<span class="hljs-string">&quot;media_jni&quot;</span>);  <span class="hljs-comment">// 1</span><br>        native_init();  <span class="hljs-comment">// 2</span><br>    &#125;<br>    ...<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">native_init</span><span class="hljs-params">()</span>;  <span class="hljs-comment">// 3</span><br>    ...<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">start</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> IllegalStateException;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在静态代码块中首先调用了注释1处的代码，用来加载名为media_jni的动态库，也就是libmedia_jni.so。接着调用注释2处的native_init方法，其内部会调用Native方法，用来完成JNI的注册。注释3处的native_init方法用native来修饰，说明它是一个native方法，表示由JNI来实现。MediaRecorder的start()方法同样也是一个native方法。对于Java Framework层来说，只需要加载对应的JNI库，接着声明native方法就可以了，剩下的工作由JNI层来完成。</p>
+<h5 id="JNI层的MediaRecorder"><a href="#JNI层的MediaRecorder" class="headerlink" title="JNI层的MediaRecorder"></a>JNI层的MediaRecorder</h5><p>MediaRecorder的JNI层由android_media_recorder.cpp实现，native方法native_init()和start()的JNI层实现如下所示：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs cpp">frameworks/base/media/jni/android_media_MediaRecorder.<span class="hljs-function">cpp</span><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span></span><br><span class="hljs-function"><span class="hljs-title">android_media_MediaRecorder_native_init</span><span class="hljs-params">(JNIEnv *env)</span></span><br><span class="hljs-function"></span>&#123;<br>    ...<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span></span><br><span class="hljs-function"><span class="hljs-title">android_media_MediaRecorder_start</span><span class="hljs-params">(JNIEnv *env, jobject thiz)</span></span><br><span class="hljs-function"></span>&#123;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>android_media_MediaRecorder_native_init()方法是native_init()方法在JNI层的实现，android_media_MediaRecorder_start()方法则是start()方法在JNI层的实现。那么native_init()方法是如何找到对应的android_media_MediaRecorder_native_init()方法的呢？这就涉及到了JNI方法注册。</p>
+<h5 id="Native方法注册"><a href="#Native方法注册" class="headerlink" title="Native方法注册"></a>Native方法注册</h5><p>Native方法注册分为静态注册和动态注册，其中静态注册多用于NDK开发，而动态注册多用于Framework开发。</p>
+<ul>
+<li>静态注册</li>
+</ul>
+<p>按照JNI规范书写函数名：java_包名_类名_方法名，包名也用下划线隔开。</p>
+<p>静态注册使用简单，但是也有一些缺点：</p>
+<ol>
+<li>JNI层的函数名称过长；</li>
+<li>声明Native方法的类需要用javah生成头文件；</li>
+<li>初次调用Native方法时需要建立关联，影响效率。</li>
+</ol>
+<ul>
+<li>动态注册</li>
+</ul>
+<p>JNI中有一种结构用来记录Java的Native方法和JNI方法的关联关系，它就是JNINativeMethod，它在jni.h中被定义。</p>
+<figure class="highlight h"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs h"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span><br>    <span class="hljs-type">const</span> <span class="hljs-type">char</span>* name;  <span class="hljs-comment">// Java方法的名字</span><br>    <span class="hljs-type">const</span> <span class="hljs-type">char</span>* signature;  <span class="hljs-comment">// Java方法的签名信息</span><br>    <span class="hljs-type">void</span>*       fnPtr;  <span class="hljs-comment">// JNI中对应的方法指针</span><br>&#125; JNINativeMethod;<br></code></pre></td></tr></table></figure>
+
+<p>系统的MediaRecorder采用的就是动态注册。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs cpp">frameworks/base/media/jni/android_media_MediaRecorder.cpp<br><span class="hljs-type">static</span> <span class="hljs-type">const</span> JNINativeMethod gMethods[] = &#123;<br>    ...<br>    &#123;<span class="hljs-string">&quot;start&quot;</span>,                <span class="hljs-string">&quot;()V&quot;</span>,                             (<span class="hljs-type">void</span> *)android_media_MediaRecorder_start&#125;,  <span class="hljs-comment">// 1</span><br>    &#123;<span class="hljs-string">&quot;stop&quot;</span>,                 <span class="hljs-string">&quot;()V&quot;</span>,                             (<span class="hljs-type">void</span> *)android_media_MediaRecorder_stop&#125;,<br>    &#123;<span class="hljs-string">&quot;pause&quot;</span>,                <span class="hljs-string">&quot;()V&quot;</span>,                             (<span class="hljs-type">void</span> *)android_media_MediaRecorder_pause&#125;,<br>    &#123;<span class="hljs-string">&quot;resume&quot;</span>,               <span class="hljs-string">&quot;()V&quot;</span>,                             (<span class="hljs-type">void</span> *)android_media_MediaRecorder_resume&#125;,<br>    &#123;<span class="hljs-string">&quot;native_reset&quot;</span>,         <span class="hljs-string">&quot;()V&quot;</span>,                             (<span class="hljs-type">void</span> *)android_media_MediaRecorder_native_reset&#125;,<br>    &#123;<span class="hljs-string">&quot;release&quot;</span>,              <span class="hljs-string">&quot;()V&quot;</span>,                             (<span class="hljs-type">void</span> *)android_media_MediaRecorder_release&#125;,<br>    &#123;<span class="hljs-string">&quot;native_init&quot;</span>,          <span class="hljs-string">&quot;()V&quot;</span>,                             (<span class="hljs-type">void</span> *)android_media_MediaRecorder_native_init&#125;,<br>    ...<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>上面定义了一个JNINativeMethod类型的gMethods数组，里面存储的就是MediaRecorder的Native方法与JNI层函数的对应关系，其中注释1处“start()“是Java层的Native方法，它对应的JNI层的函数为android_media_MediaRecorder_start()。”()V“是start()方法的签名信息。只定义JNINativeMethod类型的数组是没有用的，还需要注册它，注册的函数为register_android_media_MediaRecorder()，这个函数在android_media_MediaPlayer的JNI_OnLoad()函数中调用。这个函数会在调用System.loadLibrary()函数后调用，因为多媒体框架中的很多框架都要进行JNINativeMethod数组注册，因此，注册函数就被统一定义在android_media_MediaPlayer.cpp的JNI_OnLoad()函数中。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs cpp">frameworks/base/media/jni/android_media_MediaPlayer.<span class="hljs-function">cpp</span><br><span class="hljs-function">jint <span class="hljs-title">JNI_OnLoad</span><span class="hljs-params">(JavaVM* vm, <span class="hljs-type">void</span>* <span class="hljs-comment">/* reserved */</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>    JNIEnv* env = <span class="hljs-literal">NULL</span>;<br>    jint result = <span class="hljs-number">-1</span>;<br><br>    <span class="hljs-keyword">if</span> (vm-&gt;<span class="hljs-built_in">GetEnv</span>((<span class="hljs-type">void</span>**) &amp;env, JNI_VERSION_1_4) != JNI_OK) &#123;<br>        <span class="hljs-built_in">ALOGE</span>(<span class="hljs-string">&quot;ERROR: GetEnv failed\n&quot;</span>);<br>        <span class="hljs-keyword">goto</span> bail;<br>    &#125;<br>    <span class="hljs-built_in">assert</span>(env != <span class="hljs-literal">NULL</span>);<br>    ...<br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">register_android_media_MediaPlayer</span>(env) &lt; <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-built_in">ALOGE</span>(<span class="hljs-string">&quot;ERROR: MediaPlayer native registration failed\n&quot;</span>);<br>        <span class="hljs-keyword">goto</span> bail;<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">register_android_media_MediaRecorder</span>(env) &lt; <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-built_in">ALOGE</span>(<span class="hljs-string">&quot;ERROR: MediaRecorder native registration failed\n&quot;</span>);<br>        <span class="hljs-keyword">goto</span> bail;<br>    &#125;<br>    ...<br>    <span class="hljs-comment">/* success -- return valid version number */</span><br>    result = JNI_VERSION_1_4;<br><br>bail:<br>    <span class="hljs-keyword">return</span> result;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在JNI_OnLoad()函数中调用了整个多媒体框架的注册JNINativeMethod数组的函数。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs cpp">frameworks/base/media/jni/android_media_MediaRecorder.<span class="hljs-function">cpp</span><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">register_android_media_MediaRecorder</span><span class="hljs-params">(JNIEnv *env)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">return</span> AndroidRuntime::<span class="hljs-built_in">registerNativeMethods</span>(env,<br>                <span class="hljs-string">&quot;android/media/MediaRecorder&quot;</span>, gMethods, <span class="hljs-built_in">NELEM</span>(gMethods));<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>register_android_media_MediaRecorder()中返回了AndroidRuntime的registerNativeMethods()函数。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs cpp">frameworks/base/core/jni/AndroidRuntime.cpp<br><span class="hljs-comment">/*static*/</span> <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">AndroidRuntime::registerNativeMethods</span><span class="hljs-params">(JNIEnv* env,</span></span><br><span class="hljs-params"><span class="hljs-function">    <span class="hljs-type">const</span> <span class="hljs-type">char</span>* className, <span class="hljs-type">const</span> JNINativeMethod* gMethods, <span class="hljs-type">int</span> numMethods)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">jniRegisterNativeMethods</span>(env, className, gMethods, numMethods);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>registerNativeMethods()函数中又返回了jniRegisterNativeMethods()，它被定义在JNI帮助类JNIHelp.c中。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs c">libnativehelper/JNIHelp.c<br><span class="hljs-type">int</span> <span class="hljs-title function_">jniRegisterNativeMethods</span><span class="hljs-params">(JNIEnv* env, <span class="hljs-type">const</span> <span class="hljs-type">char</span>* className,</span><br><span class="hljs-params">    <span class="hljs-type">const</span> JNINativeMethod* methods, <span class="hljs-type">int</span> numMethods)</span><br>&#123;<br>    ALOGV(<span class="hljs-string">&quot;Registering %s&#x27;s %d native methods...&quot;</span>, className, numMethods);<br>    jclass clazz = (*env)-&gt;FindClass(env, className);<br>    ALOG_ALWAYS_FATAL_IF(clazz == <span class="hljs-literal">NULL</span>,<br>                         <span class="hljs-string">&quot;Native registration unable to find class &#x27;%s&#x27;; aborting...&quot;</span>,<br>                         className);<br>    <span class="hljs-type">int</span> result = (*env)-&gt;RegisterNatives(env, clazz, methods, numMethods);  <span class="hljs-comment">// 1</span><br>    (*env)-&gt;DeleteLocalRef(env, clazz);<br>    <span class="hljs-keyword">if</span> (result == <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>    &#125;<br><br>    <span class="hljs-comment">// Failure to register natives is fatal. Try to report the corresponding exception,</span><br>    <span class="hljs-comment">// otherwise abort with generic failure message.</span><br>    jthrowable thrown = (*env)-&gt;ExceptionOccurred(env);<br>    <span class="hljs-keyword">if</span> (thrown != <span class="hljs-literal">NULL</span>) &#123;<br>        <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ExpandableString</span> <span class="hljs-title">summary</span>;</span><br>        ExpandableStringInitialize(&amp;summary);<br>        <span class="hljs-keyword">if</span> (GetExceptionSummary(env, thrown, &amp;summary)) &#123;<br>            ALOGF(<span class="hljs-string">&quot;%s&quot;</span>, summary.data);<br>        &#125;<br>        ExpandableStringRelease(&amp;summary);<br>        (*env)-&gt;DeleteLocalRef(env, thrown);<br>    &#125;<br>    ALOGF(<span class="hljs-string">&quot;RegisterNatives failed for &#x27;%s&#x27;; aborting...&quot;</span>, className);<br>    <span class="hljs-keyword">return</span> result;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>从注释1处可以看出，最终通过调用的JNIEnv的RegisterNatives()函数来完成JNI的注册。</p>
+<h4 id="数据类型的转换"><a href="#数据类型的转换" class="headerlink" title="数据类型的转换"></a>数据类型的转换</h4><p>JNI数据类型的转换的例子仍旧以MediaRecorder来举例。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs cpp">frameworks/base/media/jni/android_media_MediaRecorder.<span class="hljs-function">cpp</span><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span></span><br><span class="hljs-function"><span class="hljs-title">android_media_MediaRecorder_start</span><span class="hljs-params">(JNIEnv *env, jobject thiz)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-built_in">ALOGV</span>(<span class="hljs-string">&quot;start&quot;</span>);<br>    sp&lt;MediaRecorder&gt; mr = <span class="hljs-built_in">getMediaRecorder</span>(env, thiz);<br>    <span class="hljs-keyword">if</span> (mr == <span class="hljs-literal">NULL</span>) &#123;<br>        <span class="hljs-built_in">jniThrowException</span>(env, <span class="hljs-string">&quot;java/lang/IllegalStateException&quot;</span>, <span class="hljs-literal">NULL</span>);<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-built_in">process_media_recorder_call</span>(env, mr-&gt;<span class="hljs-built_in">start</span>(), <span class="hljs-string">&quot;java/lang/RuntimeException&quot;</span>, <span class="hljs-string">&quot;start failed.&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>android_media_MediaRecorder_start()函数的第二个参数为jobject类型，它是JNI层的数据类型，Java的数据类型到了JNI层就需要转换为JNI层的数据类型。Java的数据类型分为基本数据类型和引用数据类型，JNI层对于这两种类型也做了区分。</p>
+<h5 id="基本数据类型的转换"><a href="#基本数据类型的转换" class="headerlink" title="基本数据类型的转换"></a>基本数据类型的转换</h5><p>除了void，其他的数据类型只需要在前面加上“j”就可以了。</p>
+<table>
+<thead>
+<tr>
+<th>Java</th>
+<th>Native</th>
+<th>Signature</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>byte</td>
+<td>jbyte</td>
+<td>B</td>
+</tr>
+<tr>
+<td>char</td>
+<td>jchar</td>
+<td>C</td>
+</tr>
+<tr>
+<td>double</td>
+<td>jdouble</td>
+<td>D</td>
+</tr>
+<tr>
+<td>float</td>
+<td>jfloat</td>
+<td>F</td>
+</tr>
+<tr>
+<td>int</td>
+<td>jint</td>
+<td>I</td>
+</tr>
+<tr>
+<td>short</td>
+<td>jshort</td>
+<td>S</td>
+</tr>
+<tr>
+<td>long</td>
+<td>jlong</td>
+<td>J</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>jboolean</td>
+<td>Z</td>
+</tr>
+<tr>
+<td>void</td>
+<td>void</td>
+<td>V</td>
+</tr>
+</tbody></table>
+<h5 id="引用数据类型的转换"><a href="#引用数据类型的转换" class="headerlink" title="引用数据类型的转换"></a>引用数据类型的转换</h5><p>数组的JNI层数据结构需要以“Array”结尾，签名格式的开头都会有“[”。需要注意有些数据类型的签名以“;”结尾，引用数据类型还具有继承关系。</p>
+<table>
+<thead>
+<tr>
+<th>Java</th>
+<th>Native</th>
+<th>Signature</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>所有对象</td>
+<td>jobject</td>
+<td>L+classname+;</td>
+</tr>
+<tr>
+<td>Class</td>
+<td>jclass</td>
+<td>Ljava&#x2F;lang&#x2F;Class;</td>
+</tr>
+<tr>
+<td>String</td>
+<td>jstring</td>
+<td>Ljava&#x2F;lang&#x2F;String;</td>
+</tr>
+<tr>
+<td>Throwable</td>
+<td>jthrowable</td>
+<td>Ljava&#x2F;lang&#x2F;Throwable;</td>
+</tr>
+<tr>
+<td>Object[]</td>
+<td>jobjectArray</td>
+<td>[L+classname+;</td>
+</tr>
+<tr>
+<td>byte[]</td>
+<td>jbyteArray</td>
+<td>[B</td>
+</tr>
+<tr>
+<td>char[]</td>
+<td>jcharArray</td>
+<td>[C</td>
+</tr>
+<tr>
+<td>double[]</td>
+<td>jdoubleArray</td>
+<td>[D</td>
+</tr>
+<tr>
+<td>float[]</td>
+<td>jfloatArray</td>
+<td>[F</td>
+</tr>
+<tr>
+<td>int[]</td>
+<td>jshortArray</td>
+<td>[I</td>
+</tr>
+<tr>
+<td>short[]</td>
+<td>jshortArray</td>
+<td>[S</td>
+</tr>
+<tr>
+<td>long[]</td>
+<td>jlongArray</td>
+<td>[J</td>
+</tr>
+<tr>
+<td>boolean[]</td>
+<td>jbooleanArray</td>
+<td>[Z</td>
+</tr>
+</tbody></table>
+<p>jclass、jstring、jarray和jthrowable都继承自jobject，而jobjectArray、jintArray和jlongArray等类型都继承自jarray。</p>
+<h4 id="方法签名"><a href="#方法签名" class="headerlink" title="方法签名"></a>方法签名</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs cpp">frameworks/base/media/jni/android_media_MediaRecorder.cpp<br><span class="hljs-type">static</span> <span class="hljs-type">const</span> JNINativeMethod gMethods[] = &#123;<br>    ...<br>    &#123;<span class="hljs-string">&quot;native_init&quot;</span>,          <span class="hljs-string">&quot;()V&quot;</span>,                             (<span class="hljs-type">void</span> *)android_media_MediaRecorder_native_init&#125;,<br>    &#123;<span class="hljs-string">&quot;native_setup&quot;</span>,         <span class="hljs-string">&quot;(Ljava/lang/Object;Ljava/lang/String;Landroid/os/Parcel;)V&quot;</span>,<br>                                                                (<span class="hljs-type">void</span> *)android_media_MediaRecorder_native_setup&#125;,<br>    ...<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>gMethods数组中存储的是MediaRecorder的Native方法与JNI层函数的对应关系，其中”()V””和”(Ljava&#x2F;lang&#x2F;Object;Ljava&#x2F;lang&#x2F;String;Landroid&#x2F;os&#x2F;Parcel;)V”就是方法签名。Java是有重载方法的，可以定义方法名相同，参数不同的方法，因此在JNI中仅仅通过方法名是无法找到Java中对应的具体方法的，JNI为了解决这一问题就将参数类型和返回值类型组合在一起作为方法签名。通过方法签名和方法名就可以找到对应的Java方法。JNI的方法签名的格式为：（参数签名格式…）返回值签名格式。</p>
+<h4 id="解析JNIEnv"><a href="#解析JNIEnv" class="headerlink" title="解析JNIEnv"></a>解析JNIEnv</h4><p>JNIEnv是Native世界中Java环境的代表，通过JNIEnv *指针就可以在Native世界中访问Java世界的代码进行操作，它只在创建它的线程中有效，不能跨线程传递，因此不同线程的JNIEnv是彼此独立的，JNIEnv的主要作用有以下两点：</p>
+<ul>
+<li>调用Java的方法。</li>
+<li>操作Java（操作Java中的变量和对象等）。</li>
+</ul>
+<p>先来看JNIEnv的定义，如下所示：</p>
+<figure class="highlight h"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs h">libnativehelper/include_jni/jni.h<br><span class="hljs-meta">#<span class="hljs-keyword">if</span> defined(__cplusplus)</span><br><span class="hljs-keyword">typedef</span> _JNIEnv JNIEnv;  <span class="hljs-comment">// 1</span><br><span class="hljs-keyword">typedef</span> _JavaVM JavaVM;<br><span class="hljs-meta">#<span class="hljs-keyword">else</span></span><br><span class="hljs-keyword">typedef</span> <span class="hljs-type">const</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">JNINativeInterface</span>* <span class="hljs-title">JNIEnv</span>;</span>  <span class="hljs-comment">// 2</span><br><span class="hljs-keyword">typedef</span> <span class="hljs-type">const</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">JNIInvokeInterface</span>* <span class="hljs-title">JavaVM</span>;</span><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br></code></pre></td></tr></table></figure>
+
+<p>这里使用预定义宏<code>__cplusplus</code>来区分C和C++两种代码，如果定义了<code>__cplusplus</code>，就是C++代码中的定义，否则就是C代码中的定义。在这里我们也看到了JavaVM，它是虚拟机在JNI层的代表，在一个虚拟机进程中只有一个JavaVM，因此，该进程的所有线程都可以使用这个JavaVM。通过JavaVM的AttachCurrentThread()函数可以获取这个线程的JNIEnv，这样就可以在不同的线程中调用Java方法了。还要记得在使用AttachCurrentThread()函数的线程退出前，调用DetachCurrentThread()函数来释放资源。</p>
+<p>从注释2处可以看出在C中，JNIEnv类型是<code>JNINativeInterface*</code>，从注释1处可以看出在C++中JNIEnv的类型是<code>_JNIEnv</code>，<code>_JNIEnv</code>是如何定义的呢？如下所示：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs cpp">libnativehelper/include_jni/jni.h<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">_JNIEnv</span> &#123;<br>    <span class="hljs-comment">/* do not rename this; it does not seem to be entirely opaque */</span><br>    <span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">JNINativeInterface</span>* functions;<br><br><span class="hljs-meta">#<span class="hljs-keyword">if</span> defined(__cplusplus)</span><br>    ...<br>    <span class="hljs-function">jclass <span class="hljs-title">FindClass</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span>* name)</span></span><br><span class="hljs-function">    </span>&#123; <span class="hljs-keyword">return</span> functions-&gt;<span class="hljs-built_in">FindClass</span>(<span class="hljs-keyword">this</span>, name); &#125;<br>    ...<br>    <span class="hljs-function">jmethodID <span class="hljs-title">GetMethodID</span><span class="hljs-params">(jclass clazz, <span class="hljs-type">const</span> <span class="hljs-type">char</span>* name, <span class="hljs-type">const</span> <span class="hljs-type">char</span>* sig)</span></span><br><span class="hljs-function">    </span>&#123; <span class="hljs-keyword">return</span> functions-&gt;<span class="hljs-built_in">GetMethodID</span>(<span class="hljs-keyword">this</span>, clazz, name, sig); &#125;<br>    ...<br>    <span class="hljs-function">jfieldID <span class="hljs-title">GetFieldID</span><span class="hljs-params">(jclass clazz, <span class="hljs-type">const</span> <span class="hljs-type">char</span>* name, <span class="hljs-type">const</span> <span class="hljs-type">char</span>* sig)</span></span><br><span class="hljs-function">    </span>&#123; <span class="hljs-keyword">return</span> functions-&gt;<span class="hljs-built_in">GetFieldID</span>(<span class="hljs-keyword">this</span>, clazz, name, sig); &#125;<br>    ...<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p><code>_JNIEnv</code>是一个结构体，其内部又包含了JNINativeInterface。在<code>_JNIEnv</code>中又定义了很多函数，这里列举了三个比较常用的函数，FindClass()用来找到Java中指定名称的类，GetMethodID()用来得到Java中的方法，GetFieldID()用来得到Java中的成员变量，这里可以发现这三个函数都调用了JNINativeInterface中定义的函数，因此可以得出结论，无论是C还是C++，JNIEnv的类型都和JNINativeInterface结构有关，JNINativeInterface的定义如下所示：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs cpp">libnativehelper/include_jni/jni.h<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">JNINativeInterface</span> &#123;<br>    ...<br>    <span class="hljs-built_in">jclass</span>      (*FindClass)(JNIEnv*, <span class="hljs-type">const</span> <span class="hljs-type">char</span>*);<br>    ...<br>    <span class="hljs-built_in">jmethodID</span>   (*GetMethodID)(JNIEnv*, jclass, <span class="hljs-type">const</span> <span class="hljs-type">char</span>*, <span class="hljs-type">const</span> <span class="hljs-type">char</span>*);<br>    ...<br>    <span class="hljs-built_in">jfieldID</span>    (*GetFieldID)(JNIEnv*, jclass, <span class="hljs-type">const</span> <span class="hljs-type">char</span>*, <span class="hljs-type">const</span> <span class="hljs-type">char</span>*);<br>    ...<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>在JNINativeInterface结构体中定义了很多和JNIEnv结构体对应的函数指针，这里只给出了上面JNIEnv结构体中对应的三个函数指针定义。通过这些函数指针的定义，就能够定位到虚拟机中的JNI函数表，从而实现了JNI层在虚拟机中的函数调用，这样JNI层就可以调用Java世界的方法了。</p>
+<h5 id="jfiledID和jmethodID"><a href="#jfiledID和jmethodID" class="headerlink" title="jfiledID和jmethodID"></a>jfiledID和jmethodID</h5><p>在<code>_JNIEnv</code>结构体中定义了很多函数，这些函数都会有不同的返回值，如下所示：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs cpp">libnativehelper/include_jni/jni.h<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">_JNIEnv</span> &#123;<br>    <span class="hljs-comment">/* do not rename this; it does not seem to be entirely opaque */</span><br>    <span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">JNINativeInterface</span>* functions;<br><br><span class="hljs-meta">#<span class="hljs-keyword">if</span> defined(__cplusplus)</span><br>    ...<br>    <span class="hljs-function">jmethodID <span class="hljs-title">GetMethodID</span><span class="hljs-params">(jclass clazz, <span class="hljs-type">const</span> <span class="hljs-type">char</span>* name, <span class="hljs-type">const</span> <span class="hljs-type">char</span>* sig)</span>  <span class="hljs-comment">// 1</span></span><br><span class="hljs-function">    </span>&#123; <span class="hljs-keyword">return</span> functions-&gt;<span class="hljs-built_in">GetMethodID</span>(<span class="hljs-keyword">this</span>, clazz, name, sig); &#125;<br>    ...<br>    <span class="hljs-function">jfieldID <span class="hljs-title">GetFieldID</span><span class="hljs-params">(jclass clazz, <span class="hljs-type">const</span> <span class="hljs-type">char</span>* name, <span class="hljs-type">const</span> <span class="hljs-type">char</span>* sig)</span></span><br><span class="hljs-function">    </span>&#123; <span class="hljs-keyword">return</span> functions-&gt;<span class="hljs-built_in">GetFieldID</span>(<span class="hljs-keyword">this</span>, clazz, name, sig); &#125;<br>    ...<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>这里列举了两个函数，这两个函数的返回值分别为jmethodID和jfieldID。jfieldID和jmethodID分别用来代表Java类中的成员变量和方法。</p>
+<p>注释1处jclass代表Java类，name代表成员方法或者成员变量的名字，sig为这个方法和变量的签名。我们来查看MediaRecorder框架的JNI层是如何使用GetMethodID()和GetFieldID()这两个方法的。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs cpp">frameworks/base/media/jni/android_media_MediaRecorder.<span class="hljs-function">cpp</span><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span></span><br><span class="hljs-function"><span class="hljs-title">android_media_MediaRecorder_native_init</span><span class="hljs-params">(JNIEnv *env)</span></span><br><span class="hljs-function"></span>&#123;<br>    jclass clazz;<br><br>    clazz = env-&gt;<span class="hljs-built_in">FindClass</span>(<span class="hljs-string">&quot;android/media/MediaRecorder&quot;</span>);  <span class="hljs-comment">// 1</span><br>    <span class="hljs-keyword">if</span> (clazz == <span class="hljs-literal">NULL</span>) &#123;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    fields.context = env-&gt;<span class="hljs-built_in">GetFieldID</span>(clazz, <span class="hljs-string">&quot;mNativeContext&quot;</span>, <span class="hljs-string">&quot;J&quot;</span>);  <span class="hljs-comment">// 2</span><br>    <span class="hljs-keyword">if</span> (fields.context == <span class="hljs-literal">NULL</span>) &#123;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    fields.surface = env-&gt;<span class="hljs-built_in">GetFieldID</span>(clazz, <span class="hljs-string">&quot;mSurface&quot;</span>, <span class="hljs-string">&quot;Landroid/view/Surface;&quot;</span>);  <span class="hljs-comment">// 3</span><br>    <span class="hljs-keyword">if</span> (fields.surface == <span class="hljs-literal">NULL</span>) &#123;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    jclass surface = env-&gt;<span class="hljs-built_in">FindClass</span>(<span class="hljs-string">&quot;android/view/Surface&quot;</span>);<br>    <span class="hljs-keyword">if</span> (surface == <span class="hljs-literal">NULL</span>) &#123;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    fields.post_event = env-&gt;<span class="hljs-built_in">GetStaticMethodID</span>(clazz, <span class="hljs-string">&quot;postEventFromNative&quot;</span>,<br>                                               <span class="hljs-string">&quot;(Ljava/lang/Object;IIILjava/lang/Object;)V&quot;</span>);  <span class="hljs-comment">// 4</span><br>    <span class="hljs-keyword">if</span> (fields.post_event == <span class="hljs-literal">NULL</span>) &#123;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    clazz = env-&gt;<span class="hljs-built_in">FindClass</span>(<span class="hljs-string">&quot;java/util/ArrayList&quot;</span>);<br>    <span class="hljs-keyword">if</span> (clazz == <span class="hljs-literal">NULL</span>) &#123;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    gArrayListFields.add = env-&gt;<span class="hljs-built_in">GetMethodID</span>(clazz, <span class="hljs-string">&quot;add&quot;</span>, <span class="hljs-string">&quot;(Ljava/lang/Object;)Z&quot;</span>);<br>    gArrayListFields.classId = <span class="hljs-built_in">static_cast</span>&lt;jclass&gt;(env-&gt;<span class="hljs-built_in">NewGlobalRef</span>(clazz));<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>注释1处，通过FindClass()来找到Java层的MediaRecorder的Class对象，并赋值给jclass类型的clazz，因此，clazz就是Java层的MediaRecorder在JNI层的代表。</p>
+<p>注释2、3处的代码分别用来找到Java层的MediaRecorder中名为mNativeContext和mSurface的成员变量，并分别赋值给context和surface。</p>
+<p>注释4处获取Java层的MediaRecorder中名为postEventFromNative()的静态方法，并赋值给fields.post_event，其中fields的定义为：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs cpp">frameworks/base/media/jni/android_media_MediaRecorder.cpp<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">fields_t</span> &#123;<br>    jfieldID    context;<br>    jfieldID    surface;<br><br>    jmethodID   post_event;<br>&#125;;<br><span class="hljs-type">static</span> <span class="hljs-type">fields_t</span> fields;<br></code></pre></td></tr></table></figure>
+
+<p>将这些成员变量和方法赋值给jfieldID和jmethodID类型的变量有两个原因：第一是为了效率考虑，如果每次调用相关方法时都要查询方法和变量，显然会效率很低；第二是这些成员变量和方法都是本地引用，在android_media_MediaRecorder_native_init()函数返回时这些本地引用会被自动释放，因此用fields来进行保存，以便后续使用。结合上面两方面原因，在MediaRecorder框架JNI层的初始化方法android_media_MediaRecorder_native_init()中将这些jfieldID和jmethodID类型的变量保存起来，是为了更高效率地供后续使用。</p>
+<h5 id="使用jfiledID和jmethodID"><a href="#使用jfiledID和jmethodID" class="headerlink" title="使用jfiledID和jmethodID"></a>使用jfiledID和jmethodID</h5><p>保存了jfiledID和jmethodID类型的变量，接着怎么使用它们呢？如下所示：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs cpp">frameworks/base/media/jni/android_media_MediaRecorder.<span class="hljs-function">cpp</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">JNIMediaRecorderListener::notify</span><span class="hljs-params">(<span class="hljs-type">int</span> msg, <span class="hljs-type">int</span> ext1, <span class="hljs-type">int</span> ext2)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-built_in">ALOGV</span>(<span class="hljs-string">&quot;JNIMediaRecorderListener::notify&quot;</span>);<br><br>    JNIEnv *env = AndroidRuntime::<span class="hljs-built_in">getJNIEnv</span>();<br>    env-&gt;<span class="hljs-built_in">CallStaticVoidMethod</span>(mClass, fields.post_event, mObject, msg, ext1, ext2, <span class="hljs-literal">NULL</span>);  <span class="hljs-comment">// 1</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>注释1处调用了JNIEnv的CallStaticVoidMethod()函数，其中就传入了fields.post_event，它保存了Java层MediaRecorder的静态方法postEventFromNative()。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java">frameworks/base/media/java/android/media/MediaRecorder.java<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">postEventFromNative</span><span class="hljs-params">(Object mediarecorder_ref,</span><br><span class="hljs-params">                                        <span class="hljs-type">int</span> what, <span class="hljs-type">int</span> arg1, <span class="hljs-type">int</span> arg2, Object obj)</span><br>&#123;<br>    <span class="hljs-type">MediaRecorder</span> <span class="hljs-variable">mr</span> <span class="hljs-operator">=</span> (MediaRecorder)((WeakReference)mediarecorder_ref).get();<br>    <span class="hljs-keyword">if</span> (mr == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (mr.mEventHandler != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-type">Message</span> <span class="hljs-variable">m</span> <span class="hljs-operator">=</span> mr.mEventHandler.obtainMessage(what, arg1, arg2, obj);  <span class="hljs-comment">// 1</span><br>        mr.mEventHandler.sendMessage(m);  <span class="hljs-comment">// 2</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>注释1处会创建一个消息，注释2处将这个消息发送给MediaRecoder内部类mEventHandler来处理，这样做的目的是将代码逻辑运行在应用程序的主线程中。JNIEnv的CallStaticVoidMethod()函数会调用Java层MediaRecoder的静态方法postEventFromNative(0，也就是说JNIEnv的CallStaticVoidMethod()函数可以访问Java的静态方法，同理如果想要访问Java的方法则可以使用JNIEnv的CallStaticVoidMethod()函数。上面的例子是使用了jmethodID，接着来查看jfieldID是如何应用的：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs cpp">frameworks/base/media/jni/android_media_MediaRecorder.<span class="hljs-function">cpp</span><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span></span><br><span class="hljs-function"><span class="hljs-title">android_media_MediaRecorder_prepare</span><span class="hljs-params">(JNIEnv *env, jobject thiz)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-built_in">ALOGV</span>(<span class="hljs-string">&quot;prepare&quot;</span>);<br>    sp&lt;MediaRecorder&gt; mr = <span class="hljs-built_in">getMediaRecorder</span>(env, thiz);<br>    <span class="hljs-keyword">if</span> (mr == <span class="hljs-literal">NULL</span>) &#123;<br>        <span class="hljs-built_in">jniThrowException</span>(env, <span class="hljs-string">&quot;java/lang/IllegalStateException&quot;</span>, <span class="hljs-literal">NULL</span>);<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    jobject surface = env-&gt;<span class="hljs-built_in">GetObjectField</span>(thiz, fields.surface);  <span class="hljs-comment">// 1</span><br>    <span class="hljs-keyword">if</span> (surface != <span class="hljs-literal">NULL</span>) &#123;<br>        <span class="hljs-type">const</span> sp&lt;Surface&gt; native_surface = <span class="hljs-built_in">get_surface</span>(env, surface);<br>        ...<br>    &#125;<br>    <span class="hljs-built_in">process_media_recorder_call</span>(env, mr-&gt;<span class="hljs-built_in">prepare</span>(), <span class="hljs-string">&quot;java/io/IOException&quot;</span>, <span class="hljs-string">&quot;prepare failed.&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>注释1处调用了JNIEnv的GetObjectField()函数，参数中的fields.surface是jfieldID类型的变量，用来保存Java层MediaRecorder中的成员变量mSurface，mSurface的类型为Surface，这样通过GetObjectField()函数就得到了mSurface在JNI层中对应的jobject类型变量surface。</p>
+<h4 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h4><p>和Java的引用类型一样，JNI也有引用类型，它们分别是本地引用（Local References）、全局引用（Global References）和弱全局引用（Weak Global References）。</p>
+<h5 id="本地引用"><a href="#本地引用" class="headerlink" title="本地引用"></a>本地引用</h5><p>JNIEnv提供的函数所返回的引用基本上都是本地引用，因此本地引用也是JNI中最常见的引用类型。本地引用的特点主要有以下几点：</p>
+<ul>
+<li>当native函数返回时，这个本地引用就会被自动释放。</li>
+<li>只在创建它的线程中有效，不能够跨线程使用。</li>
+<li>局部引用是JVM负责的引用类型，受JVM管理。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs cpp">frameworks/base/media/jni/android_media_MediaRecorder.<span class="hljs-function">cpp</span><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span></span><br><span class="hljs-function"><span class="hljs-title">android_media_MediaRecorder_native_init</span><span class="hljs-params">(JNIEnv *env)</span></span><br><span class="hljs-function"></span>&#123;<br>    jclass clazz;<br><br>    clazz = env-&gt;<span class="hljs-built_in">FindClass</span>(<span class="hljs-string">&quot;android/media/MediaRecorder&quot;</span>);  <span class="hljs-comment">// 1</span><br>    <span class="hljs-keyword">if</span> (clazz == <span class="hljs-literal">NULL</span>) &#123;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>注释1处的FindClass()会返回clazz，这个clazz就是本地引用，它会在android_media_MediaRecorder_native_init()函数调用返回后被自动释放。我们也可以使用JNIEnv的DeleteLocalRef()函数来手动删除本地引用，DeleteLocalRef()函数的使用场景主要是在native函数返回前占用了大量内存，需要调用DeleteLocalRef()函数立即删除本地引用。</p>
+<h5 id="全局引用"><a href="#全局引用" class="headerlink" title="全局引用"></a>全局引用</h5><p>全局引用和本地引用几乎是相反的，它主要有以下特点：</p>
+<ul>
+<li>当native函数返回时不会被自动释放，因此全局引用需要手动来进行释放，并且不会被GC回收。</li>
+<li>全局引用是可以跨线程使用的。</li>
+<li>全局引用不受到JVM管理。</li>
+</ul>
+<p>JNIEnv的NewGlobalRef()函数用来创建全局引用，调用JNIEnv的DeleteGlobalRef()函数来释放全局引用：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs cpp">frameworks/base/media/jni/android_media_MediaRecorder.<span class="hljs-function">cpp</span><br><span class="hljs-function"><span class="hljs-title">JNIMediaRecorderListener::JNIMediaRecorderListener</span><span class="hljs-params">(JNIEnv* env, jobject thiz, jobject weak_thiz)</span></span><br><span class="hljs-function"></span>&#123;<br><br>    <span class="hljs-comment">// Hold onto the MediaRecorder class for use in calling the static method</span><br>    <span class="hljs-comment">// that posts events to the application thread.</span><br>    jclass clazz = env-&gt;<span class="hljs-built_in">GetObjectClass</span>(thiz);  <span class="hljs-comment">// 1</span><br>    <span class="hljs-keyword">if</span> (clazz == <span class="hljs-literal">NULL</span>) &#123;<br>        <span class="hljs-built_in">ALOGE</span>(<span class="hljs-string">&quot;Can&#x27;t find android/media/MediaRecorder&quot;</span>);<br>        <span class="hljs-built_in">jniThrowException</span>(env, <span class="hljs-string">&quot;java/lang/Exception&quot;</span>, <span class="hljs-literal">NULL</span>);<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    mClass = (jclass)env-&gt;<span class="hljs-built_in">NewGlobalRef</span>(clazz);  <span class="hljs-comment">// 2</span><br><br>    <span class="hljs-comment">// We use a weak reference so the MediaRecorder object can be garbage collected.</span><br>    <span class="hljs-comment">// The reference is only used as a proxy for callbacks.</span><br>    mObject  = env-&gt;<span class="hljs-built_in">NewGlobalRef</span>(weak_thiz);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>注释1处返回的clazz是本地引用，并传入到注释2处，在注释2处调用JNIEnv的NewGlobalRef()函数将clazz转变为全局引用mClass。那什么时候将全局引用mClass释放呢？我们来查看JNIMediaRecorderListener的析构函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs cpp">frameworks/base/media/jni/android_media_MediaRecorder.cpp<br>JNIMediaRecorderListener::~<span class="hljs-built_in">JNIMediaRecorderListener</span>()<br>&#123;<br>    <span class="hljs-comment">// remove global references</span><br>    JNIEnv *env = AndroidRuntime::<span class="hljs-built_in">getJNIEnv</span>();<br>    env-&gt;<span class="hljs-built_in">DeleteGlobalRef</span>(mObject);<br>    env-&gt;<span class="hljs-built_in">DeleteGlobalRef</span>(mClass);  <span class="hljs-comment">// 1</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>从上面的析构函数的注释就可以知道，这个析构函数用来释放全局引用，在注释1处释放了全局引用mClass。</p>
+<h5 id="弱全局引用"><a href="#弱全局引用" class="headerlink" title="弱全局引用"></a>弱全局引用</h5><p>弱全局引用是一种特殊的全局引用，它和全局引用的特点相似，不同的是弱全局引用是可以被GC回收的，弱全局引用被GC回收之后会指向NULL。JNIEnv的NewWeakGlobalRef()函数用来创建弱全局引用，调用JNIEnv的DeleteWeakGlobalRef()函数来释放弱全局引用。由于弱全局引用可能被GC回收，因此在使用它之前要先判断它是否被回收了，方法就是使用JNIEnv的IsSameObject()函数来判断。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Android/" class="category-chain-item">Android</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>JNI原理</div>
+      <div>http://example.com/2024/03/10/JNI原理/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年3月10日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/03/10/Launcher%E5%BA%94%E7%94%A8%E5%9B%BE%E6%A0%87%E6%98%BE%E7%A4%BA%E6%B5%81%E7%A8%8B/" title="Launcher应用图标显示流程">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Launcher应用图标显示流程</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/03/10/Launcher%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" title="Launcher启动流程">
+                        <span class="hidden-mobile">Launcher启动流程</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script>
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          Fluid.utils.createCssLink('https://lib.baomitu.com/disqusjs/1.3.0/disqusjs.css');
+          Fluid.utils.createScript('https://lib.baomitu.com/disqusjs/1.3.0/disqus.js', function() {
+            new DisqusJS({
+              shortname: 'fluid',
+              apikey: ''
+            });
+          });
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

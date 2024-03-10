@@ -224,15 +224,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2024/03/09/%E5%B9%BF%E6%92%AD%E7%9A%84%E5%8F%91%E9%80%81%E5%92%8C%E6%8E%A5%E6%94%B6%E8%BF%87%E7%A8%8B/" target="_self">
-          广播的发送和接收过程
+        <a href="/2024/03/10/AMS%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/" target="_self">
+          AMS的启动过程
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/03/09/%E5%B9%BF%E6%92%AD%E7%9A%84%E5%8F%91%E9%80%81%E5%92%8C%E6%8E%A5%E6%94%B6%E8%BF%87%E7%A8%8B/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/03/10/AMS%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/" target="_self">
         <div>
-          以无序广播为例，分为ContextImpl到AMS的调用过程，和AMS到BroadcastReceiver的调用过程。
+          AMS的启动是在SystemServer进程中启动的。从SystemServer的main()方法开始。
         </div>
       </a>
 
@@ -240,8 +240,8 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2024-03-09 22:55" pubdate>
-              2024-03-09
+            <time datetime="2024-03-10 12:17" pubdate>
+              2024-03-10
             </time>
           </div>
         
@@ -271,7 +271,9 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/%E5%B9%BF%E6%92%AD/">#广播</a>
+              <a href="/tags/AMS/">#AMS</a>
+            
+              <a href="/tags/%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">#启动流程</a>
             
           </div>
         
@@ -285,15 +287,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2024/03/09/Android%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" target="_self">
-          Android启动流程
+        <a href="/2024/03/10/AMS%E4%B8%8E%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%BF%9B%E7%A8%8B/" target="_self">
+          AMS与应用程序进程
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/03/09/Android%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/03/10/AMS%E4%B8%8E%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%BF%9B%E7%A8%8B/" target="_self">
         <div>
-          从上电开始到系统服务启动完成。整个流程的可以简述为：BootLoader -> Kernel -> Native-> Framework-> App
+          Zygote的Java框架层中，会创建一个Server端的Socket，这个Socket用来等待AMS请求Zygote来创建新的应用程序进程。要启动一个应用程序，首先要保证这个应用程序所需要的应用程序进程已经存在。在启动应用程序时AMS会检查这个应用程序需要的应用程序进程是否存在，不存在就会请求Zygote进程创建需要的应用程序进程。这里以Service的启动过程为例，来分析AMS与应用程序进程的
         </div>
       </a>
 
@@ -301,8 +303,130 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2024-03-09 22:47" pubdate>
-              2024-03-09
+            <time datetime="2024-03-10 12:17" pubdate>
+              2024-03-10
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Android/" class="category-chain-item">Android</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/AMS/">#AMS</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/03/10/Service%E7%9A%84%E7%BB%91%E5%AE%9A%E8%BF%87%E7%A8%8B/" target="_self">
+          Service的绑定过程
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/03/10/Service%E7%9A%84%E7%BB%91%E5%AE%9A%E8%BF%87%E7%A8%8B/" target="_self">
+        <div>
+          我们可以用bindService()方法来绑定Service，它在ContextWrapper中实现。
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-03-10 12:11" pubdate>
+              2024-03-10
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Android/" class="category-chain-item">Android</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Service/">#Service</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/03/10/Service%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/" target="_self">
+          Service的启动过程
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/03/10/Service%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/" target="_self">
+        <div>
+          要启动Service，我们会调用startService()方法，它在ContextWrapper中实现。
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-03-10 12:09" pubdate>
+              2024-03-10
             </time>
           </div>
         
@@ -334,6 +458,8 @@
             
               <a href="/tags/%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">#启动流程</a>
             
+              <a href="/tags/Service/">#Service</a>
+            
           </div>
         
       </div>
@@ -346,15 +472,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2024/03/09/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" target="_self">
-          应用程序进程启动流程
+        <a href="/2024/03/10/WMS%E7%9A%84%E5%88%9B%E5%BB%BA/" target="_self">
+          WMS的创建
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/03/09/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/03/10/WMS%E7%9A%84%E5%88%9B%E5%BB%BA/" target="_self">
         <div>
-          分为ATMS发送启动应用程序进程请求，和Zygote接收请求并创建应用程序进程两个步骤。
+          WMS是在SystemServer中创建的。
         </div>
       </a>
 
@@ -362,8 +488,69 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2024-03-09 22:40" pubdate>
-              2024-03-09
+            <time datetime="2024-03-10 12:08" pubdate>
+              2024-03-10
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Android/" class="category-chain-item">Android</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Window/">#Window</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/03/10/SystemServer%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" target="_self">
+          SystemServer启动流程
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/03/10/SystemServer%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" target="_self">
+        <div>
+          SystemServer进程是Android系统中的核心进程，由Zygote进程fork出。在SystemServer进程中，启动了很多关键的服务，如AMS、PMS、WMS等，还启动出了WatchDog，用于监测系统服务。
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-03-10 12:06" pubdate>
+              2024-03-10
             </time>
           </div>
         
@@ -395,6 +582,8 @@
             
               <a href="/tags/%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">#启动流程</a>
             
+              <a href="/tags/SystemServer/">#SystemServer</a>
+            
           </div>
         
       </div>
@@ -407,15 +596,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2024/03/09/Window%E7%9A%84%E5%B1%9E%E6%80%A7/" target="_self">
-          
+        <a href="/2024/03/10/WMS%E5%8F%8A%E5%85%B6%E6%88%90%E5%91%98/" target="_self">
+          WMS及其成员
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/03/09/Window%E7%9A%84%E5%B1%9E%E6%80%A7/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/03/10/WMS%E5%8F%8A%E5%85%B6%E6%88%90%E5%91%98/" target="_self">
         <div>
-          Window的属性 基于Android U  WMS是Window的最终管理者，Window好比是员工，WMS是老板，为了方便老板管理员工则需要定义一些“协议”，这些“协议”就是Window的属性，它们被定义在WindowManager的内部类LayoutParams中，了解Window的属性能够更好地理解WMS的内部原理。Window的属性有很多种，与应用开发最密切的有三种，分别是Type（Wi
+          WMS的职责包括窗口管理、窗口动画、输入系统的中转站、Surface管理。WMS的重要成员包括mPolicy、mSessions、mWindowMap、mResizingWindows、mAnimator、mH、mInputManager。
         </div>
       </a>
 
@@ -423,12 +612,40 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2024-03-09 15:30" pubdate>
-              2024-03-09
+            <time datetime="2024-03-10 12:03" pubdate>
+              2024-03-10
             </time>
           </div>
         
         
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Android/" class="category-chain-item">Android</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Window/">#Window</a>
+            
+          </div>
         
       </div>
     </article>
@@ -440,15 +657,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2024/03/09/Window%E7%9A%84%E6%93%8D%E4%BD%9C/" target="_self">
-          
+        <a href="/2024/03/10/Window%E7%9A%84%E5%B1%9E%E6%80%A7/" target="_self">
+          Window的属性
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/03/09/Window%E7%9A%84%E6%93%8D%E4%BD%9C/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/03/10/Window%E7%9A%84%E5%B1%9E%E6%80%A7/" target="_self">
         <div>
-          Window的操作 基于Android U  Window的操作包括对Window的添加、更新和删除。对于Window的操作，最终都是交由WMS来进行处理的。Window的操作分为两大部分，一部分是WindowManager处理部分，另一部分是WMS处理部分。我们知道Window分为三大类，分别是Application Window（应用程序窗口）、Sub Window（子窗口）和System W
+          WMS是Window的最终管理者，Window好比是员工，WMS是老板，为了方便老板管理员工则需要定义一些“协议”，这些“协议”就是Window的属性，它们被定义在WindowManager的内部类LayoutParams中，了解Window的属性能够更好地理解WMS的内部原理。Window的属性有很多种，与应用开发最密切的有三种，分别是Type（Window的类型）、Flag（Window的标志
         </div>
       </a>
 
@@ -456,12 +673,40 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2024-03-09 15:30" pubdate>
-              2024-03-09
+            <time datetime="2024-03-10 11:14" pubdate>
+              2024-03-10
             </time>
           </div>
         
         
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Android/" class="category-chain-item">Android</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Window/">#Window</a>
+            
+          </div>
         
       </div>
     </article>
@@ -473,15 +718,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2024/03/09/WMS%E5%8F%8A%E5%85%B6%E6%88%90%E5%91%98/" target="_self">
-          
+        <a href="/2024/03/10/Window%E7%9A%84%E6%93%8D%E4%BD%9C/" target="_self">
+          Window的操作
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/03/09/WMS%E5%8F%8A%E5%85%B6%E6%88%90%E5%91%98/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/03/10/Window%E7%9A%84%E6%93%8D%E4%BD%9C/" target="_self">
         <div>
-          WMS及其成员 基于Android U  WMS的职责   窗口管理  WMS是窗口的管理者，它负责窗口的启动、添加和删除，另外窗口的大小和层级也是由WMS进行管理的。窗口管理的核心成员有DisplayContent、WindowToken和WindowState。  窗口动画  窗口间进行切换时，使用窗口动画可以显得更炫一些，窗口动画由WMS的动画子系统来负责，动画子系统的管理者为WindowA
+          Window的操作包括对Window的添加、更新和删除。对于Window的操作，最终都是交由WMS来进行处理的。Window的操作分为两大部分，一部分是WindowManager处理部分，另一部分是WMS处理部分。我们知道Window分为三大类，分别是Application Window（应用程序窗口）、Sub Window（子窗口）和SystemWindow（系统窗口），对于不同类型的Windo
         </div>
       </a>
 
@@ -489,12 +734,40 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2024-03-09 15:30" pubdate>
-              2024-03-09
+            <time datetime="2024-03-10 11:10" pubdate>
+              2024-03-10
             </time>
           </div>
         
         
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Android/" class="category-chain-item">Android</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Window/">#Window</a>
+            
+          </div>
         
       </div>
     </article>
@@ -506,15 +779,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2024/03/09/SystemServer%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" target="_self">
-          
+        <a href="/2024/03/10/Window%E7%9B%B8%E5%85%B3%E7%B1%BB/" target="_self">
+          Window相关类
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/03/09/SystemServer%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/03/10/Window%E7%9B%B8%E5%85%B3%E7%B1%BB/" target="_self">
         <div>
-          SystemServer启动流程 基于Android U。 SystemServer进程是Android系统中的核心进程，由Zygote进程fork出。 在SystemServer进程中，启动了很多关键的服务，如AMS、PMS、WMS等，还启动出了WatchDog，用于监测系统服务。   创建SystemServerforkSystemServer1234567891011121314151617
+          Window是一个抽象类，具体的实现类为PhoneWindow，它对View进行管理。WindowManager是一个接口类，继承自接口ViewManager，它是用来管理Window的，它的实现类为WindowManagerImpl。WindowManager会将具体的工作交由WMS来处理。
         </div>
       </a>
 
@@ -522,111 +795,40 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2024-03-09 15:30" pubdate>
-              2024-03-09
+            <time datetime="2024-03-10 11:01" pubdate>
+              2024-03-10
             </time>
           </div>
         
         
-        
-      </div>
-    </article>
-  </div>
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
 
-  <div class="row mx-auto index-card">
+<span class="category-chains">
+  
+  
     
+      <span class="category-chain">
+        
+  <a href="/categories/Android/" class="category-chain-item">Android</a>
+  
+  
+
+      </span>
     
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/03/09/WMS%E7%9A%84%E5%88%9B%E5%BB%BA/" target="_self">
-          
-        </a>
-      </h2>
+  
+</span>
 
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/03/09/WMS%E7%9A%84%E5%88%9B%E5%BB%BA/" target="_self">
-        <div>
-          WMS的创建 基于Android U  WMS的创建过程WMS是在SystemServer中创建的。 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768frameworks/base/servic
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-03-09 15:30" pubdate>
-              2024-03-09
-            </time>
           </div>
         
         
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/03/09/Service%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/" target="_self">
-          
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/03/09/Service%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/" target="_self">
-        <div>
-          Service的启动过程 基于Android U  ContextImpl到AMS的调用过程 要启动Service，我们会调用startService()方法，它在ContextWrapper中实现。 1234frameworks/base/core/java/android/content/ContextWrapper.javapublic @Nullable ComponentName sta
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-03-09 15:30" pubdate>
-              2024-03-09
-            </time>
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Window/">#Window</a>
+            
           </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/03/09/Service%E7%9A%84%E7%BB%91%E5%AE%9A%E8%BF%87%E7%A8%8B/" target="_self">
-          
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/03/09/Service%E7%9A%84%E7%BB%91%E5%AE%9A%E8%BF%87%E7%A8%8B/" target="_self">
-        <div>
-          Service的绑定过程 基于Android U   ContextImpl到AMS的调用过程我们可以用bindService()方法来绑定Service，它在ContextWrapper中实现。 12345frameworks/base/core/java/android/content/ContextWrapper.javapublic boolean bindService(Intent s
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-03-09 15:30" pubdate>
-              2024-03-09
-            </time>
-          </div>
-        
-        
         
       </div>
     </article>

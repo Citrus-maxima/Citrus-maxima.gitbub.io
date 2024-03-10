@@ -1,0 +1,749 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="ContentProvider，即内容提供者，主要用于进程内和进程间的数据共享。当ContentProvider所在进程启动时，ContentProvider会同时启动并被发布到AMS中。需要注意的是，这时ContentProvider的onCreate()先于Application的onCreate()执行。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ContentProvider的启动过程">
+<meta property="og:url" content="http://example.com/2024/03/10/ContentProvider%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="ContentProvider，即内容提供者，主要用于进程内和进程间的数据共享。当ContentProvider所在进程启动时，ContentProvider会同时启动并被发布到AMS中。需要注意的是，这时ContentProvider的onCreate()先于Application的onCreate()执行。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2024/01/03/WDwZyvoBsYg9THb.jpg">
+<meta property="og:image" content="https://s2.loli.net/2024/01/03/592eMmCpzvDHqtN.jpg">
+<meta property="article:published_time" content="2024-03-10T04:33:05.175Z">
+<meta property="article:modified_time" content="2024-03-10T04:33:05.175Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="启动流程">
+<meta property="article:tag" content="ContentProvider">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2024/01/03/WDwZyvoBsYg9THb.jpg">
+  
+  
+  
+  <title>ContentProvider的启动过程 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>柚子树</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="ContentProvider的启动过程"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-03-10 12:33" pubdate>
+          2024年3月10日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          18 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">ContentProvider的启动过程</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <blockquote>
+<p>基于Android U</p>
+</blockquote>
+<p>ContentProvider，即内容提供者，主要用于进程内和进程间的数据共享。</p>
+<p>当ContentProvider所在进程启动时，ContentProvider会同时启动并被发布到AMS中。需要注意的是，这时ContentProvider的onCreate()先于Application的onCreate()执行。</p>
+<p>外界无法直接访问ContentProvider，只能通过AMS根据Uri获取对应ContentProvider的Binder接口IContentProvider，然后再通过IContentProvider来访问ContentProvider中的数据源。访问ContentProvider需要通过ContentResolver，ContentResolver是一个抽象类，通过Context的**getContentResolver()**方法获取。真正实现是ApplicationContentResolver（ContextImpl的内部类）。当ContentProvider所在的进程未启动时，第一次访问ContentResolver的方法时，就会启动该进程和ContentProvider。</p>
+<p>通过增删改查四个方法的任何一个都可以触发ContentProvider的启动。</p>
+<h4 id="query方法到AMS的调用过程"><a href="#query方法到AMS的调用过程" class="headerlink" title="query方法到AMS的调用过程"></a>query方法到AMS的调用过程</h4><p><img src="https://s2.loli.net/2024/01/03/WDwZyvoBsYg9THb.jpg" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java">frameworks/base/core/java/android/content/ContextWrapper.java<br><span class="hljs-keyword">public</span> ContentResolver <span class="hljs-title function_">getContentResolver</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> mBase.getContentResolver();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>mBase指的是ContextImpl。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java">frameworks/base/core/java/android/app/ContextImpl.java<br><span class="hljs-keyword">public</span> ContentResolver <span class="hljs-title function_">getContentResolver</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-keyword">return</span> mContentResolver;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>getContentResolver()方法中返回了ApplicationContentResolver类型的mContentResolver对象，ApplicationContentResolver是ContextImpl中的静态内部类，继承自ContentResolver，它在ContextImpl的构造方法中被创建，这说明当我们调用ContentResolver的insert、query、update等方法时就会启动ContentProvider。这里以query()方法来举例，query()方法在ApplicationContentResolver的父类ContentResolver中实现，有3个重载方法，最终会调用如下的query()方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs java">frameworks/base/core/java/android/content/ContentResolver.java<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-meta">@Nullable</span> Cursor <span class="hljs-title function_">query</span><span class="hljs-params">(<span class="hljs-keyword">final</span> <span class="hljs-meta">@RequiresPermission</span>.Read <span class="hljs-meta">@NonNull</span> Uri uri,</span><br><span class="hljs-params">        <span class="hljs-meta">@Nullable</span> String[] projection, <span class="hljs-meta">@Nullable</span> Bundle queryArgs,</span><br><span class="hljs-params">        <span class="hljs-meta">@Nullable</span> CancellationSignal cancellationSignal)</span> &#123;<br>    ...<br>    <span class="hljs-type">IContentProvider</span> <span class="hljs-variable">unstableProvider</span> <span class="hljs-operator">=</span> acquireUnstableProvider(uri);  <span class="hljs-comment">// 1</span><br>    ...<br>    <span class="hljs-keyword">try</span> &#123;<br>        ...<br>        <span class="hljs-keyword">try</span> &#123;<br>            qCursor = unstableProvider.query(mContext.getAttributionSource(), uri, projection,<br>                    queryArgs, remoteCancellationSignal);  <span class="hljs-comment">// 2</span><br>        &#125; <span class="hljs-keyword">catch</span> (DeadObjectException e) &#123;<br>            ...<br>        &#125;<br>        <span class="hljs-keyword">if</span> (qCursor == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>        &#125;<br>        ...<br>    &#125; <span class="hljs-keyword">catch</span> (RemoteException e) &#123;<br>        ...<br>    &#125; <span class="hljs-keyword">finally</span> &#123;<br>        ...<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>注释1处通过acquireUnstableProvider()方法返回IContentProvider类型的unstableProvider对象，注释2处调用unstableProvider的query()方法。IContentProvider是ContentProvider在本地的代理，具体的实现为ContentProvider。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java">frameworks/base/core/java/android/content/ContentResolver.java<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> IContentProvider <span class="hljs-title function_">acquireUnstableProvider</span><span class="hljs-params">(Uri uri)</span> &#123;<br>    <span class="hljs-keyword">if</span> (!SCHEME_CONTENT.equals(uri.getScheme())) &#123;  <span class="hljs-comment">// 1</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>    <span class="hljs-type">String</span> <span class="hljs-variable">auth</span> <span class="hljs-operator">=</span> uri.getAuthority();<br>    <span class="hljs-keyword">if</span> (auth != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span> acquireUnstableProvider(mContext, uri.getAuthority());  <span class="hljs-comment">// 2</span><br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>注释1处检查uri的scheme是否等于SCHEME_CONTENT（值为”content”），如果不是则返回null。</p>
+<p>注释2处调用了acquireUnstableProvider()方法，这是个抽象方法，它在ContentResolver的子类ApplicationContentResolver中实现，ApplicationContentResolver是ContextImpl的静态内部类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java">frameworks/base/core/java/android/app/ContextImpl.java<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ApplicationContentResolver</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">ContentResolver</span> &#123;<br>    <span class="hljs-keyword">protected</span> IContentProvider <span class="hljs-title function_">acquireUnstableProvider</span><span class="hljs-params">(Context c, String auth)</span> &#123;<br>        <span class="hljs-keyword">return</span> mMainThread.acquireProvider(c,<br>                ContentProvider.getAuthorityWithoutUserId(auth),<br>                resolveUserIdFromAuthority(auth), <span class="hljs-literal">false</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在acquireUnstableProvider()方法中返回了ActivityThread类型的mMainThread对象的acquireProvider()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs java">frameworks/base/core/java/android/app/ActivityThread.java<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> IContentProvider <span class="hljs-title function_">acquireProvider</span><span class="hljs-params">(</span><br><span class="hljs-params">        Context c, String auth, <span class="hljs-type">int</span> userId, <span class="hljs-type">boolean</span> stable)</span> &#123;<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">IContentProvider</span> <span class="hljs-variable">provider</span> <span class="hljs-operator">=</span> acquireExistingProvider(c, auth, userId, stable);  <span class="hljs-comment">// 1</span><br>    <span class="hljs-keyword">if</span> (provider != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span> provider;<br>    &#125;<br><br>    <span class="hljs-type">ContentProviderHolder</span> <span class="hljs-variable">holder</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">ProviderKey</span> <span class="hljs-variable">key</span> <span class="hljs-operator">=</span> getGetProviderKey(auth, userId);<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-keyword">synchronized</span> (key) &#123;<br>            holder = ActivityManager.getService().getContentProvider(<br>                    getApplicationThread(), c.getOpPackageName(), auth, userId, stable);  <span class="hljs-comment">// 2</span><br>            ...<br>        &#125;<br>    &#125; <span class="hljs-keyword">catch</span> (RemoteException ex) &#123;<br>        ...<br>    &#125; <span class="hljs-keyword">catch</span> (InterruptedException e) &#123;<br>        ...<br>    &#125; <span class="hljs-keyword">finally</span> &#123;<br>        ...<br>    &#125;<br>    ...<br><br>    <span class="hljs-comment">// Install provider will increment the reference count for us, and break</span><br>    <span class="hljs-comment">// any ties in the race.</span><br>    holder = installProvider(c, holder, holder.info,<br>            <span class="hljs-literal">true</span> <span class="hljs-comment">/*noisy*/</span>, holder.noReleaseNeeded, stable);  <span class="hljs-comment">// 3</span><br>    <span class="hljs-keyword">return</span> holder.provider;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>注释1处的acquireExistingProvider()方法内部会检查ActivityThread的全局变量mProviderMap中是否有目标ContentProvider存在，有则返回，没有就会在注释2处调用IActivityManager的getContentProvider()方法，最终会调用AMS的getContentProvider()方法。注释3处的installProvider()方法用来安装ContentProvider，并将注释2处返回的ContentProvider相关的数据存储在mProviderMap中，起到缓存的作用，这样使用相同的ContentProvider时，就不需要每次都调用AMS的getContentProvider()方法了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java">frameworks/base/services/core/java/com/android/server/am/ActivityManagerService.java<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> ContentProviderHolder <span class="hljs-title function_">getContentProvider</span><span class="hljs-params">(</span><br><span class="hljs-params">        IApplicationThread caller, String callingPackage, String name, <span class="hljs-type">int</span> userId,</span><br><span class="hljs-params">        <span class="hljs-type">boolean</span> stable)</span> &#123;<br>    ...<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-keyword">return</span> mCpHelper.getContentProvider(caller, callingPackage, name, userId, stable);  <span class="hljs-comment">// 1</span><br>    &#125; <span class="hljs-keyword">finally</span> &#123;<br>        ...<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>调用的ContentProviderHelper的getContentProvider()。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java">frameworks/base/services/core/java/com/android/server/am/ContentProviderHelper.java<br>ContentProviderHolder <span class="hljs-title function_">getContentProvider</span><span class="hljs-params">(IApplicationThread caller, String callingPackage,</span><br><span class="hljs-params">        String name, <span class="hljs-type">int</span> userId, <span class="hljs-type">boolean</span> stable)</span> &#123;<br>    ...<br>    <span class="hljs-keyword">return</span> getContentProviderImpl(caller, name, <span class="hljs-literal">null</span>, callingUid, callingPackage,<br>            <span class="hljs-literal">null</span>, stable, userId);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>getContentProvider()方法返回了getContentProviderImpl()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs java">frameworks/base/services/core/java/com/android/server/am/ContentProviderHelper.java<br><span class="hljs-keyword">private</span> ContentProviderHolder <span class="hljs-title function_">getContentProviderImpl</span><span class="hljs-params">(IApplicationThread caller,</span><br><span class="hljs-params">        String name, IBinder token, <span class="hljs-type">int</span> callingUid, String callingPackage, String callingTag,</span><br><span class="hljs-params">        <span class="hljs-type">boolean</span> stable, <span class="hljs-type">int</span> userId)</span> &#123;<br>    ...<br>    <span class="hljs-keyword">synchronized</span> (mService) &#123;<br>        ...  <br>        <span class="hljs-keyword">if</span> (!providerRunning) &#123;<br>            ...<br>            <span class="hljs-comment">// If the provider is not already being launched, then get it started.</span><br>            <span class="hljs-keyword">if</span> (i &gt;= numLaunchingProviders) &#123;<br>                ...<br>                <span class="hljs-keyword">try</span> &#123;<br>                    ...<br>                    <span class="hljs-type">ProcessRecord</span> <span class="hljs-variable">proc</span> <span class="hljs-operator">=</span> mService.getProcessRecordLocked(<br>                            cpi.processName, cpr.appInfo.uid);  <span class="hljs-comment">// 1</span><br>                    IApplicationThread thread;<br>                    <span class="hljs-keyword">if</span> (proc != <span class="hljs-literal">null</span> &amp;&amp; (thread = proc.getThread()) != <span class="hljs-literal">null</span><br>                            &amp;&amp; !proc.isKilled()) &#123;<br>                        ...<br>                        <span class="hljs-keyword">final</span> <span class="hljs-type">ProcessProviderRecord</span> <span class="hljs-variable">pr</span> <span class="hljs-operator">=</span> proc.mProviders;<br>                        <span class="hljs-keyword">if</span> (!pr.hasProvider(cpi.name)) &#123;<br>                            checkTime(startTime, <span class="hljs-string">&quot;getContentProviderImpl: scheduling install&quot;</span>);<br>                            pr.installProvider(cpi.name, cpr);<br>                            <span class="hljs-keyword">try</span> &#123;<br>                                thread.scheduleInstallProvider(cpi);  <span class="hljs-comment">// 2</span><br>                            &#125; <span class="hljs-keyword">catch</span> (RemoteException e) &#123;<br>                            &#125;<br>                        &#125;<br>                        ...<br>                    &#125; <span class="hljs-keyword">else</span> &#123;<br>                        ...<br>                        proc = mService.startProcessLocked(<br>                                cpi.processName, cpr.appInfo, <span class="hljs-literal">false</span>, <span class="hljs-number">0</span>,<br>                                <span class="hljs-keyword">new</span> <span class="hljs-title class_">HostingRecord</span>(HostingRecord.HOSTING_TYPE_CONTENT_PROVIDER,<br>                                    <span class="hljs-keyword">new</span> <span class="hljs-title class_">ComponentName</span>(<br>                                            cpi.applicationInfo.packageName, cpi.name)),<br>                                Process.ZYGOTE_POLICY_FLAG_EMPTY, <span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>);  <span class="hljs-comment">// 3</span><br>                        ...<br>                    &#125;<br>                    ...<br>                &#125; <span class="hljs-keyword">finally</span> &#123;<br>                    ...<br>                &#125;<br>            &#125;<br>            ...<br>        &#125;<br>        ...<br>    &#125;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>注释1处通过getProcessRecordLocked()方法来获取目标ContentProvider的应用程序进程信息，这些信息用ProcessRecord类型的proc来表示，如果该应用程序进程已经启动就会调用注释2处的代码，否则就会调用注释3处的startProcessLocked()来启动进程。这里假设ContentProvider的应用程序进程还没有启动，应用程序进程启动最终会调用ActivityThread的main()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java">frameworks/base/core/java/android/app/ActivityThread.java<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>    ...<br>    Looper.prepareMainLooper();  <span class="hljs-comment">// 1</span><br>    ...<br>    <span class="hljs-type">ActivityThread</span> <span class="hljs-variable">thread</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ActivityThread</span>();  <span class="hljs-comment">// 2</span><br>    thread.attach(<span class="hljs-literal">false</span>, startSeq);  <span class="hljs-comment">// 3</span><br>    ...<br>    Looper.loop();  <span class="hljs-comment">// 4</span><br><br>    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Main thread loop unexpectedly exited&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>注释1处通过prepareMainLooper()方法在ThreadLocal中获取Looper，并在注释4处开启消息循环。注释2处创建了ActivityThread，紧接着调用了它的attach()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java">frameworks/base/core/java/android/app/ActivityThread.java<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">attach</span><span class="hljs-params">(<span class="hljs-type">boolean</span> system, <span class="hljs-type">long</span> startSeq)</span> &#123;<br>    ...<br>    <span class="hljs-keyword">if</span> (!system) &#123;<br>        ...<br>        <span class="hljs-keyword">final</span> <span class="hljs-type">IActivityManager</span> <span class="hljs-variable">mgr</span> <span class="hljs-operator">=</span> ActivityManager.getService();  <span class="hljs-comment">// 1</span><br>        <span class="hljs-keyword">try</span> &#123;<br>            mgr.attachApplication(mAppThread, startSeq);  <span class="hljs-comment">// 2</span><br>        &#125; <span class="hljs-keyword">catch</span> (RemoteException ex) &#123;<br>            <span class="hljs-keyword">throw</span> ex.rethrowFromSystemServer();<br>        &#125;<br>        ...<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        ...<br>    &#125;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>注释1处得到IActivityManager，注释2处调用IActivityManager的attachApplication()方法，并将ApplicationThread类型的mAppThread对象传进去，最终调用的是AMS的attachApplication()方法。</p>
+<h4 id="AMS启动ContentProvider的过程"><a href="#AMS启动ContentProvider的过程" class="headerlink" title="AMS启动ContentProvider的过程"></a>AMS启动ContentProvider的过程</h4><p><img src="https://s2.loli.net/2024/01/03/592eMmCpzvDHqtN.jpg" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java">frameworks/base/services/core/java/com/android/server/am/ActivityManagerService.java<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">attachApplication</span><span class="hljs-params">(IApplicationThread thread, <span class="hljs-type">long</span> startSeq)</span> &#123;<br>    ...<br>    <span class="hljs-keyword">synchronized</span> (<span class="hljs-built_in">this</span>) &#123;<br>        ...<br>        attachApplicationLocked(thread, callingPid, callingUid, startSeq);<br>        ...<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在attachApplicationLocked()方法中又调用了attachApplicationLocked()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs java">frameworks/base/services/core/java/com/android/server/am/ActivityManagerService.java<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">attachApplicationLocked</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> IApplicationThread thread,</span><br><span class="hljs-params">        <span class="hljs-type">int</span> pid, <span class="hljs-type">int</span> callingUid, <span class="hljs-type">long</span> startSeq)</span> &#123;<br>    ...<br>    <span class="hljs-keyword">try</span> &#123;<br>        ...<br>        <span class="hljs-keyword">final</span> <span class="hljs-type">ActiveInstrumentation</span> <span class="hljs-variable">instr2</span> <span class="hljs-operator">=</span> app.getActiveInstrumentation();<br>        ...<br>        <span class="hljs-keyword">if</span> (app.getIsolatedEntryPoint() != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-comment">// This is an isolated process which should just call an entry point instead of</span><br>            <span class="hljs-comment">// being bound to an application.</span><br>            thread.runIsolatedEntryPoint(<br>                    app.getIsolatedEntryPoint(), app.getIsolatedEntryPointArgs());<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (instr2 != <span class="hljs-literal">null</span>) &#123;<br>            thread.bindApplication(processName, appInfo,<br>                    app.sdkSandboxClientAppVolumeUuid, app.sdkSandboxClientAppPackage,<br>                    providerList,<br>                    instr2.mClass,<br>                    profilerInfo, instr2.mArguments,<br>                    instr2.mWatcher,<br>                    instr2.mUiAutomationConnection, testMode,<br>                    mBinderTransactionTrackingEnabled, enableTrackAllocation,<br>                    isRestrictedBackupMode || !normalMode, app.isPersistent(),<br>                    <span class="hljs-keyword">new</span> <span class="hljs-title class_">Configuration</span>(app.getWindowProcessController().getConfiguration()),<br>                    app.getCompat(), getCommonServicesLocked(app.isolated),<br>                    mCoreSettingsObserver.getCoreSettingsLocked(),<br>                    buildSerial, autofillOptions, contentCaptureOptions,<br>                    app.getDisabledCompatChanges(), serializedSystemFontMap,<br>                    app.getStartElapsedTime(), app.getStartUptime());<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            thread.bindApplication(processName, appInfo,<br>                    app.sdkSandboxClientAppVolumeUuid, app.sdkSandboxClientAppPackage,<br>                    providerList, <span class="hljs-literal">null</span>, profilerInfo, <span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>, testMode,<br>                    mBinderTransactionTrackingEnabled, enableTrackAllocation,<br>                    isRestrictedBackupMode || !normalMode, app.isPersistent(),<br>                    <span class="hljs-keyword">new</span> <span class="hljs-title class_">Configuration</span>(app.getWindowProcessController().getConfiguration()),<br>                    app.getCompat(), getCommonServicesLocked(app.isolated),<br>                    mCoreSettingsObserver.getCoreSettingsLocked(),<br>                    buildSerial, autofillOptions, contentCaptureOptions,<br>                    app.getDisabledCompatChanges(), serializedSystemFontMap,<br>                    app.getStartElapsedTime(), app.getStartUptime());<br>        &#125;<br>        ...<br>    &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>        ...<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在attachApplicationLocked()中调用了thread的bindApplication()方法，thread是IApplicationThread类型的，这里和IActivityManager一样采用了AIDL，ApplicationThread是ActivityThread的内部类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs java">frameworks/base/core/java/android/app/ActivityThread$ApplicationThread<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ApplicationThread</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">IApplicationThread</span>.Stub &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">bindApplication</span><span class="hljs-params">(String processName, ApplicationInfo appInfo,</span><br><span class="hljs-params">            String sdkSandboxClientAppVolumeUuid, String sdkSandboxClientAppPackage,</span><br><span class="hljs-params">            ProviderInfoList providerList, ComponentName instrumentationName,</span><br><span class="hljs-params">            ProfilerInfo profilerInfo, Bundle instrumentationArgs,</span><br><span class="hljs-params">            IInstrumentationWatcher instrumentationWatcher,</span><br><span class="hljs-params">            IUiAutomationConnection instrumentationUiConnection, <span class="hljs-type">int</span> debugMode,</span><br><span class="hljs-params">            <span class="hljs-type">boolean</span> enableBinderTracking, <span class="hljs-type">boolean</span> trackAllocation,</span><br><span class="hljs-params">            <span class="hljs-type">boolean</span> isRestrictedBackupMode, <span class="hljs-type">boolean</span> persistent, Configuration config,</span><br><span class="hljs-params">            CompatibilityInfo compatInfo, Map services, Bundle coreSettings,</span><br><span class="hljs-params">            String buildSerial, AutofillOptions autofillOptions,</span><br><span class="hljs-params">            ContentCaptureOptions contentCaptureOptions, <span class="hljs-type">long</span>[] disabledCompatChanges,</span><br><span class="hljs-params">            SharedMemory serializedSystemFontMap,</span><br><span class="hljs-params">            <span class="hljs-type">long</span> startRequestedElapsedTime, <span class="hljs-type">long</span> startRequestedUptime)</span> &#123;<br>        <span class="hljs-keyword">if</span> (services != <span class="hljs-literal">null</span>) &#123;<br>            ...<br>            <span class="hljs-comment">// Setup the service cache in the ServiceManager</span><br>            ServiceManager.initServiceCache(services);<br>        &#125;<br><br>        setCoreSettings(coreSettings);<br><br>        <span class="hljs-type">AppBindData</span> <span class="hljs-variable">data</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">AppBindData</span>();<br>        data.processName = processName;<br>        data.appInfo = appInfo;<br>        data.sdkSandboxClientAppVolumeUuid = sdkSandboxClientAppVolumeUuid;<br>        data.sdkSandboxClientAppPackage = sdkSandboxClientAppPackage;<br>        data.providers = providerList.getList();<br>        data.instrumentationName = instrumentationName;<br>        data.instrumentationArgs = instrumentationArgs;<br>        data.instrumentationWatcher = instrumentationWatcher;<br>        data.instrumentationUiAutomationConnection = instrumentationUiConnection;<br>        data.debugMode = debugMode;<br>        data.enableBinderTracking = enableBinderTracking;<br>        data.trackAllocation = trackAllocation;<br>        data.restrictedBackupMode = isRestrictedBackupMode;<br>        data.persistent = persistent;<br>        data.config = config;<br>        data.compatInfo = compatInfo;<br>        data.initProfilerInfo = profilerInfo;<br>        data.buildSerial = buildSerial;<br>        data.autofillOptions = autofillOptions;<br>        data.contentCaptureOptions = contentCaptureOptions;<br>        data.disabledCompatChanges = disabledCompatChanges;<br>        data.mSerializedSystemFontMap = serializedSystemFontMap;<br>        data.startRequestedElapsedTime = startRequestedElapsedTime;<br>        data.startRequestedUptime = startRequestedUptime;<br>        updateCompatOverrideScale(compatInfo);<br>        CompatibilityInfo.applyOverrideScaleIfNeeded(config);<br>        sendMessage(H.BIND_APPLICATION, data);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在bindApplication()方法中最后调用sendMessage()方法向H发送BIND_APPLICATION类型消息。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java">frameworks/base/core/java/android/app/ActivityThread$H<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">H</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Handler</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">handleMessage</span><span class="hljs-params">(Message msg)</span> &#123;<br>        ...<br>        <span class="hljs-keyword">switch</span> (msg.what) &#123;<br>            <span class="hljs-keyword">case</span> BIND_APPLICATION:<br>                ...<br>                handleBindApplication(data);<br>                ...<br>                <span class="hljs-keyword">break</span>;<br>            ...<br>        &#125;<br>        ...<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>接下来执行handleBindApplication()。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs java">frameworks/base/core/java/android/app/ActivityThread.java<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">handleBindApplication</span><span class="hljs-params">(AppBindData data)</span> &#123;<br>    ...<br>    Application app;<br>    ...<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-comment">// If the app is being launched for full backup or restore, bring it up in</span><br>        <span class="hljs-comment">// a restricted environment with the base application class.</span><br>        app = data.info.makeApplicationInner(data.restrictedBackupMode, <span class="hljs-literal">null</span>);  <span class="hljs-comment">// 1</span><br>        ...<br>        mInitialApplication = app;<br>        ...<br>        <span class="hljs-comment">// don&#x27;t bring up providers in restricted mode; they may depend on the</span><br>        <span class="hljs-comment">// app&#x27;s custom Application class</span><br>        <span class="hljs-keyword">if</span> (!data.restrictedBackupMode) &#123;<br>            <span class="hljs-keyword">if</span> (!ArrayUtils.isEmpty(data.providers)) &#123;<br>                installContentProviders(app, data.providers);  <span class="hljs-comment">// 2</span><br>            &#125;<br>        &#125;<br>        ...<br>        <span class="hljs-keyword">try</span> &#123;<br>            mInstrumentation.callApplicationOnCreate(app);  <span class="hljs-comment">// 3</span><br>        &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>            ...<br>        &#125;<br>    &#125; <span class="hljs-keyword">finally</span> &#123;<br>        ...<br>    &#125;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>注释1处创建Application，注释2处在非受限模式下启动ContentProvider，注释3处执行Application的onCreate()方法。</p>
+<p>ContentProvider的启动时机是在Application创建后，Application#onCreate()调用前。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java">frameworks/base/core/java/android/app/ActivityThread.java<br><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">installContentProviders</span><span class="hljs-params">(</span><br><span class="hljs-params">        Context context, List&lt;ProviderInfo&gt; providers)</span> &#123;<br>    <span class="hljs-keyword">final</span> ArrayList&lt;ContentProviderHolder&gt; results = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br><br>    <span class="hljs-keyword">for</span> (ProviderInfo cpi : providers) &#123;  <span class="hljs-comment">// 1</span><br>        ...<br>        <span class="hljs-type">ContentProviderHolder</span> <span class="hljs-variable">cph</span> <span class="hljs-operator">=</span> installProvider(context, <span class="hljs-literal">null</span>, cpi,<br>                <span class="hljs-literal">false</span> <span class="hljs-comment">/*noisy*/</span>, <span class="hljs-literal">true</span> <span class="hljs-comment">/*noReleaseNeeded*/</span>, <span class="hljs-literal">true</span> <span class="hljs-comment">/*stable*/</span>);  <span class="hljs-comment">// 2</span><br>        <span class="hljs-keyword">if</span> (cph != <span class="hljs-literal">null</span>) &#123;<br>            cph.noReleaseNeeded = <span class="hljs-literal">true</span>;<br>            results.add(cph);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">try</span> &#123;<br>        ActivityManager.getService().publishContentProviders(<br>            getApplicationThread(), results);  <span class="hljs-comment">// 3</span><br>    &#125; <span class="hljs-keyword">catch</span> (RemoteException ex) &#123;<br>        <span class="hljs-keyword">throw</span> ex.rethrowFromSystemServer();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>注释1处遍历当前应用程序进程的ProviderInfo列表，得到每个ContentProvider的ProviderInfo（存储ContentProvider的信息），并在注释2处调用installProvider()方法来启动这些ContentProvider。注释3处通过AMS的publishContentProviders()方法将这些ContentProvider存储在AMS的mProviderMap中，这个mProviderMap在前面提到过，起到缓存的作用，防止每次使用相同的ContentProvider时都会调用AMS的getContentProvider()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs java">frameworks/base/core/java/android/app/ActivityThread.java<br><span class="hljs-keyword">private</span> ContentProviderHolder <span class="hljs-title function_">installProvider</span><span class="hljs-params">(Context context,</span><br><span class="hljs-params">        ContentProviderHolder holder, ProviderInfo info,</span><br><span class="hljs-params">        <span class="hljs-type">boolean</span> noisy, <span class="hljs-type">boolean</span> noReleaseNeeded, <span class="hljs-type">boolean</span> stable)</span> &#123;<br>    <span class="hljs-type">ContentProvider</span> <span class="hljs-variable">localProvider</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>    IContentProvider provider;<br>    <span class="hljs-keyword">if</span> (holder == <span class="hljs-literal">null</span> || holder.provider == <span class="hljs-literal">null</span>) &#123;<br>        ...<br>        <span class="hljs-type">Context</span> <span class="hljs-variable">c</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>        <span class="hljs-type">ApplicationInfo</span> <span class="hljs-variable">ai</span> <span class="hljs-operator">=</span> info.applicationInfo;<br>        <span class="hljs-comment">// 1</span><br>        <span class="hljs-keyword">if</span> (context.getPackageName().equals(ai.packageName)) &#123;<br>            c = context;<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (mInitialApplication != <span class="hljs-literal">null</span> &amp;&amp;<br>                mInitialApplication.getPackageName().equals(ai.packageName)) &#123;<br>            c = mInitialApplication;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                c = context.createPackageContext(ai.packageName,<br>                        Context.CONTEXT_INCLUDE_CODE);<br>            &#125; <span class="hljs-keyword">catch</span> (PackageManager.NameNotFoundException e) &#123;<br>                <span class="hljs-comment">// Ignore</span><br>            &#125;<br>        &#125;<br>        ...<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-keyword">final</span> java.lang.<span class="hljs-type">ClassLoader</span> <span class="hljs-variable">cl</span> <span class="hljs-operator">=</span> c.getClassLoader();<br>            <span class="hljs-type">LoadedApk</span> <span class="hljs-variable">packageInfo</span> <span class="hljs-operator">=</span> peekPackageInfo(ai.packageName, <span class="hljs-literal">true</span>);  <span class="hljs-comment">// 2</span><br>            <span class="hljs-keyword">if</span> (packageInfo == <span class="hljs-literal">null</span>) &#123;<br>                <span class="hljs-comment">// System startup case.</span><br>                packageInfo = getSystemContext().mPackageInfo;<br>            &#125;<br>            localProvider = packageInfo.getAppFactory()<br>                    .instantiateProvider(cl, info.name);  <span class="hljs-comment">// 3</span><br>            provider = localProvider.getIContentProvider();<br>            <br>            ...<br>            localProvider.attachInfo(c, info);  <span class="hljs-comment">// 4</span><br>        &#125; <span class="hljs-keyword">catch</span> (java.lang.Exception e) &#123;<br>            ...<br>        &#125;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        ...<br>    &#125;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>注释1处首先获取Context，一般情况下就是Application；</p>
+<p>注释2处获取应用信息；</p>
+<p>注释3处通过AppComponentFactory实例化ContentProvider；</p>
+<p>注释4处初始化ContentProvider，调用其onCreate()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java">frameworks/base/core/java/android/content/ContentProvider.java<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">attachInfo</span><span class="hljs-params">(Context context, ProviderInfo info)</span> &#123;<br>    attachInfo(context, info, <span class="hljs-literal">false</span>);<br>&#125;<br><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">attachInfo</span><span class="hljs-params">(Context context, ProviderInfo info, <span class="hljs-type">boolean</span> testing)</span> &#123;<br>    ...<br>    <span class="hljs-keyword">if</span> (mContext == <span class="hljs-literal">null</span>) &#123;<br>        mContext = context;<br>        ...<br>        ContentProvider.<span class="hljs-built_in">this</span>.onCreate();  <span class="hljs-comment">// 1</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>注释1处在attachInfo()方法中调用了onCreate()方法，它是一个抽象方法，这样ContentProvider就启动完毕。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Android/" class="category-chain-item">Android</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" class="print-no-link">#启动流程</a>
+      
+        <a href="/tags/ContentProvider/" class="print-no-link">#ContentProvider</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>ContentProvider的启动过程</div>
+      <div>http://example.com/2024/03/10/ContentProvider的启动过程/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年3月10日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/03/10/Init%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" title="Init启动流程">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Init启动流程</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/03/10/Configuration%E5%8F%98%E6%9B%B4%E6%97%B6%E6%9B%B4%E6%96%B0%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E9%85%8D%E7%BD%AE/" title="Configuration变更时更新应用程序配置">
+                        <span class="hidden-mobile">Configuration变更时更新应用程序配置</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script>
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          Fluid.utils.createCssLink('https://lib.baomitu.com/disqusjs/1.3.0/disqusjs.css');
+          Fluid.utils.createScript('https://lib.baomitu.com/disqusjs/1.3.0/disqus.js', function() {
+            new DisqusJS({
+              shortname: 'fluid',
+              apikey: ''
+            });
+          });
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
