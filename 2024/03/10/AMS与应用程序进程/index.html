@@ -16,15 +16,15 @@
   <meta name="author" content="柚子树">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Zygote的Java框架层中，会创建一个Server端的Socket，这个Socket用来等待AMS请求Zygote来创建新的应用程序进程。要启动一个应用程序，首先要保证这个应用程序所需要的应用程序进程已经存在。在启动应用程序时AMS会检查这个应用程序需要的应用程序进程是否存在，不存在就会请求Zygote进程创建需要的应用程序进程。这里以Service的启动过程为例，来分析AMS与应用程序进程的">
+    <meta name="description" content="要启动一个应用程序，首先要保证这个应用程序所需要的应用程序进程已经存在。在启动应用程序时AMS会检查这个应用程序需要的应用程序进程是否存在，不存在就会请求Zygote进程创建需要的应用程序进程。这里以Service的启动过程为例，来分析AMS与应用程序进程的关系。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="AMS与应用程序进程">
 <meta property="og:url" content="https://citrus-maxima.github.io/2024/03/10/AMS%E4%B8%8E%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E8%BF%9B%E7%A8%8B/index.html">
 <meta property="og:site_name" content="柚子树的博客">
-<meta property="og:description" content="Zygote的Java框架层中，会创建一个Server端的Socket，这个Socket用来等待AMS请求Zygote来创建新的应用程序进程。要启动一个应用程序，首先要保证这个应用程序所需要的应用程序进程已经存在。在启动应用程序时AMS会检查这个应用程序需要的应用程序进程是否存在，不存在就会请求Zygote进程创建需要的应用程序进程。这里以Service的启动过程为例，来分析AMS与应用程序进程的">
+<meta property="og:description" content="要启动一个应用程序，首先要保证这个应用程序所需要的应用程序进程已经存在。在启动应用程序时AMS会检查这个应用程序需要的应用程序进程是否存在，不存在就会请求Zygote进程创建需要的应用程序进程。这里以Service的启动过程为例，来分析AMS与应用程序进程的关系。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-03-10T04:17:37.986Z">
-<meta property="article:modified_time" content="2024-03-10T04:17:37.986Z">
+<meta property="article:published_time" content="2024-03-10T08:35:07.709Z">
+<meta property="article:modified_time" content="2024-03-10T08:35:07.710Z">
 <meta property="article:author" content="柚子树">
 <meta property="article:tag" content="AMS">
 <meta name="twitter:card" content="summary_large_image">
@@ -69,7 +69,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"citrus-maxima.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"citrus-maxima.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"9ec5bbe3dcaa744f03d8b3f4ae3c055a","google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -79,6 +79,46 @@
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
   
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?9ec5bbe3dcaa744f03d8b3f4ae3c055a";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', '');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
 
 
   
@@ -208,8 +248,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-03-10 12:17" pubdate>
-          2024年3月10日 中午
+        <time datetime="2024-03-10 16:35" pubdate>
+          2024年3月10日 下午
         </time>
       </span>
     
@@ -389,9 +429,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/03/10/AMS%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/" title="AMS的启动过程">
+                      <a href="/2024/03/10/Window%E7%9A%84%E5%B1%9E%E6%80%A7/" title="Window的属性">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">AMS的启动过程</span>
+                        <span class="hidden-mobile">Window的属性</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -399,8 +439,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/03/10/Service%E7%9A%84%E7%BB%91%E5%AE%9A%E8%BF%87%E7%A8%8B/" title="Service的绑定过程">
-                        <span class="hidden-mobile">Service的绑定过程</span>
+                      <a href="/2024/03/10/Launcher%E5%BA%94%E7%94%A8%E5%9B%BE%E6%A0%87%E6%98%BE%E7%A4%BA%E6%B5%81%E7%A8%8B/" title="Launcher应用图标显示流程">
+                        <span class="hidden-mobile">Launcher应用图标显示流程</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
