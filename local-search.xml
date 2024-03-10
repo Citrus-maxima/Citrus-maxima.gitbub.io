@@ -254,9 +254,9 @@
     
     <tags>
       
-      <tag>AMS</tag>
-      
       <tag>启动流程</tag>
+      
+      <tag>AMS</tag>
       
     </tags>
     
@@ -795,6 +795,17 @@
   
   
   
+  
+  
+  
+  <entry>
+    <title>about</title>
+    <link href="/"/>
+    <url>/</url>
+    
+    <content type="html"><![CDATA[]]></content>
+    
+  </entry>
   
   
   
